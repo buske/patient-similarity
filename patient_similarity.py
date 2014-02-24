@@ -168,7 +168,8 @@ class PatientComparator:
         logging.debug('Patient 1 ic: {:.6f}'.format(p1_ic))
         logging.debug('Patient 2 ic: {:.6f}'.format(p2_ic))
         logging.debug('Shared ic: {:.6f}'.format(shared_ic))
-        return [tanh(2 * shared_ic / (p1_ic + p2_ic)), shared_ic]
+        harmonic_mean = 2 / (p1_ic / shared_ic + p2_ic / shared_ic)
+        return [harmonic_mean, shared_ic]
         
 class Patient:
     def __init__(self, id, hp_terms, neg_hp_terms=None, onset=None):
@@ -255,7 +256,7 @@ def script(patient_hpo_filename, hpo_filename, disease_phenotype_filename,
         for j in range(len(patients)):
             if i != j:
                 score = scores[(min(i, j), max(i, j))]
-                print('\t'.join(map(str, [patients[i].id, patients[j].id] + score)))
+                print('\t'.join([patients[i].id, patients[j].id, '{:.6f}\t{:.6f}'.format(score[0], score[1])]))
 
 
 def parse_args(args):
