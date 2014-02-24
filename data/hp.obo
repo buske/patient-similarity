@@ -1,6 +1,6 @@
 format-version: 1.2
-data-version: 2014-01-22
-date: 22:01:2014 21:28
+data-version: 2014-02-15
+date: 15:02:2014 13:45
 saved-by: peter
 auto-generated-by: OBO-Edit 2.3
 subsetdef: hposlim_core "Core clinical terminology"
@@ -2047,6 +2047,7 @@ name: Wide anterior fontanel
 def: "Enlargement of the `anterior fontanelle` (FMA:75439) with respect to age-dependent norms." [HPO:curators]
 synonym: "Large anterior fontanel" EXACT []
 synonym: "Large anterior fontanelle" EXACT []
+synonym: "LARGE ANTERIOR FONTANELS" RELATED [HPO:skoehler]
 synonym: "Large open anterior fontanel" EXACT []
 synonym: "Large open anterior fontanelle" EXACT []
 synonym: "Wide anterior fontanelle" EXACT []
@@ -3210,6 +3211,7 @@ def: "Absence or failure to form of the external auditory canal." [HPO:probinson
 subset: hposlim_core
 synonym: "Absent auditory canals" EXACT []
 synonym: "Absent external auditory canals" EXACT []
+synonym: "ATRESIA OF THE EXTERNAL AUDITORY CANALS" RELATED [HPO:skoehler]
 synonym: "Atretic auditory canal" EXACT []
 synonym: "Atretic auditory canals" EXACT []
 synonym: "Atretic external auditory canal" EXACT []
@@ -3500,7 +3502,7 @@ name: Broad nasal tip
 alt_id: HP:0004501
 alt_id: HP:0005269
 def: "Increase in width of the `nasal tip` (FMA:59518)." [HPO:probinson, pmid:19152422]
-comment: MERGED COMMENT:\nTARGET COMMENT: Nasal tip width is assessed at the anterior junction of the alae and the tip. This is easier in persons with a somewhat squared shape of the nasal tip. This may be best viewed from the inferior aspect of the nose. No objective measures are available. See Bulbous nose for a related term.\n--------------------\nSOURCE COMMENT: This bundled term will be made obsolete in future versions of the HPO and should not be used for new annotations.
+comment: Nasal tip width is assessed at the anterior junction of the alae and the tip. This is easier in persons with a somewhat squared shape of the nasal tip. This may be best viewed from the inferior aspect of the nose. No objective measures are available. See Bulbous nose for a related term.
 synonym: " Nasal tip, wide" EXACT []
 synonym: "BROAD UPTURNED NOSE" RELATED []
 synonym: "Broad, upturned nose" EXACT []
@@ -3780,6 +3782,8 @@ is_a: HP:0000479 ! Abnormality of the retina
 id: HP:0000489
 name: Abnormality of globe location or size
 is_obsolete: true
+consider: HP:0100886
+consider: HP:0100887
 
 [Term]
 id: HP:0000490
@@ -8739,6 +8743,7 @@ id: HP:0001113
 name: Early cataracts
 xref: UMLS:C1835120 "Early cataracts"
 is_obsolete: true
+replaced_by: HP:0000518
 
 [Term]
 id: HP:0001114
@@ -9598,7 +9603,7 @@ synonym: "Epilepsy" RELATED []
 synonym: "Seizure" EXACT []
 xref: MeSH:D012640 "Seizures"
 xref: UMLS:C0036572 "Seizure"
-is_a: HP:0002011 ! Abnormality of the central nervous system
+is_a: HP:0012638 ! Abnormality of nervous system physiology
 
 [Term]
 id: HP:0001251
@@ -9899,10 +9904,10 @@ is_a: HP:0012332 ! Abnormal autonomic nervous system physiology
 [Term]
 id: HP:0001279
 name: Syncope
-def: "Syncope refers to a generalized weakness of muscles with loss of postural tone, inability to stand upright, and loss of consciousness. Once the patient is in a horizontal position, blood flow to the brain is no longer hindered by gravitation and consciousness is regained. Unconsciousness usually lasts for seconds to minutes. Headache and drowsiness (which usually follow seizures) do not follow a syncopal attack. Syncope results from a sudden impairment of brain metabolism usually due to a reduction in cerebral blood flow. This term refers to an abnormally increased disposition to syncope." [HPO:probinson]
+def: "Syncope refers to a generalized weakness of muscles with loss of postural tone, inability to stand upright, and loss of consciousness. Once the patient is in a horizontal position, blood flow to the brain is no longer hindered by gravitation and consciousness is regained. Unconsciousness usually lasts for seconds to minutes. Headache and drowsiness (which usually follow seizures) do not follow a syncopal attack. Syncope results from a sudden impairment of brain metabolism usually due to a reduction in cerebral blood flow." [HPO:probinson]
 xref: MeSH:D013575 "Syncope"
 xref: UMLS:C0039070 "Syncope"
-is_a: HP:0001626 ! Abnormality of the cardiovascular system
+is_a: HP:0011025 ! Abnormality of cardiovascular system physiology
 created_by: peter
 creation_date: 2008-02-25T10:37:00Z
 
@@ -10124,7 +10129,7 @@ synonym: "Hypoactive to absent deep tendon reflexes" EXACT []
 synonym: "Impaired tendon reflexes" EXACT []
 synonym: "Reduced/absent deep tendon reflexes" EXACT []
 synonym: "Weak or absent deep tendon reflexes" EXACT []
-is_a: HP:0000759 ! Abnormality of the peripheral nervous system
+is_a: HP:0012638 ! Abnormality of nervous system physiology
 
 [Term]
 id: HP:0001317
@@ -12028,11 +12033,11 @@ is_a: HP:0000118 ! Phenotypic abnormality
 
 [Term]
 id: HP:0001627
-name: Abnormality of the heart
+name: Abnormality of cardiac morphology
 def: "An abnormality of the `heart` (FMA:7088)." [HPO:probinson]
+synonym: "Abnormality of the heart" EXACT []
 synonym: "Cardiac abnormality" EXACT []
 synonym: "Cardiac anomalies" EXACT []
-xref: UMLS:C0018798 "Congenital Heart Defects"
 is_a: HP:0001626 ! Abnormality of the cardiovascular system
 
 [Term]
@@ -12122,7 +12127,7 @@ name: Cardiomegaly
 def: "`Increased size` (PATO:0000586) of the `heart` (FMA:7088)." [HPO:probinson]
 xref: MeSH:D006332 "Cardiomegaly"
 xref: UMLS:C0018800 "Cardiomegaly"
-is_a: HP:0001627 ! Abnormality of the heart
+is_a: HP:0001627 ! Abnormality of cardiac morphology
 
 [Term]
 id: HP:0001641
@@ -15477,8 +15482,9 @@ is_a: HP:0002094 ! Dyspnea
 id: HP:0002099
 name: Asthma
 alt_id: HP:0002112
-def: "Asthma is characterized by increased responsiveness of the tracheobronchial tree to multiple stimuli, leading to narrowing of the air passages with resultant dyspnea, cough, and wheezing." [HPO:curators]
+def: "Asthma is characterized by increased responsiveness of the tracheobronchial tree to multiple stimuli, leading to narrowing of the air passages with resultant dyspnea, cough, and wheezing." [HPO:probinson]
 synonym: "Bronchial asthma" EXACT []
+synonym: "Reactive airway disease" RELATED []
 xref: MeSH:D001249 "Asthma"
 xref: UMLS:C0004096 "Asthma"
 is_a: HP:0002088 ! Abnormality of the lung
@@ -15650,7 +15656,8 @@ is_a: HP:0002197 ! Generalized seizures
 [Term]
 id: HP:0002126
 name: Polymicrogyria
-def: "A congenital abnormality of the cerebral hemisphere characterized by an excessive number of small gyri (convolutions) on the surface of the brain." [HPO:curators]
+def: "A congenital abnormality of the cerebral hemisphere characterized by an excessive number of small gyri (convolutions) on the surface of the brain." [HPO:probinson]
+comment: Polymicrogyria, one of the most common malformations of cortical development, is characterized histologically by the appearance of an excessive number of small cortical folds, often fused together, with disordered cortical lamination.
 xref: UMLS:C0266464 "Polymicrogyria"
 is_a: HP:0002536 ! Abnormal cortical gyration
 
@@ -16940,7 +16947,7 @@ comment: Headache is one of the most common types of recurrent pain as well as o
 synonym: "Headaches" EXACT []
 xref: MeSH:D006261 "Headache"
 xref: UMLS:C0018681 "Headache"
-is_a: HP:0002011 ! Abnormality of the central nervous system
+is_a: HP:0012638 ! Abnormality of nervous system physiology
 
 [Term]
 id: HP:0002317
@@ -17931,7 +17938,7 @@ is_a: HP:0004934 ! Vascular calcification
 [Term]
 id: HP:0002505
 name: Progressive inability to walk
-is_a: HP:0001288 ! Gait disturbance
+is_a: HP:0002540 ! Inability to walk
 
 [Term]
 id: HP:0002506
@@ -18058,7 +18065,7 @@ comment: Cataplexy is a frequent feature of narcolepsy, a neurologic disorder ch
 synonym: "Narcolepsy" RELATED []
 xref: MeSH:D002385 "Cataplexy"
 xref: UMLS:C0007384 "Cataplexy"
-is_a: HP:0002011 ! Abnormality of the central nervous system
+is_a: HP:0012638 ! Abnormality of nervous system physiology
 
 [Term]
 id: HP:0002526
@@ -18131,7 +18138,8 @@ is_a: HP:0002538 ! Abnormality of the cerebral cortex
 [Term]
 id: HP:0002540
 name: Inability to walk
-synonym: "Abasia" RELATED []
+def: "Incapability to ambulate." [HPO:probinson]
+synonym: "Non-ambulatory" EXACT []
 is_a: HP:0001288 ! Gait disturbance
 
 [Term]
@@ -18279,7 +18287,7 @@ synonym: "Congenital heart defect" EXACT []
 synonym: "Congenital heart defects" EXACT []
 synonym: "Congenital heart disease" EXACT []
 xref: UMLS:C0018798 "Congenital Heart Defects"
-is_a: HP:0001627 ! Abnormality of the heart
+is_a: HP:0001627 ! Abnormality of cardiac morphology
 
 [Term]
 id: HP:0002566
@@ -20011,6 +20019,7 @@ name: Arthralgia
 def: "Joint pain." [HPO:probinson]
 synonym: "Arthralgias" EXACT []
 synonym: "Joint pain" EXACT []
+synonym: "JOINT PAINS" RELATED [HPO:skoehler]
 xref: MeSH:D018771 "Arthralgia"
 xref: UMLS:C0003862 "Arthralgia"
 is_a: HP:0001367 ! Abnormal joint morphology
@@ -21919,6 +21928,7 @@ id: HP:0003114
 name: Abnormal cardiological findings
 comment: Consider abnormality of the cardiovascular system, HP:0001626.
 is_obsolete: true
+replaced_by: HP:0001113
 
 [Term]
 id: HP:0003115
@@ -21929,8 +21939,11 @@ is_a: HP:0011025 ! Abnormality of cardiovascular system physiology
 [Term]
 id: HP:0003116
 name: Abnormal echocardiogram
+def: "An abnormality detectable by sonography of the heart (echocardiography)." [HPO:probinson]
+comment: Note that while structural heart anomalies can cause abnormal echocardiograpy findings, structural abnormalities are detectable by multiple imaging modalities and should be coded using terms from the hierarchy under 'Abnormality of cardiac morphology' (HP:0001627).
+synonym: "Abnormal echocardiography" EXACT []
 xref: UMLS:C0476369 "Abnormal echocardiogram"
-is_a: HP:0001627 ! Abnormality of the heart
+is_a: HP:0011025 ! Abnormality of cardiovascular system physiology
 
 [Term]
 id: HP:0003117
@@ -23419,7 +23432,7 @@ is_a: HP:0012200 ! Abnormality of prothrombin
 [Term]
 id: HP:0003338
 name: Focal necrosis of right ventricular muscle cells
-is_a: HP:0001627 ! Abnormality of the heart
+is_a: HP:0001627 ! Abnormality of cardiac morphology
 
 [Term]
 id: HP:0003339
@@ -23433,6 +23446,7 @@ id: HP:0003340
 name: Abnormal dermatological laboratory findings
 comment: Consider integument abnormality, HP:0001574.
 is_obsolete: true
+consider: HP:0000951
 
 [Term]
 id: HP:0003341
@@ -24221,8 +24235,8 @@ id: HP:0003472
 name: Hypocalcemic tetany
 def: "Hyperexcitability of the neuromuscular system related to abnormally low level of calcium in the blood, resulting in carpopedal or generalized spasms." [HPO:probinson]
 xref: UMLS:C0151940 "Hypocalcaemic tetany"
-is_a: HP:0000759 ! Abnormality of the peripheral nervous system
 is_a: HP:0002901 ! Hypocalcemia
+is_a: HP:0012638 ! Abnormality of nervous system physiology
 
 [Term]
 id: HP:0003473
@@ -24342,6 +24356,7 @@ is_a: HP:0002960 ! Autoimmunity
 id: HP:0003494
 name: Loss of heterozygosity, multiple chromosomes
 is_obsolete: true
+consider: HP:0001428
 
 [Term]
 id: HP:0003495
@@ -27239,16 +27254,19 @@ is_a: HP:0001167 ! Abnormality of finger
 id: HP:0004066
 name: Laterally deviated thumb phalanges
 is_obsolete: true
+consider: HP:0009602
 
 [Term]
 id: HP:0004083
 name: Laterally deviated terminal thumb phalanx
 is_obsolete: true
+consider: HP:0005895
 
 [Term]
 id: HP:0004090
 name: Advanced maturation/advanced ossification of terminal thumb phalanx epiphysis
 is_obsolete: true
+consider: HP:0009662
 
 [Term]
 id: HP:0004095
@@ -27289,6 +27307,7 @@ name: Radially deviated index finger phalanges
 alt_id: HP:0004111
 synonym: "Radially displaced index finger phalanges" EXACT []
 is_obsolete: true
+consider: HP:0009542
 
 [Term]
 id: HP:0004112
@@ -27302,6 +27321,7 @@ creation_date: 2009-01-21T04:59:08Z
 id: HP:0004121
 name: Radially displaced proximal index finger phalanx
 is_obsolete: true
+consider: HP:0009544
 
 [Term]
 id: HP:0004122
@@ -27324,21 +27344,25 @@ creation_date: 2009-01-21T05:05:55Z
 id: HP:0004138
 name: Metaphyseal abnormality of middle phalanx of the 2nd finger
 is_obsolete: true
+consider: HP:0009541
 
 [Term]
 id: HP:0004139
 name: Flared metaphysis of middle phalanx of index finger
 is_obsolete: true
+consider: HP:0009569
 
 [Term]
 id: HP:0004143
 name: Radially deviated terminal index finger phalanx
 is_obsolete: true
+consider: HP:0009542
 
 [Term]
 id: HP:0004144
 name: Duplication of terminal index finger phalanx
 is_obsolete: true
+replaced_by: HP:0009948
 
 [Term]
 id: HP:0004150
@@ -27351,26 +27375,31 @@ is_a: HP:0001167 ! Abnormality of finger
 id: HP:0004153
 name: Overgrowth of middle finger
 is_obsolete: true
+consider: HP:0009316
 
 [Term]
 id: HP:0004157
 name: Accessory middle-finger phalanges
 is_obsolete: true
+replaced_by: HP:0009963
 
 [Term]
 id: HP:0004161
 name: Periosteal new bone of middle finger phalanges
 is_obsolete: true
+consider: HP:0009316
 
 [Term]
 id: HP:0004162
 name: Radially pointed middle finger phalanges
 is_obsolete: true
+consider: HP:0009316
 
 [Term]
 id: HP:0004168
 name: Radially pointed proximal middle-finger phalanx
 is_obsolete: true
+consider: HP:0009316
 
 [Term]
 id: HP:0004172
@@ -27381,11 +27410,13 @@ is_a: HP:0009316 ! Abnormality of the phalanges of the 3rd finger
 id: HP:0004174
 name: Accessory middle phalanx of middle finger
 is_obsolete: true
+replaced_by: HP:0009963
 
 [Term]
 id: HP:0004175
 name: Periosteal new bone of middle phalanx of middle-finger
 is_obsolete: true
+consider: HP:0004172
 
 [Term]
 id: HP:0004180
@@ -27403,26 +27434,31 @@ is_a: HP:0009882 ! Short distal phalanx of finger
 id: HP:0004183
 name: Abnormality of the epiphyses of the terminal phalanx of the middle finger
 is_obsolete: true
+consider: HP:0009357
 
 [Term]
 id: HP:0004184
 name: Cone-shaped epiphysis of terminal phalanx of the middle finger
 is_obsolete: true
+consider: HP:0009423
 
 [Term]
 id: HP:0004185
 name: Fused epiphysis of terminal phalanx of the middle finger
 is_obsolete: true
+consider: HP:0009316
 
 [Term]
 id: HP:0004186
 name: Large epiphysis of terminal phalanx of the middle finger
 is_obsolete: true
+consider: HP:0009316
 
 [Term]
 id: HP:0004187
 name: Prematurely fused epiphysis of terminal phalanx of the middle finger
 is_obsolete: true
+consider: HP:0009316
 
 [Term]
 id: HP:0004188
@@ -27436,16 +27472,19 @@ name: Bracket epiphyses of the 4th finger
 def: "The epiphyses are normally located on the proximal surface of the phalanges. Bracket epiphysis refers to an abnormality in which the epiphysis surrounds the phalanx, having a bracket-like form and reaching from the proximal side of the phalanx to the distal side." [HPO:curators]
 synonym: "Bracket epiphyses of the ring finger" EXACT []
 is_obsolete: true
+replaced_by: HP:0009394
 
 [Term]
 id: HP:0004193
 name: Expanded phalanges of the ring finger
 is_obsolete: true
+consider: HP:0009172
 
 [Term]
 id: HP:0004194
 name: Hypoplastic phalanges of the ring finger
 is_obsolete: true
+consider: HP:0009408
 
 [Term]
 id: HP:0004195
@@ -27459,6 +27498,7 @@ is_a: HP:0009771 ! Osteolytic defects of the phalanges of the hand
 id: HP:0004196
 name: Short phalanges of the ring finger
 is_obsolete: true
+consider: HP:0009408
 
 [Term]
 id: HP:0004197
@@ -27473,21 +27513,25 @@ is_a: HP:0009773 ! Symphalangism affecting the phalanges of the hand
 id: HP:0004198
 name: Wide/broad phalanges of the ring finger
 is_obsolete: true
+consider: HP:0009172
 
 [Term]
 id: HP:0004201
 name: Expanded proximal phalanx of the ring finger
 is_obsolete: true
+replaced_by: HP:0009310
 
 [Term]
 id: HP:0004202
 name: Lytic defects of the proximal phalanx of the ring finger
 is_obsolete: true
+replaced_by: HP:0009312
 
 [Term]
 id: HP:0004203
 name: Short proximal phalanx of the ring finger
 is_obsolete: true
+replaced_by: HP:0009300
 
 [Term]
 id: HP:0004207
@@ -28121,7 +28165,7 @@ name: Abnormality of the endocardium
 alt_id: HP:0005260
 def: "An abnormality of the `endocardium` (FMA:7280)." [HPO:probinson]
 synonym: "Abnormality of the endomycoardium" EXACT []
-is_a: HP:0001627 ! Abnormality of the heart
+is_a: HP:0001627 ! Abnormality of cardiac morphology
 created_by: peter
 creation_date: 2008-02-20T01:23:00Z
 
@@ -30166,6 +30210,7 @@ id: HP:0004689
 name: Short fourth metatarsal
 def: "Short `fourth metatarsal bone` (FMA:24505)." [HPO:probinson]
 synonym: "Bilateral fourth metatarsal shortening" EXACT []
+synonym: "SHORT FOURTH METATARSALS" RELATED [HPO:skoehler]
 synonym: "Short fourth metatarsus" EXACT []
 xref: UMLS:C1848514 "Short fourth metatarsals"
 is_a: HP:0010743 ! Short metatarsal
@@ -35205,6 +35250,7 @@ is_a: HP:0001386 ! Joint swelling
 id: HP:0005834
 name: Thumbs hypo/aplastic
 is_obsolete: true
+replaced_by: HP:0009658
 
 [Term]
 id: HP:0005837
@@ -39640,6 +39686,7 @@ is_a: HP:0007262 ! Symmetric peripheral demyelination
 id: HP:0006877
 name: Mental retardation, in some
 is_obsolete: true
+replaced_by: HP:0001249
 
 [Term]
 id: HP:0006879
@@ -40458,9 +40505,10 @@ is_a: HP:0002119 ! Ventriculomegaly
 
 [Term]
 id: HP:0007103
-name: Hypodensity of cerebral white matter on MRI
+name: Hypointensity of cerebral white matter on MRI
 alt_id: HP:0006804
-synonym: "White matter hypodensities on MRI" EXACT []
+def: "A darker than expected signal on magnetic resonance imaging emanating from the cerebral white matter." [HPO:probinson]
+synonym: "White matter hypointensities on MRI" EXACT []
 is_a: HP:0002500 ! Abnormality of the cerebral white matter
 
 [Term]
@@ -40904,7 +40952,6 @@ synonym: "Corticospinal signs" EXACT []
 synonym: "Pyramidal tract dysfunction" EXACT []
 synonym: "Pyramidal tract signs" EXACT []
 xref: UMLS:C0234132 "Pyramidal signs"
-is_a: HP:0002062 ! Abnormality of the pyramidal tracts
 is_a: HP:0011442 ! Abnormality of central motor function
 
 [Term]
@@ -41141,8 +41188,9 @@ is_a: HP:0002011 ! Abnormality of the central nervous system
 [Term]
 id: HP:0007321
 name: Deep white matter hypodensities
+def: "Multiple areas of darker than expected signal on magnetic resonance imaging emanating from the deep cerebral white matter." [HPO:probinson]
 xref: UMLS:C1856979 "Deep white matter hypodensities"
-is_a: HP:0007103 ! Hypodensity of cerebral white matter on MRI
+is_a: HP:0007103 ! Hypointensity of cerebral white matter on MRI
 
 [Term]
 id: HP:0007325
@@ -43145,6 +43193,7 @@ alt_id: HP:0007896
 alt_id: HP:0007966
 def: "Reduced transparency of the `stroma of cornea` (FMA:58306)." [DDD:gblack]
 synonym: "Cloudy cornea" EXACT []
+synonym: "CLOUDY CORNEAS" RELATED [HPO:skoehler]
 synonym: "Corneal stromal opacity" EXACT []
 is_a: HP:0007957 ! Corneal opacity
 is_a: HP:0011492 ! Abnormality of corneal stroma
@@ -43476,6 +43525,7 @@ is_a: HP:0000602 ! Ophthalmoplegia
 id: HP:0007825
 name: Cataracts develop in second or third decade
 is_obsolete: true
+replaced_by: HP:0000518
 
 [Term]
 id: HP:0007827
@@ -43846,6 +43896,7 @@ is_a: HP:0011491 ! Reduced number of corneal endothelial cells
 id: HP:0007916
 name: Small anterior lens surface opacities
 is_obsolete: true
+consider: HP:0007795
 
 [Term]
 id: HP:0007917
@@ -45946,6 +45997,8 @@ is_a: HP:0001260 ! Dysarthria
 id: HP:0008383
 name: Slow-growing nails
 alt_id: HP:0008411
+def: "Nails whose growth is slower than normal." [HPO:probinson]
+synonym: "Abnormal nail growth" RELATED []
 xref: UMLS:C1835238 "Slow-growing nails"
 is_a: HP:0001597 ! Abnormality of the nail
 
@@ -49265,6 +49318,7 @@ id: HP:0009163
 name: Abnormal form of the 5th finger
 def: "Abnormal form of the 5th finger." [HPO:curators]
 is_obsolete: true
+consider: HP:0004207
 created_by: peter
 creation_date: 2008-12-22T06:17:30Z
 
@@ -51979,6 +52033,7 @@ name: Aplasia of the phalanges of the 3rd finger
 alt_id: HP:0004156
 synonym: "Absent middle finger phalanges" EXACT []
 is_obsolete: true
+consider: HP:0009447
 created_by: doelkens
 creation_date: 2009-01-14T04:11:21Z
 
@@ -51992,6 +52047,7 @@ synonym: "Hypoplastic middle finger phalanges" EXACT []
 synonym: "Short middle finger phalanges" EXACT []
 synonym: "Small middle finger phalanges" EXACT []
 is_obsolete: true
+replaced_by: HP:0009447
 created_by: doelkens
 creation_date: 2009-01-14T04:11:21Z
 
@@ -52888,7 +52944,7 @@ alt_id: HP:0004105
 def: "Abnormality of the phalanges of the 2nd (index) finger." [HPO:curators]
 synonym: "Abnormality of 2nd finger phalanges" EXACT []
 is_a: HP:0004100 ! Abnormality of the 2nd finger
-is_a: HP:0005918 ! Abnormality of phalanx of finger
+is_a: HP:0009774 ! Triangular shaped phalanges of the hand
 created_by: doelkens
 creation_date: 2009-01-21T10:15:07Z
 
@@ -52937,7 +52993,6 @@ alt_id: HP:0004117
 def: "Triangular shaped phalanges of the 2nd finger. A triangular or so called delta shaped phalanx is a typical result after a bracket epiphysis of the affected phalanx." [HPO:curators]
 synonym: "Triangular index finger phalanges" EXACT []
 is_a: HP:0009541 ! Abnormality of the phalanges of the 2nd finger
-is_a: HP:0009774 ! Triangular shaped phalanges of the hand
 created_by: doelkens
 creation_date: 2009-01-21T10:19:34Z
 
@@ -53517,7 +53572,7 @@ alt_id: HP:0004064
 def: "Abnormality of the phalanges of the thumb." [HPO:curators]
 synonym: "Abnormality of thumb phalanges" EXACT []
 is_a: HP:0001172 ! Abnormality of the thumb
-is_a: HP:0005918 ! Abnormality of phalanx of finger
+is_a: HP:0009774 ! Triangular shaped phalanges of the hand
 created_by: doelkens
 creation_date: 2009-01-29T01:10:39Z
 
@@ -53677,6 +53732,7 @@ name: Radial deviation of the thumb
 alt_id: HP:0004063
 synonym: "Radially deviated thumb" EXACT []
 is_obsolete: true
+consider: HP:0009602
 created_by: doelkens
 creation_date: 2009-01-29T04:35:09Z
 
@@ -53684,6 +53740,7 @@ creation_date: 2009-01-29T04:35:09Z
 id: HP:0009621
 name: Ulnar deviation of the thumb
 is_obsolete: true
+consider: HP:0009602
 created_by: doelkens
 creation_date: 2009-01-29T04:35:51Z
 
@@ -54026,7 +54083,6 @@ alt_id: HP:0004072
 def: "Triangular shaped phalanges of the thumb finger." [HPO:curators]
 synonym: "Triangular thumb phalanges" EXACT []
 is_a: HP:0009602 ! Abnormality of the phalanges of the thumb
-is_a: HP:0009774 ! Triangular shaped phalanges of the hand
 created_by: doelkens
 creation_date: 2009-01-29T05:29:26Z
 
@@ -56071,7 +56127,6 @@ alt_id: HP:0006076
 alt_id: HP:0006132
 alt_id: HP:0006199
 alt_id: HP:0006223
-alt_id: HP:0010279
 def: "Short distance from the end of the finger to the most distal interphalangeal crease or the distal interphalangeal joint flexion point. That is, hypoplasia of one or more of the `distal phalanx of finger` (FMA:75818)." [HPO:probinson, pmid:19125433]
 comment: This term differs from Partial absence of the finger because in that term, the phalanx must be missing, whereas in this term it may be small, but present. Distal phalangeal lengths can be assessed subjectively by comparing that digit segment to the rest of the digit, to other normal digits in that patient, or to typical patients of that age or build. Regarding the subjective definition, for individuals who do not have flexion creases, one may determine this by flexing the DIP joint and estimating the length of the terminal segment of the digit. Alternatively, one may be able to palpate the joint.
 subset: hposlim_core
@@ -56121,6 +56176,7 @@ id: HP:0009885
 name: Prenatal short stature
 def: "Short stature with prenatal onset." [HPO:curators]
 is_obsolete: true
+consider: HP:0001511
 creation_date: 2009-04-30T05:29:10Z
 
 [Term]
@@ -65085,7 +65141,6 @@ name: Abdominal wall defect
 def: "An `incomplete closure` (PATO:0000609) of the `abdominal wall` (FMA:259054)." [HPO:probinson]
 synonym: "Congenital anterior abdominal wall defect" EXACT []
 is_a: HP:0004298 ! Abnormality of the abdominal wall
-is_a: HP:0100656 ! Thoracoabdominal wall defects
 created_by: peter
 creation_date: 2010-08-03T09:55:15Z
 
@@ -69222,6 +69277,7 @@ id: HP:0011330
 name: Metopic synostosis
 def: "Premature fusion of the metopic suture." [DDD:awilkie]
 subset: hposlim_core
+synonym: "Metopic suture craniosynostosis" EXACT []
 is_a: HP:0005556 ! Abnormality of the metopic suture
 created_by: peter
 creation_date: 2012-02-25T03:52:01Z
@@ -70168,7 +70224,7 @@ creation_date: 2012-03-18T01:51:24Z
 id: HP:0011442
 name: Abnormality of central motor function
 def: "An anomaly of the control or production of movement in the central nervous system." [HPO:probinson]
-is_a: HP:0002011 ! Abnormality of the central nervous system
+is_a: HP:0012638 ! Abnormality of nervous system physiology
 created_by: peter
 creation_date: 2012-03-18T02:29:04Z
 
@@ -70202,7 +70258,7 @@ creation_date: 2012-03-18T03:53:04Z
 id: HP:0011446
 name: Abnormality of higher mental function
 def: "Cognitive, psychiatric or memory anomaly." [DDD:ajackson]
-is_a: HP:0002011 ! Abnormality of the central nervous system
+is_a: HP:0012638 ! Abnormality of nervous system physiology
 created_by: peter
 creation_date: 2012-03-18T04:23:59Z
 
@@ -72640,7 +72696,7 @@ creation_date: 2012-04-18T07:09:28Z
 id: HP:0011730
 name: Abnormality of central sensory function
 def: "An abnormality of cortical sensation. Assuming the primary sensory modalities are intact and the patient is alert and cooperative, the presence of an abnormality of sensory function usually indicates a lesion of a parietal cortex or of the thalamocortical projections to the parietal cortex." [HPO:probinson]
-is_a: HP:0002011 ! Abnormality of the central nervous system
+is_a: HP:0012638 ! Abnormality of nervous system physiology
 created_by: peter
 creation_date: 2012-04-19T07:44:18Z
 
@@ -75310,6 +75366,7 @@ creation_date: 2012-07-30T06:50:19Z
 id: HP:0012042
 name: Aspirin-induced asthma
 def: "A type of asthma in which aspirin and other nonsteroidal anti-inflammatory drugs (NSAIDs) that inhibit cyclooxygen-ase 1 (COX-1) exacerbate bronchoconstriction." [pmid:12743549]
+xref: MeSH:D055963 "Asthma, Aspirin-Induced"
 is_a: HP:0002099 ! Asthma
 created_by: peter
 creation_date: 2012-08-01T11:22:04Z
@@ -79633,6 +79690,7 @@ name: Dysesthesia
 def: "Abnormal sensations with no apparent physical cause that are painful or unpleasant." [ORCID:0000-0001-5208-3432]
 comment: Dysesthesia is a subclass of paresthesia in which the sensations are unpleasant or disagreeable.
 synonym: "Dysaesthesia" EXACT []
+synonym: "DYSESTHESIAS" RELATED [HPO:skoehler]
 is_a: HP:0003401 ! Paresthesia
 created_by: peter
 creation_date: 2013-12-15T09:59:55Z
@@ -80574,6 +80632,240 @@ is_a: HP:0000493 ! Abnormality of the fovea
 is_a: HP:0008002 ! Abnormality of macular pigmentation
 created_by: peter
 creation_date: 2014-01-22T21:25:34Z
+
+[Term]
+id: HP:0012644
+name: Increased caudate lactate level
+def: "An elevated concentration of lactate in the caudate nucleus. This finding can be elicited by magnetic resonance spectroscopy imaging." [HPO:probinson, pmid:23810640]
+is_a: HP:0002339 ! Abnormality of the caudate nucleus
+created_by: peter
+creation_date: 2014-01-28T08:19:22Z
+
+[Term]
+id: HP:0012645
+name: Enlarged peripheral nerve
+def: "Increase in size of a peripheral nerve. This finding can be appreciated by palpation along the axis of the nerve." [HPO:probinson]
+comment: The differential diagnosis of enlarged peripheral nerves includes leprosy, eredi-\ntary motor and sensory neuropathy type 1 (about 30% of patients), but not type 2 (the axonal form), some other polyneuropathies, neurofibromatosis, and nerve tumors. A good review is available in Practical Neurology, 2003,3:40-45 by Michael Donaghy (no pubmed id).
+synonym: "ENLARGED PERIPHERAL NERVES" RELATED [HPO:skoehler]
+is_a: HP:0000759 ! Abnormality of the peripheral nervous system
+created_by: peter
+creation_date: 2014-02-01T12:44:16Z
+
+[Term]
+id: HP:0012646
+name: Retractile testis
+def: "A testis that is located at the upper scrotum or lower inguinal canal and that can be made to descend completely into the scrotum without resistance by manual reduction but returns to its original position by the cremasteric reflex." [HPO:probinson, pmid:23061004, pmid:4380054]
+synonym: "Retractile testicle" EXACT []
+is_a: HP:0000035 ! Abnormality of the testis
+created_by: peter
+creation_date: 2014-02-01T12:57:41Z
+
+[Term]
+id: HP:0012647
+name: Abnormal inflammatory response
+def: "Any anomaly of the `inflammatory response` (GO:0006954), a response to injury or infection characterized by local vasodilation, extravasation of plasma into intercellular spaces and accumulation of white blood cells and macrophages." [MONARCH:mhaendel]
+is_a: HP:0010978 ! Abnormality of immune system physiology
+created_by: peter
+creation_date: 2014-02-01T13:25:42Z
+
+[Term]
+id: HP:0012648
+name: Decreased inflammatory response
+def: "An abnormal reduction in the `inflammatory response` (GO:0006954) to injury or infection." [MONARCH:mhaendel]
+is_a: HP:0012647 ! Abnormal inflammatory response
+created_by: peter
+creation_date: 2014-02-01T13:29:24Z
+
+[Term]
+id: HP:0012649
+name: Increased inflammatory response
+def: "A abnormal increase in the `inflammatory response` (GO:0006954) to injury or infection." [MONARCH:mhaendel]
+is_a: HP:0012647 ! Abnormal inflammatory response
+created_by: peter
+creation_date: 2014-02-01T13:29:58Z
+
+[Term]
+id: HP:0012650
+name: Perisylvian polymicrogyria
+def: "An excessive number of small gyri (convolutions) on the surface of the brain in the region surrounding the sylvian fissures." [HPO:probinson, pmid:15159468]
+is_a: HP:0002126 ! Polymicrogyria
+created_by: peter
+creation_date: 2014-02-06T19:47:51Z
+
+[Term]
+id: HP:0012651
+name: Abasia
+def: "Ay severe form of gait ataxia such that an affected person cannot walk at all." [HPO:probinson]
+is_a: HP:0002066 ! Gait ataxia
+created_by: peter
+creation_date: 2014-02-06T19:52:50Z
+
+[Term]
+id: HP:0012652
+name: Exercise-induced asthma
+def: "Asthma attacks following exercise." [HPO:probinson]
+xref: MeSH:D001250 "Asthma, Exercise-Induced"
+is_a: HP:0002099 ! Asthma
+created_by: peter
+creation_date: 2014-02-12T22:42:14Z
+
+[Term]
+id: HP:0012653
+name: Status Asthmaticus
+def: "Severe asthma unresponsive to repeated courses of beta-agonist therapy such as inhaled albuterol, levalbuterol, or subcutaneous epinephrine." [HPO:probinson, pmid:22794687]
+synonym: "Acute severe asthma" EXACT []
+xref: MeSH:D013224 "Status Asthmaticus"
+is_a: HP:0002099 ! Asthma
+created_by: peter
+creation_date: 2014-02-12T22:43:34Z
+
+[Term]
+id: HP:0012654
+name: Abnormal CSF dopamine level
+def: "Abnormal concentration of `dopamine` (CHEBI:18243) in the cerebrospinal fluid (CSF)." [Monarch:mhaendel]
+is_a: HP:0002921 ! Abnormality of the cerebrospinal fluid
+created_by: peter
+creation_date: 2014-02-15T10:35:24Z
+
+[Term]
+id: HP:0012655
+name: Elevated CSF dopamine level
+def: "Increased concentration of `dopamine` (CHEBI:18243) in the cerebrospinal fluid (CSF)." [Monarch:mhaendel]
+is_a: HP:0012654 ! Abnormal CSF dopamine level
+created_by: peter
+creation_date: 2014-02-15T10:36:53Z
+
+[Term]
+id: HP:0012656
+name: Reduced CSF dopamine level
+def: "Decreased concentration of `dopamine` (CHEBI:18243) in the cerebrospinal fluid (CSF)." [Monarch:mhaendel]
+is_a: HP:0012654 ! Abnormal CSF dopamine level
+created_by: peter
+creation_date: 2014-02-15T10:37:27Z
+
+[Term]
+id: HP:0012657
+name: Abnormal brain positron emission tomography
+def: "A functional brain anomaly detectable by positron emission tomography (PET). PET scanning is a method for functional brain imaging, and its measurements reflect the amount of brain activity in the various regions of the brain." [HPO:probinson]
+comment: Note that while structural brain anomalies can cause abnormal brain PET scan results, structural abnormalities are detectable by multiple neuroimaging modalities and should be coded using terms from the hierarchy under 'Abnormality of nervous system morphology' (HP:0012639).
+is_a: HP:0012638 ! Abnormality of nervous system physiology
+created_by: peter
+creation_date: 2014-02-15T11:22:18Z
+
+[Term]
+id: HP:0012658
+name: Abnormal brain FDG positron emission tomography
+def: "An anomaly detectable in [18F]-fluorodeoxyglucose (FDG) positron emission tomography (PET) brain scans. Glucose uptake measured with FDG-PET is a marker of neuronal metabolic activity." [HPO:probinson]
+is_a: HP:0012657 ! Abnormal brain positron emission tomography
+created_by: peter
+creation_date: 2014-02-15T11:29:38Z
+
+[Term]
+id: HP:0012659
+name: Prefrontal hypometabolism in FDG PET
+def: "Reduced uptake of [18F]-fluorodeoxyglucose  (FDG) in the prefrontal cortex as measured by positron emission tomography (PET) brain scan." [HPO:probinson, pmid:23585882]
+comment: Glucose uptake measured with FDG-PET is a marker of neuronal metabolic activity, thus this sign indicates reduced metabolic activity in the prefrontal cortex.
+is_a: HP:0012658 ! Abnormal brain FDG positron emission tomography
+created_by: peter
+creation_date: 2014-02-15T11:33:12Z
+
+[Term]
+id: HP:0012660
+name: Thalamic hypometabolism in FDG PET
+def: "Reduced uptake of [18F]-fluorodeoxyglucose  (FDG) in the thalamus as measured by positron emission tomography (PET) brain scan." [HPO:probinson]
+comment: Glucose uptake measured with FDG-PET is a marker of neuronal metabolic activity, thus this sign indicates reduced metabolic activity in the thalamus.
+is_a: HP:0012658 ! Abnormal brain FDG positron emission tomography
+created_by: peter
+creation_date: 2014-02-15T11:35:25Z
+
+[Term]
+id: HP:0012661
+name: Hypothalamic hypometabolism in FDG PET
+def: "Reduced uptake of [18F]-fluorodeoxyglucose  (FDG) in the hypothalamus as measured by positron emission tomography (PET) brain scan." [HPO:probinson]
+comment: Glucose uptake measured with FDG-PET is a marker of neuronal metabolic activity, thus this sign indicates reduced metabolic activity in the hypothalamus.
+is_a: HP:0012658 ! Abnormal brain FDG positron emission tomography
+created_by: peter
+creation_date: 2014-02-15T11:37:59Z
+
+[Term]
+id: HP:0012662
+name: Parietal hypometabolism in FDG PET
+def: "Reduced uptake of [18F]-fluorodeoxyglucose  (FDG) in the parietal cortex as measured by positron emission tomography (PET) brain scan." [HPO:probinson, pmid:15073255]
+comment: Glucose uptake measured with FDG-PET is a marker of neuronal metabolic activity, thus this sign indicates reduced metabolic activity in the parietal cortex.
+is_a: HP:0012658 ! Abnormal brain FDG positron emission tomography
+created_by: peter
+creation_date: 2014-02-15T11:45:41Z
+
+[Term]
+id: HP:0012663
+name: Mildly reduced ejection fraction
+def: "A small reduction in the fraction of blood pumped from the left ventricle with each cardiac cycle. The normal range in adults is at least 55 percent, and a mild reduction is defined as 45-54 percent." [HPO:probinson, pmid:16376782]
+is_a: HP:0012664 ! Reduced ejection fraction
+created_by: peter
+creation_date: 2014-02-15T13:06:28Z
+
+[Term]
+id: HP:0012664
+name: Reduced ejection fraction
+def: "A diminution of the volumetric fraction of blood pumped out of the ventricle with each cardiac cycle." [HPO:probinson]
+comment: The normal range is at least 55 percent.
+is_a: HP:0003116 ! Abnormal echocardiogram
+created_by: peter
+creation_date: 2014-02-15T13:03:37Z
+
+[Term]
+id: HP:0012665
+name: Moderately reduced ejection fraction
+def: "A medium reduction in the fraction of blood pumped from the left ventricle with each cardiac cycle. The normal range in adults is at least 55 percent, and a moderate reduction is defined as 30-44 percent." [HPO:probinson, pmid:16376782]
+is_a: HP:0012664 ! Reduced ejection fraction
+created_by: peter
+creation_date: 2014-02-15T13:08:33Z
+
+[Term]
+id: HP:0012666
+name: Severely reduced ejection fraction
+def: "A large reduction in the fraction of blood pumped from the left ventricle with each cardiac cycle. The normal range in adults is at least 55 percent, and a moderate reduction is defined as less than 30 percent." [HPO:probinson, pmid:16376782]
+is_a: HP:0012664 ! Reduced ejection fraction
+created_by: peter
+creation_date: 2014-02-15T13:09:02Z
+
+[Term]
+id: HP:0012667
+name: Regional left ventricular wall motion abnormality
+def: "An abnormal motion of a segment of the left ventricle during the cardiac cycle." [HPO:probinson]
+comment: This feature can be appreciated using color kinesis, which tracks the motion of the endocardium in real time throughout systole and results in color-encoded images reflecting the magnitude and timing of endocardial motion.
+is_a: HP:0003116 ! Abnormal echocardiogram
+created_by: peter
+creation_date: 2014-02-15T13:12:48Z
+
+[Term]
+id: HP:0012668
+name: Vasovagal syncope
+def: "Loss of consciousness due to a reduction in blood pressure that is associated with an increase in vagal tone and peripheral vasodilation." [HPO:probinson, MeSH:D019462]
+synonym: "Neurocardiogenic syncope" EXACT []
+synonym: "Reflex syncope" EXACT []
+synonym: "Situational syncope" EXACT []
+xref: MeSH:D019462 "Syncope, Vasovagal"
+is_a: HP:0001279 ! Syncope
+created_by: peter
+creation_date: 2014-02-15T13:33:13Z
+
+[Term]
+id: HP:0012669
+name: Carotid sinus syncope
+def: "An exaggerated response to carotid sinus baroreceptor stimulation resulting in syncope from transient diminished cerebral perfusion." [HPO:probinson]
+comment: Carotid sinus syncope cam be elicited mechanical manipulation of the carotid sinuses (eg, taking pulses in the neck, shaving).
+is_a: HP:0001279 ! Syncope
+created_by: peter
+creation_date: 2014-02-15T13:39:14Z
+
+[Term]
+id: HP:0012670
+name: Orthostatic syncope
+def: "Syncope following a quick change in position from lying down to standing." [HPO:probinson]
+is_a: HP:0001279 ! Syncope
+created_by: peter
+creation_date: 2014-02-15T13:41:57Z
 
 [Term]
 id: HP:0100000
@@ -84898,7 +85190,7 @@ def: "A `neoplasm` (MPATH:218) of the `heart` (FMA:7088)." [HPO:probinson]
 synonym: "Cardiac neoplasia" RELATED []
 synonym: "Cardiac neoplasm" EXACT []
 xref: MeSH:D006338 "Heart Neoplasms"
-is_a: HP:0001627 ! Abnormality of the heart
+is_a: HP:0001627 ! Abnormality of cardiac morphology
 is_a: HP:0011793 ! Neoplasm by anatomical site
 created_by: doelkens
 creation_date: 2010-12-20T07:00:31Z
@@ -85887,7 +86179,7 @@ creation_date: 2010-12-30T09:57:09Z
 [Term]
 id: HP:0100655
 name: Thoracic wall defect
-is_a: HP:0100656 ! Thoracoabdominal wall defects
+is_a: HP:0000765 ! Abnormality of the thorax
 created_by: doelkens
 creation_date: 2010-12-30T10:03:09Z
 
@@ -85895,7 +86187,7 @@ creation_date: 2010-12-30T10:03:09Z
 id: HP:0100656
 name: Thoracoabdominal wall defects
 is_a: HP:0000765 ! Abnormality of the thorax
-is_a: HP:0001438 ! Abnormality of the abdomen
+is_a: HP:0010866 ! Abdominal wall defect
 created_by: doelkens
 creation_date: 2010-12-30T10:04:18Z
 
@@ -88607,6 +88899,7 @@ name: Epidermoid cyst
 def: "The presence of one or more `cysts` (MPATH:62) of the `skin` (FMA:7163)." [HPO:skoehler]
 comment: A cyst is a cavity containing liquid, semisolid, or solid material. An epidermoid cyst is a benign cyst that develops out of ectodermal tissue and consists of a thin layer of squamous epithelium. An epidermoid cyst may or may not be painful or release pus, and are usually noticed as a bump on the skin.
 synonym: "Epidermal inclusion cyst " EXACT []
+synonym: "EPIDERMOID CYSTS" RELATED [HPO:skoehler]
 synonym: "Skin cyst" EXACT []
 xref: MeSH:D004814 "Epidermal Cyst"
 is_a: HP:0011355 ! Localized skin lesion
@@ -88718,6 +89011,7 @@ id: HP:0200055
 name: Small hand
 def: "Disproportionately small hand." [HPO:probinson]
 synonym: "Disproportionately small hands" EXACT []
+synonym: "SMALL HANDS" RELATED [HPO:skoehler]
 xref: SNOMEDCT:299032009 "Small hand"
 xref: UMLS:C0575802 "Small hand"
 is_a: HP:0005927 ! Aplasia/Hypoplasia involving bones of the hand
