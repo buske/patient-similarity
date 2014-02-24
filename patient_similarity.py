@@ -10,8 +10,8 @@ import os
 import sys
 import logging
 
-from math import log, exp, tanh
-from collections import Counter, defaultdict
+from math import log, exp
+from collections import defaultdict
 
 from hpo import HPO
 from mim import MIM
@@ -83,6 +83,7 @@ class PatientComparator:
                 prob_mass = 0.0
                 for descendant in descendants:
                     prob_mass += term_freq.get(descendant, 0)
+
                 if prob_mass > EPS:
                     prob_mass = bound(prob_mass)
                     term_ic[node] = -log(prob_mass)
@@ -93,18 +94,39 @@ class PatientComparator:
         term_ic = get_ics()
         logging.info('IC calculated for {} terms'.format(len(term_ic)))
 
-        prob_cond_parents = {}
+        # Calculate closer conditional IC approximation to handle multiple
+        # parents per node
+        ic_cond_parents = {}
         for term in term_ic:
-            assert term not in prob_cond_parents
-            prob_cond_parents[term] = term_ic[term] - \
-                max([term_ic.get(p, 0) for p in term.parents] + [0])
+            assert term not in ic_cond_parents
+            siblings = None
+            for p in term.parents:
+                if siblings is None:
+                    siblings = set(p.children)
+                else:
+                    siblings.intersection_update(p.children)
+
+            if siblings is None:
+                ic_cond_parents[term] = 0.0
+                logging.info('Missing siblings for term: {!r}'.format(term))
+            else:
+                # Siblings now contains all other siblings to term
+                sibling_prob_mass = 0.0
+                for t in siblings:
+                    if t in term_ic:
+                        sibling_prob_mass += exp(-term_ic[t])
+
+                if sibling_prob_mass < EPS:
+                    ic_cond_parents[term] = 0.0
+                else:
+                    ic_cond_parents[term] = term_ic[term] + log(sibling_prob_mass)
 
         self.hpo = hpo
         self.mim = mim
         self.orphanet = orphanet
         self.term_freq = term_freq
         self.term_ic = term_ic
-        self.prob_cond_parents = prob_cond_parents
+        self.ic_cond_parents = ic_cond_parents
 
     @classmethod
     def get_average_phenotype_frequency(cls, mim, hpo):
@@ -142,7 +164,7 @@ class PatientComparator:
 
     def joint_information_content(self, ancestors):
         """Return the "joint" information content of the given bag of terms"""
-        return sum([self.prob_cond_parents.get(term, 0) for term in ancestors])
+        return sum([self.ic_cond_parents.get(term, 0) for term in ancestors])
 
     def compare(self, patient1, patient2):
         logging.debug('Comparing patients: {}, {}'.format(patient1.id, patient2.id))
@@ -168,7 +190,11 @@ class PatientComparator:
         logging.debug('Patient 1 ic: {:.6f}'.format(p1_ic))
         logging.debug('Patient 2 ic: {:.6f}'.format(p2_ic))
         logging.debug('Shared ic: {:.6f}'.format(shared_ic))
-        harmonic_mean = 2 / (p1_ic / shared_ic + p2_ic / shared_ic)
+        if shared_ic < EPS:
+            harmonic_mean = 0.0
+        else:
+            harmonic_mean = 2 / (p1_ic / shared_ic + p2_ic / shared_ic)
+
         return [harmonic_mean, shared_ic]
         
 class Patient:
