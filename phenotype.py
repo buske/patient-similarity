@@ -25,10 +25,13 @@ class Disease(Phenotype):
 					new_traits.append(self.traits[i].rand_walk(steps))
 		return Patient(new_traits, disease = self)
 
+	def gen_prototypical(self):
+		raise NotImplementedError()
+
 	def show(self):
-		print self.name
+		print(self.name)
 		for t in sorted([t.name for t in self.traits]):
-			print '\t' + t
+			print('\t' + t)
 
 class Patient(Phenotype):
 	def __init__(self, traits = [], disease = None):
@@ -44,6 +47,6 @@ class Patient(Phenotype):
 		return ''.join([t.code + ' ' for t in self.traits])
 	
 	def show(self):
-		print self.disease.name
+		print(self.disease.name)
 		for t in sorted([t.name for t in self.traits]):
-			print '\t' + t
+			print('\t' + t)

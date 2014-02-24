@@ -1,9 +1,9 @@
-import cPickle as pickle
+import pickle as pickle
 from node import *
 import phenotype
 from math import *
 import numpy as np
-import Queue
+import queue
 
 f = open('all_data', 'rb')
 data = pickle.load(f)

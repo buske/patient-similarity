@@ -1,10 +1,10 @@
 from node import *
-import cPickle as pickle
+import pickle as pickle
 import sys
 import re
-import Queue
+import queue
 
-f = open('hp.obo', 'r')
+f = open(sys.argv[1], 'r', encoding='utf-8')
 
 code_to_term = {}
 line = ('','','')
@@ -33,7 +33,11 @@ for code in code_to_term:
 			curr_term.parents[i] = code_to_term[curr_term.parents[i]]
 			curr_term.parents[i].children.append(curr_term)
 
+# Changed by OJB to drop onset and inheritance terms
 hpo_root = code_to_term['HP:0000001']
+#hpo_root = code_to_term['HP:0000118']
+#hpo_root.parents = []
+
 hpo_root.map(Node.set_proper_children)
 for node in hpo_root:
 	node.clean()
@@ -43,7 +47,7 @@ terms = []
 for t in set(code_to_term.values()):
 	t.count = 0
 
-q = Queue.Queue()
+q = queue.Queue()
 q.put(hpo_root)
 
 while not q.empty():
@@ -54,11 +58,26 @@ while not q.empty():
 			q.put(c)
 	terms.append(t)
 
-for t in set(code_to_term.values()):
-	del t.count
 
-for t in terms:
-	print t.name
+for t in set(code_to_term.values()):
+        del t.count
+
+#to_drop = set()
+#for code, t in code_to_term.items():
+#	if t.count == 0 and t is not hpo_root:
+#		to_drop.add(code)
+
+#print('Dropping {} terms not under root'.format(len(to_drop)), file=sys.stderr)
+#for code in to_drop:
+#	del code_to_term[code]
+
+#for t in set(code_to_term.values()):
+#	del t.count
+
+#for t in terms:
+#	print(t.name)
+
+print('Found {} terms'.format(len(terms)))
 
 sys.setrecursionlimit(10000)
 data = {'code_to_term': code_to_term, 'hpo_root': hpo_root, 'terms': terms}

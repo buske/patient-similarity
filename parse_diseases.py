@@ -2,17 +2,17 @@ from node import *
 from phenotype import *
 from hpo_data import *
 from math import *
-import cPickle as pickle
+import pickle as pickle
 import sys
 import re
 
-f = open('phenotype_annotation.tab')
+f = open(sys.argv[1], 'r', encoding='utf-8')
 line = ['']
 name_to_dis = {}
 freq_mods = {'very rare':0.01, 'rare':0.05, 'occasional': 0.075, 'frequent':0.33, 'typical': 0.5, 'variable':0.5, 'common':0.75, 'hallmark':0.9, 'obligate': 1.0}
 default_freq = 0.25
-eps = 10e-10
-percent = re.compile(r"\s*(\d*)\s*%\s*")
+eps = 1e-9
+percent = re.compile(r"\s*([\d.]*)\s*%\s*")
 frac = re.compile(r"\s*(\d*)\s*(of|/)\s*(\d*)\s*")
 
 for l in f:
@@ -26,19 +26,26 @@ for l in f:
 			curr_dis = Disease(line[2])
 			name_to_dis[line[2]] = curr_dis
 			curr_dis.codes = []
-		curr_dis.traits.append(code_to_term[line[4]])
-		curr_dis.codes.append(line[4])
-		freq = line[8]
-		m1=percent.match(freq)
-		m2=frac.match(freq)
-		if m1:
-			curr_dis.freqs.append(float(m1.group(1))/100)
-		elif m2:
-			curr_dis.freqs.append(float(m2.group(1))/float(m2.group(3)))
-		elif freq in freq_mods:
-			curr_dis.freqs.append(freq_mods[freq])
+		try:
+			trait = code_to_term[line[4]]
+		except KeyError:
+			pass
 		else:
-			curr_dis.freqs.append(None)
+			curr_dis.traits.append(trait)
+			curr_dis.codes.append(line[4])
+			freq = line[8].lower()
+			m1=percent.match(freq)
+			m2=frac.match(freq)
+			if m1:
+				curr_dis.freqs.append(float(m1.group(1))/100)
+			elif m2:
+				curr_dis.freqs.append(float(m2.group(1))/float(m2.group(3)))
+			elif freq in freq_mods:
+				curr_dis.freqs.append(freq_mods[freq])
+			else:
+				if freq:
+					print('Couldnt parse: {!r}'.format(freq), file=sys.stderr)
+				curr_dis.freqs.append(None)
 
 for dis in name_to_dis.values():
 	freqs = {}
@@ -56,8 +63,16 @@ for dis in name_to_dis.values():
 	for i in range(len(dis.traits)):
 		dis.traits[i].raw_freq += dis.freqs[i]
 
+
+assert abs(code_to_term['HP:0000032'].raw_freq - 0.25) < 1e-6
+assert abs(code_to_term['HP:0000137'].raw_freq - 0.075) < 1e-6
+assert abs(code_to_term['HP:0000177'].raw_freq - 0.05) < 1e-6
+
+term_codes = []
 for t in terms:
 	t.raw_freq += 0.001
+	term_codes.append(t.code)
+term_codes.sort()
 
 def sd(f):
 	def fp(s):
@@ -85,6 +100,14 @@ def compute_probs():
 		t.freq = t.raw_freq / tot
 		t.freq = min(max(t.freq, eps), 1-eps)
   
+
+	print('Total frequency mass:', tot)
+	for code in term_codes[:5]:
+		t = code_to_term[code]
+		print(code)
+		print(t.raw_freq)
+		print(t.freq)
+
 	#The t.prob is the total probability mass in the descendants of t
 	for t in terms:
 		t.prob = sum([x.freq for x in t.get_descendants()])
@@ -102,10 +125,10 @@ def compute_probs():
 
 compute_probs()
 
-diseases = sorted(list(set(name_to_dis.values())))
-for i in xrange(len(diseases)):
+diseases = [name_to_dis[name] for name in sorted(name_to_dis)]
+for i in range(len(diseases)):
 	diseases[i].id = i
-print "Diseases:", len(name_to_dis)
+print("Diseases:", len(name_to_dis))
 
 sys.setrecursionlimit(100000)
 data = {'code_to_term': code_to_term, 'hpo_root': hpo_root, 'name_to_dis': name_to_dis, 'terms': terms, 'diseases': diseases}

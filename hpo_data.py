@@ -1,4 +1,4 @@
-import cPickle as pickle
+import pickle as pickle
 from node import *
 
 f = open('hpo_data', 'rb')

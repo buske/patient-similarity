@@ -40,8 +40,12 @@ class Node:
 				child.map(f)
 	
 	def set_proper_children(self):
-		if len(self.parents) > 0 and self not in self.parents[0].proper_children:
-			self.parents[0].proper_children.append(self)
+		try:
+			if len(self.parents) > 0 and self not in self.parents[0].proper_children:
+				self.parents[0].proper_children.append(self)
+		except RuntimeError:
+			print(self.code)
+			raise
 	
 	def add_child(self, child):
 		self.children.append(child)
@@ -51,7 +55,7 @@ class Node:
 	def __iter__(self):
 		return next(self)
 
-	def next(self):
+	def __next__(self):
 		yield self
 		for child in self.proper_children:
 			for node in child:
@@ -79,11 +83,11 @@ class Term(Node):
 		self.freq = 0
 
 	def show(self, n=0):
-		print "  "*n + self.name, self.prob
+		print("  "*n + self.name, self.prob)
 		for child in self.children:
 			child.show(n+1)		
 			
 	def show_brief(self):
-		print self.name
+		print(self.name)
 		for child in self.children:
-			print "    " + child.name
+			print("    " + child.name)
