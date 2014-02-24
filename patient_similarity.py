@@ -99,13 +99,6 @@ class PatientComparator:
             prob_cond_parents[term] = term_ic[term] - \
                 max([term_ic.get(p, 0) for p in term.parents] + [0])
 
-        test_id = 'HP:0008773'
-        test_node = hpo.hps[test_id]
-        logging.debug('p({}): {}'.format(test_id, term_freq.get(test_node)))
-        logging.debug('IC({}): {}'.format(test_id, term_ic.get(test_node)))
-        logging.debug('IC({})|p: {}'.format(test_id, prob_cond_parents.get(test_node)))
-
-
         self.hpo = hpo
         self.mim = mim
         self.orphanet = orphanet
@@ -143,13 +136,16 @@ class PatientComparator:
                 ic = 0.0
         return ic
 
-    def patient_information_content(self, patient):
-        """Return the information content of the given patient"""
-        return sum([self.get_term_ic(term) for term in patient.hp_terms])
+    def bag_information_content(self, terms):
+        """Return the information content of the given terms"""
+        return sum([self.get_term_ic(term) for term in terms])
+
+    def joint_information_content(self, ancestors):
+        """Return the "joint" information content of the given bag of terms"""
+        return sum([self.prob_cond_parents.get(term, 0) for term in ancestors])
 
     def compare(self, patient1, patient2):
         logging.debug('Comparing patients: {}, {}'.format(patient1.id, patient2.id))
-
 
         assert patient1.hp_terms and patient2.hp_terms
 
@@ -161,21 +157,13 @@ class PatientComparator:
         for t in patient2.hp_terms:
             logging.debug('  {:.6f}: {} ({})'.format(self.get_term_ic(t), t, t.name))
 
-        p1_ic = self.patient_information_content(patient1)
-        p2_ic = self.patient_information_content(patient2)
-        
-        p1_ancestors = Counter()
-        for hp_term in patient1.hp_terms:
-            p1_ancestors.update(hp_term.ancestors())
-
-        p2_ancestors = Counter()
-        for hp_term in patient2.hp_terms:
-            p2_ancestors.update(hp_term.ancestors())
-
+        p1_ancestors = patient1.ancestors()
+        p2_ancestors = patient2.ancestors()
         common_ancestors = p1_ancestors & p2_ancestors  # min
-        logging.debug('Found {} common ancestors'.format(len(common_ancestors)))
-        shared_ic = sum([count * self.prob_cond_parents.get(term, 0)
-                           for term, count in common_ancestors.items()])
+
+        p1_ic = self.joint_information_content(p1_ancestors)
+        p2_ic = self.joint_information_content(p2_ancestors)
+        shared_ic = self.joint_information_content(common_ancestors)
 
         logging.debug('Patient 1 ic: {:.6f}'.format(p1_ic))
         logging.debug('Patient 2 ic: {:.6f}'.format(p2_ic))
@@ -188,12 +176,22 @@ class Patient:
         self.hp_terms = hp_terms
         self.neg_hp_terms = neg_hp_terms
         self.onset = onset
+        self._ancestors = None
 
     def __repr__(self):
         return self.id
 
     def __lt__(self, o):
         return self.id < o.id
+
+    def ancestors(self):
+        if self._ancestors is None:
+            ancestors = set()
+            for term in self.hp_terms:
+                ancestors.update(term.ancestors())
+            self._ancestors = ancestors
+
+        return self._ancestors
 
     @classmethod
     def iter_from_file(self, filename, hpo):
