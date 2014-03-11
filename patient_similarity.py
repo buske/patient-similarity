@@ -182,7 +182,6 @@ class PatientComparator:
         p1_ancestors = patient1.ancestors()
         p2_ancestors = patient2.ancestors()
         common_ancestors = p1_ancestors & p2_ancestors  # min
-
         p1_ic = self.joint_information_content(p1_ancestors)
         p2_ic = self.joint_information_content(p2_ancestors)
         shared_ic = self.joint_information_content(common_ancestors)
@@ -260,7 +259,8 @@ class Patient:
 
 
 def script(patient_hpo_filename, hpo_filename, disease_phenotype_filename, 
-           orphanet_lookup_filename, orphanet_prevalence_filename, **kwargs):
+           orphanet_lookup_filename, orphanet_prevalence_filename, proto=None, 
+           **kwargs):
     hpo = load_hpo(hpo_filename)
     mim = MIM(disease_phenotype_filename)
     orphanet = Orphanet(orphanet_lookup_filename, orphanet_prevalence_filename)
@@ -269,6 +269,10 @@ def script(patient_hpo_filename, hpo_filename, disease_phenotype_filename,
                 for patient in Patient.iter_from_file(patient_hpo_filename, hpo)
                 if patient.hp_terms]
 
+    if proto:
+        proto = [patient 
+                 for patient in Patient.iter_from_file(proto, hpo)
+                 if patient.hp_terms]
 
     comparator = PatientComparator(hpo, mim, orphanet)
 
@@ -284,6 +288,11 @@ def script(patient_hpo_filename, hpo_filename, disease_phenotype_filename,
                 score = scores[(min(i, j), max(i, j))]
                 print('\t'.join([patients[i].id, patients[j].id, '{:.6f}\t{:.6f}'.format(score[0], score[1])]))
 
+        if proto:
+            for j in range(len(proto)):
+                score = comparator.compare(patients[i], proto[j])
+                print('\t'.join([patients[i].id, proto[j].id, '{:.6f}\t{:.6f}'.format(score[0], score[1])]))
+
 
 def parse_args(args):
     from argparse import ArgumentParser
@@ -296,6 +305,7 @@ def parse_args(args):
     parser.add_argument('orphanet_lookup_filename', metavar='orphanet_lookup')
     parser.add_argument('orphanet_prevalence_filename', metavar='orphanet_prevalence')
     parser.add_argument('--log', dest='loglevel', choices=['DEBUG', 'INFO', 'WARNING', 'ERROR', 'CRITICAL'], default='WARNING')
+    parser.add_argument('--proto', metavar="file", help="hpo file of disease prototypes")
 
     return parser.parse_args(args)
 
