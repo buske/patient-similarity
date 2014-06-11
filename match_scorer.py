@@ -18,7 +18,6 @@ KO_THRESHOLD = 0.87  # between nonframeshift and splicing
 
 def read_ids(filename):
     pheno_ids = {}
-    geno_ids = {}
     ids = {}  # id -> (pheno, geno)
     with open(filename) as ifp:
         for line in ifp:
@@ -33,15 +32,13 @@ def read_ids(filename):
                 logging.error('Found duplicate pheno ID: {}'.format(pheno_id))
                 continue
 
-            assert geno_id not in geno_ids
             assert id not in ids
             pheno_ids[pheno_id] = id
-            geno_ids[geno_id] = id
             ids[id] = (pheno_id, geno_id)
             
 
     logging.info('Found {} complete patients'.format(len(ids)))
-    return pheno_ids, geno_ids, ids
+    return pheno_ids, ids
 
 
 def read_exomizer_vcf(filename):
@@ -162,7 +159,7 @@ def print_match(p1, p2, score, top):
             print('    %.4f: %s (%s)' % (score, gene, inh))
 
 def script(id_lookup, pheno_sim, gene_damage_file, exomiser_dir):
-    pheno_ids, geno_ids, ids = read_ids(id_lookup)
+    pheno_ids, ids = read_ids(id_lookup)
     control_damages = read_gene_damages(gene_damage_file)
 
     patient_damages = defaultdict(dict)
@@ -179,10 +176,10 @@ def script(id_lookup, pheno_sim, gene_damage_file, exomiser_dir):
         matches = [(scores.get((p1, p), 0), p) for p in ids]
         matches.sort(reverse=True)
 
-        id1 = ids[p1][0]
+        id1 = ids[p1][0] or p1
         for score, p2 in matches[:5]:
             top = top_genes(p1, p2, control_damages, patient_damages, scores)
-            id2 = ids[p2][0]
+            id2 = ids[p2][0] or p2
             print_match(id1, id2, score, top)
 
 
