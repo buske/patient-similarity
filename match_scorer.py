@@ -19,7 +19,7 @@ KO_THRESHOLD = 0.87  # between nonframeshift and splicing
 def read_ids(filename):
     pheno_ids = {}
     geno_ids = {}
-    ids = set()
+    ids = {}  # id -> (pheno, geno)
     with open(filename) as ifp:
         for line in ifp:
             line = line.strip()
@@ -29,31 +29,19 @@ def read_ids(filename):
                 # Missing phenotype or genotype data
                 continue
 
-            assert pheno_id not in pheno_ids
+            if pheno_id in pheno_ids:
+                logging.error('Found duplicate pheno ID: {}'.format(pheno_id))
+                continue
+
             assert geno_id not in geno_ids
             assert id not in ids
             pheno_ids[pheno_id] = id
             geno_ids[geno_id] = id
-            ids.add(id)
+            ids[id] = (pheno_id, geno_id)
             
 
     logging.info('Found {} complete patients'.format(len(ids)))
     return pheno_ids, geno_ids, ids
-
-
-def read_causal_genes(filename):
-    causal_genes = {}  # -> (id, gene)
-    with open(filename) as ifp:
-        for line in ifp:
-            line = line.strip()
-            if not line or line.startswith('#'): continue
-            tokens = line.split('\t')
-            if len(tokens) > 1:
-                id, gene = tokens
-                causal_genes[id] = gene            
-
-    logging.info('Found causal gene for {} patients'.format(len(causal_genes)))
-    return causal_genes
 
 
 def read_exomizer_vcf(filename):
@@ -129,16 +117,17 @@ def score_gene(gene, p1, p2, control_damages, patient_damages, sim_scores):
     gene_geno1 = min(p1_damage[1][-1], p2_damage[1][-1])
     gene_geno2 = min(p1_damage[1][-2], p2_damage[1][-2])
 
-    score_dom = 1
-    score_rec = 1
+    gene_score = min((gene_pheno + 0.1) / 0.7, 1)
+    score_dom = gene_score * gene_geno1
+    score_rec = gene_score * gene_geno2
     for other in set(patient_damages) - set([p1, p2]):
         other_damage = patient_damages[other].get(gene)
         if other_damage:
-            pheno_similarity = min(sim_scores[p1, other], sim_scores[p2, other]) + 0.001
-            if other_damage[1][-1] >= gene_geno1:
+            pheno_similarity = max(sim_scores[p1, other], sim_scores[p2, other]) + 0.0001
+            if other_damage[1][-1] + 0.02 >= gene_geno1:
                 # hurt chances of dominant model
                 score_dom *= pheno_similarity
-            if other_damage[1][-2] >= gene_geno2:
+            if other_damage[1][-2] + 0.02 >= gene_geno2:
                 # hurt chances of recessive model
                 score_rec *= pheno_similarity
 
@@ -172,51 +161,30 @@ def print_match(p1, p2, score, top):
         if score >= 0.0001:
             print('    %.4f: %s (%s)' % (score, gene, inh))
 
-def script(id_lookup, pheno_sim, causal_file, gene_damage_file, exomizer_files):
+def script(id_lookup, pheno_sim, gene_damage_file, exomiser_dir):
     pheno_ids, geno_ids, ids = read_ids(id_lookup)
-    causal_genes = read_causal_genes(causal_file)
     control_damages = read_gene_damages(gene_damage_file)
 
     patient_damages = defaultdict(dict)
-    for filename in exomizer_files:
-        patient_damage = read_exomizer_vcf(filename)
-        geno_id = os.path.basename(filename).split('.')[0]
-        id = geno_ids[geno_id]
-        patient_damages[id] = patient_damage
+    for pid, (pheno_id, geno_id) in ids.items():
+        ezr_filename = os.path.join(exomiser_dir, pid + '.ezr')
+        if os.path.isfile(ezr_filename):
+            patient_damage = read_exomizer_vcf(ezr_filename)
+            patient_damages[pid] = patient_damage
 
     logging.info('Read gene damage info for {} patients'.format(len(patient_damages)))
     scores = read_sim(pheno_sim, ids=pheno_ids)
 
-    ids = ["UDP_1019", "UDP_2058", "380_120891B", "UDP_3384", "UDP_2803", "UDP_5730", "464_MT0003", "UDP_4306", "UDP_5316", "474_BC0006", "474_BC0005"]
     for p1 in ids:
-        # p1 = '174_10-462'
         matches = [(scores.get((p1, p), 0), p) for p in ids]
         matches.sort(reverse=True)
 
-        for score, p2 in matches[:2]:
+        id1 = ids[p1][0]
+        for score, p2 in matches[:5]:
             top = top_genes(p1, p2, control_damages, patient_damages, scores)
-            print_match(p1, p2, score, top)
-            # # print('\t'.join(map(str, [p1, p2, z1, z2, pair_sim[1], p1_ic, p2_ic, len(shared_genes)])))
-            
-            # gene_scores = [(score_gene(gene, p1, p2, control_damages, patient_damages), gene) for gene in shared_genes]
-            # gene_scores.sort(reverse=True)
-            # print('\t'.join(map(str, [p1, p2, min_z, '\t'.join(map(str, gene_scores[:5]))])))
-            # For each shared mutated gene, compute score for dominant and recessive modes
-            # depending on damage in the gene within two patients and all others
-            
+            id2 = ids[p2][0]
+            print_match(id1, id2, score, top)
 
-            #p1_damage[1][-2:]
-            #p2_damage[1][-2:]
-
-            # if p1_damage[0] > 2 or p2_damage[0] > 2 or control_damage[0] > 0: continue
-            # if (p1_damage[0] == 0 and p1_damage[1] > 3) or (p2_damage[0] == 0 and p2_damage[1] > 3): continue
-            # if (p1_damage[0] <= 1 and p2_damage[0] <= 1) and control_damage[1] > 0: continue
-            # if (p1_damage[0] == 0 or p2_damage[0] == 0) and control_damage[2] > 0: continue
-            
-            #print('{}\t{}\t{}\t{}'.format(gene, p1_damage, p2_damage, case_damages))
-
-        # break
-    
 
 def parse_args(args):
     from argparse import ArgumentParser
@@ -225,9 +193,8 @@ def parse_args(args):
     parser = ArgumentParser(description=description)
     parser.add_argument("id_lookup")
     parser.add_argument("pheno_sim")
-    parser.add_argument("causal_file", metavar="causal_genes")
     parser.add_argument("gene_damage_file", metavar="gene_damages")
-    parser.add_argument("exomizer_files", metavar="exomizer", nargs='+')
+    parser.add_argument("exomiser_dir")
 
     return parser.parse_args(args)
 
