@@ -50,6 +50,8 @@ class HP(object):
         self.children = set()
         self.alts = set()
         self._parent_hps = set()
+        self._ancestors = None
+
         for line in lines:
             line = line.strip()
             field, value = line.split(': ', 1)
@@ -94,7 +96,9 @@ class HP(object):
         return len(self._parent_hps) == 0
 
     def ancestors(self):
-        return get_ancestors(self)
+        if self._ancestors is None:
+            self._ancestors = get_ancestors(self)
+        return self._ancestors
 
 def _iter_hp_terms(reader):
     term_lines = None
@@ -192,6 +196,7 @@ class HPO(object):
             node.parents.clear()
             node.children.clear()
             node._parent_hps.intersection_update(safe_hps)
+            node._ancestors = None
 
         # Re-link
         for node in safe_nodes:
