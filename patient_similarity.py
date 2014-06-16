@@ -166,25 +166,62 @@ class PatientComparator:
         """Return the "joint" information content of the given bag of terms"""
         return sum([self.ic_cond_parents.get(term, 0) for term in ancestors])
 
+    def pretty_similarity(self, patient1, patient2):
+        p1_terms = patient1.hp_terms
+        p2_terms = patient2.hp_terms
+        assert p1_terms and p2_terms
+
+        p1_ancestors = patient1.ancestors()
+        p2_ancestors = patient2.ancestors()
+        common_ancestors = p1_ancestors & p2_ancestors  # min
+        
+        
+        # Find max-ic ancestor
+        score, cat = max([self.get_term_ic(t), t) for t in common_ancestors])
+        print(score, cat)
+
     def compare(self, patient1, patient2):
         logging.debug('Comparing patients: {}, {}'.format(patient1.id, patient2.id))
 
-        assert patient1.hp_terms and patient2.hp_terms
+        p1_terms = patient1.hp_terms
+        p2_terms = patient2.hp_terms
+        assert p1_terms and p2_terms
 
         logging.debug('Patient 1 terms and IC')
-        for t in patient1.hp_terms:
+        for t in p1_terms:
             logging.debug('  {:.6f}: {} ({})'.format(self.get_term_ic(t), t, t.name))
 
         logging.debug('Patient 2 terms and IC')
-        for t in patient2.hp_terms:
+        for t in p2_terms:
             logging.debug('  {:.6f}: {} ({})'.format(self.get_term_ic(t), t, t.name))
 
         p1_ancestors = patient1.ancestors()
         p2_ancestors = patient2.ancestors()
         common_ancestors = p1_ancestors & p2_ancestors  # min
+        all_ancestors = p1_ancestors | p2_ancestors  # max
         p1_ic = self.joint_information_content(p1_ancestors)
         p2_ic = self.joint_information_content(p2_ancestors)
         shared_ic = self.joint_information_content(common_ancestors)
+
+        jaccard = len(common_ancestors) / len(all_ancestors)
+
+        def owl_score(t1, t2):
+            return max([self.get_term_ic(t) for t in t1.ancestors() & t2.ancestors()])
+            
+        owl_scores = [[owl_score(t1, t2) 
+                       for t1 in p1_terms]
+                      for t2 in p2_terms]
+        row_max = [max(row) for row in owl_scores]
+        col_max = [max([row[i] for row in owl_scores]) for i in range(len(owl_scores[0]))]
+        owl_max_score = max(row_max)
+        owl_avg_score = (sum(row_max) + sum(col_max)) / (len(row_max) + len(col_max))
+        opt_p1_scores = [self.get_term_ic(t) for t in p1_terms]
+        opt_max_score = max(opt_p1_scores)
+        opt_avg_score = sum(opt_p1_scores) / len(opt_p1_scores)
+        
+        owl_max_ps = 100 * owl_max_score / opt_max_score
+        owl_avg_ps = 100 * owl_avg_score / opt_avg_score
+        owl_combined_score = 0.5 * (owl_max_ps + owl_avg_ps)
 
         logging.debug('Patient 1 ic: {:.6f}'.format(p1_ic))
         logging.debug('Patient 2 ic: {:.6f}'.format(p2_ic))
@@ -194,7 +231,7 @@ class PatientComparator:
         else:
             harmonic_mean = 2 / (p1_ic / shared_ic + p2_ic / shared_ic)
 
-        return [harmonic_mean, shared_ic]
+        return (harmonic_mean, shared_ic, jaccard, owl_max_ps, owl_avg_ps, owl_combined_score)
         
 class Patient:
     def __init__(self, id, hp_terms, neg_hp_terms=None, onset=None):
@@ -286,12 +323,14 @@ def script(patient_hpo_filename, hpo_filename, disease_phenotype_filename,
         for j in range(len(patients)):
             if i != j:
                 score = scores[(min(i, j), max(i, j))]
-                print('\t'.join([patients[i].id, patients[j].id, '{:.6f}\t{:.6f}'.format(score[0], score[1])]))
+                score_str = ['{:.6f}'.format(s) for s in score]
+                print('\t'.join([patients[i].id, patients[j].id] + score_str))
 
         if proto:
             for j in range(len(proto)):
                 score = comparator.compare(patients[i], proto[j])
-                print('\t'.join([patients[i].id, proto[j].id, '{:.6f}\t{:.6f}'.format(score[0], score[1])]))
+                score_str = ['{:.6f}'.format(s) for s in score]
+                print('\t'.join([patients[i].id, proto[j].id] + score_str))
 
 
 def parse_args(args):
