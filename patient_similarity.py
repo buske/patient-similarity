@@ -166,19 +166,42 @@ class PatientComparator:
         """Return the "joint" information content of the given bag of terms"""
         return sum([self.ic_cond_parents.get(term, 0) for term in ancestors])
 
-    def pretty_similarity(self, patient1, patient2):
-        p1_terms = patient1.hp_terms
-        p2_terms = patient2.hp_terms
+    def similarity_breakdown(self, patient1, patient2):
+        p1_terms = set(patient1.hp_terms)
+        p2_terms = set(patient2.hp_terms)
         assert p1_terms and p2_terms
 
-        p1_ancestors = patient1.ancestors()
-        p2_ancestors = patient2.ancestors()
-        common_ancestors = p1_ancestors & p2_ancestors  # min
-        
-        
-        # Find max-ic ancestor
-        score, cat = max([self.get_term_ic(t), t) for t in common_ancestors])
-        print(score, cat)
+        logging.info('Comparing patients: {}, {}'.format(patient1.id, patient2.id))
+        logging.info('Patient 1 terms and IC')
+        for t in p1_terms:
+            logging.info('  {:.6f}: {} ({})'.format(self.get_term_ic(t), t, t.name))
+
+        logging.info('Patient 2 terms and IC')
+        for t in p2_terms:
+            logging.info('  {:.6f}: {} ({})'.format(self.get_term_ic(t), t, t.name))
+
+        clusters = []
+        while p1_terms and p2_terms:
+            p1_ancestors = set().union(*[t.ancestors() for t in p1_terms])
+            p2_ancestors = set().union(*[t.ancestors() for t in p2_terms])
+            common_ancestors = p1_ancestors & p2_ancestors
+
+            # Find max-ic ancestor
+            score, group_root = max([(self.get_term_ic(t), t) for t in common_ancestors])
+
+            # Pop all terms with that as ancestor
+            matched1 = set([t for t in p1_terms if group_root in t.ancestors()])
+            matched2 = set([t for t in p2_terms if group_root in t.ancestors()])
+            p1_terms.difference_update(matched1)
+            p2_terms.difference_update(matched2)
+            clusters.append((score, group_root, matched1, matched2))
+
+        if p1_terms:
+            clusters.append((0, None, p1_terms, []))
+        elif p2_terms:
+            clusters.append((0, None, [], p2_terms))
+
+        return clusters
 
     def compare(self, patient1, patient2):
         logging.debug('Comparing patients: {}, {}'.format(patient1.id, patient2.id))
