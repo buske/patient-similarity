@@ -300,15 +300,15 @@ class Patient:
                 id = entry['id']
                 hp_terms = entry.get('hps', [])
                 if hp_terms:
-                    hp_terms = resolve_terms(hp_terms.split(';'))
+                    hp_terms = resolve_terms(hp_terms.split(','))
 
                 neg_hp_terms = entry.get('no_hps', [])
                 if neg_hp_terms:
-                    neg_hp_terms = resolve_terms(neg_hp_terms.split(';'))
+                    neg_hp_terms = resolve_terms(neg_hp_terms.split(','))
                     
                 onset = entry.get('onset')
                 if onset:
-                    onset = resolve_terms(onset.split(';'))
+                    onset = resolve_terms(onset.split(','))
                     
                 yield Patient(id, hp_terms, neg_hp_terms)
 
