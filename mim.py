@@ -22,8 +22,32 @@ FREQUENCIES = {'very rare':  0.01,
                'common':     0.75, 
                'hallmark':   0.9, 
                'obligate':   1.0}
-fraction_frequency_re = re.compile(r'of|/')
 
+def parse_frequency(s, default=None, fraction_frequency_re = re.compile(r'of|/')):
+    """Return float parsed frequency or default if problem or absent"""
+    s = s.lower()
+    if not s:
+        freq = default
+    elif s in FREQUENCIES:
+        freq = FREQUENCIES[s]
+    elif s.endswith('%'):
+        s = s.replace('%', '')
+        if '-' in s:
+            # Average any frequency ranges
+            low, high = s.split('-')
+            freq = (float(low) + float(high)) / 2 / 100
+        else:
+            freq = float(s) / 100
+    else:
+        try:
+            num, denom = fraction_frequency_re.split(s)
+        except:
+            logging.error("Error parsing frequency: {!r}".format(s))
+            freq = default
+        else:
+            freq = float(num) / float(denom)
+
+    return freq
 
 class Disease:
     def __init__(self, db, id, name, phenotype_freqs):
@@ -63,32 +87,6 @@ class MIM:
             if cur_disease:
                 yield cur_disease, cur_lines
 
-    @classmethod
-    def parse_frequency(cls, s, default=None):
-        """Return float parsed frequency or default if problem or absent"""
-        s = s.lower()
-        if not s:
-            freq = default
-        elif s in FREQUENCIES:
-            freq = FREQUENCIES[s]
-        elif s.endswith('%'):
-            s = s.replace('%', '')
-            if '-' in s:
-                # Average any frequency ranges
-                low, high = s.split('-')
-                freq = (float(low) + float(high)) / 2 / 100
-            else:
-                freq = float(s) / 100
-        else:
-            try:
-                num, denom = fraction_frequency_re.split(s)
-            except:
-                logging.error("Error parsing frequency: {!r}".format(s))
-                freq = default
-            else:
-                freq = float(num) / float(denom)
-
-        return freq
 
     @classmethod
     def iter_diseases(cls, filename, default_freq=None):
@@ -97,7 +95,7 @@ class MIM:
             raw_phenotypes = defaultdict(list)
             name = None
             for tokens in tokens_list:
-                freq = cls.parse_frequency(tokens[8])
+                freq = parse_frequency(tokens[8])
                 hp_term = tokens[4].strip()
                 raw_phenotypes[hp_term].append(freq)
                 if not name:
