@@ -170,19 +170,17 @@ class HPOIC:
     
     @classmethod
     def get_link_strengths(cls, root, term_ic):
-        # Calculate closer link strength (conditional IC) approximation to handle
-        # multiple parents per node
         eps = EPS
         lss = {}
-        for term in term_ic:
-            assert term not in lss
-            ls = 0
-            if term.parents:
-                ic = term_ic[term]
-                ls = ic - max([term_ic[p] for p in term.parents])
+#         for term in term_ic:
+#             assert term not in lss
+#             ls = 0
+#             if term.parents:
+#                 ic = term_ic[term]
+#                 ls = ic - max([term_ic[p] for p in term.parents])
 
-            lss[term] = ls
-            assert ls >= -eps, ls
+#             lss[term] = ls
+#             assert ls >= -eps, ls
 
 #         def recurse(node):
 #             if node in term_ic:
@@ -200,34 +198,39 @@ class HPOIC:
 
 #         recurse(root)
 
-#         for term, ic in term_ic.items():
-#             assert term not in lss
-#             if len(term.parents) == 1:
-#                 ls = term_ic[next(iter(term.parents))] - ic
+        # P(term&parents) = P(term|parents) P(parents)
+        # P(term|parents) = P(term&parents) / P(parents)
+        # P(parents) = probmass(descendants)
+        for term, ic in term_ic.items():
+            assert term not in lss
+            if not term.parents:
+                ls = 0.0
+            elif len(term.parents) == 1:
+                ls = ic - term_ic[next(iter(term.parents))]
+            else:
+                siblings = None
+                for p in term.parents:
+                    if siblings is None:
+                        siblings = set(p.children)
+                    else:
+                        siblings.intersection_update(p.children)
 
-            
-#             siblings = None
-#             for p in term.parents:
-#                 if siblings is None:
-#                     siblings = set(p.children)
-#                 else:
-#                     siblings.intersection_update(p.children)
+                assert siblings
+                # Siblings now contains all other siblings to term (+ self)
+                sibling_prob_mass = 0.0
+                for t in siblings:
+                    if t in term_ic:
+                        sibling_prob_mass += exp(-term_ic[t])
 
-#             if siblings is None:
-#                 lss[term] = 0.0
-#                 assert term.is_root(), 'Missing siblings for term: {!r}'.format(term)
-#             else:
-#                 # Siblings now contains all other siblings to term (+ self)
-#                 sibling_prob_mass = 0.0
-#                 for t in siblings:
-#                     if t in term_ic:
-#                         sibling_prob_mass += exp(-term_ic[t])
-
-#                 if sibling_prob_mass < eps:
-#                     lss[term] = 0.0
-#                 else:
-#                     lss[term] = term_ic[term] + log(sibling_prob_mass)
-#                     assert lss[term] > 0
+                if sibling_prob_mass < eps:
+                    ls = 0.0
+                else:
+                    ls = ic + log(sibling_prob_mass)
+                    if abs(ls) < eps:
+                        ls = 0
+                    assert ls >= 0
+                        
+            lss[term] = ls
 
         return lss
 
