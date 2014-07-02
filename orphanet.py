@@ -31,13 +31,18 @@ class Orphanet:
         lookup = {}  # orphanet -> omim
         for disorder in root.findall('.//Disorder'):
             orphanum = disorder.find('OrphaNumber').text
+            omim = None
             for ref in disorder.findall('./ExternalReferenceList/ExternalReference'):
                 if ref.find('Source').text == 'OMIM':
-                    omim = ref.find('Reference').text
-                    break
+                    if omim is None:
+                        omim = ref.find('Reference').text
+                    else:
+                        omim = None
+                        break
 
             assert orphanum not in lookup
-            lookup[orphanum] = omim
+            if omim is not None:
+                lookup[orphanum] = omim
 
         logging.info('Found {:d} Orphanet->OMIM entries'.format(len(lookup)))
         return lookup
