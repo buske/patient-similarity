@@ -6,11 +6,8 @@ Given all the information for a pair of patients, computer a match score, with g
 
 import sys
 import os
-import math
 import logging
 from collections import defaultdict
-from itertools import combinations, product
-from numpy import array
 
 KO_THRESHOLD = 0.87  # between nonframeshift and splicing
 
@@ -78,6 +75,19 @@ def read_sim(filename, ids={}):
     logging.info('Read similarity scores for {} pairs'.format(len(sim_scores)))
     return sim_scores
 
+def read_pheno_to_geno_file(filename):
+    pheno_to_geno = {}
+    with open(filename) as ifp:
+        for line in ifp:
+            line = line.strip()
+            if not line or line.startswith('#'): continue
+            tokens = line.split('\t')
+            pid, pheno, geno = tokens[:3]
+            assert pheno not in pheno_to_geno
+            pheno_to_geno[pheno] = geno
+
+    return pheno_to_geno
+
 def score_gene(gene, p1, p2, patient_damages, sim_scores, 
                inheritance=None, control_damage=None):
     p1_damage = patient_damages[p1][gene]
@@ -105,11 +115,11 @@ def score_gene(gene, p1, p2, patient_damages, sim_scores,
         # Use 1000gp as control damage              KOhom KOhet DMGhom DMGhet
         control_gene_damage = control_damage.get(gene, [0, 0, 0, 0])
         score_dom /= control_gene_damage[1] + 1
-        if gene_geno1 < KO_THRESHOLD:
+        if geno_1st < KO_THRESHOLD:
             score_dom /= control_gene_damage[3] + 1
 
         score_rec /= control_gene_damage[0] + 1
-        if gene_geno2 < KO_THRESHOLD:
+        if geno_2nd < KO_THRESHOLD:
             score_rec /= control_gene_damage[2] +1
 
     if not inheritance:
@@ -147,7 +157,8 @@ def top_genes(p1, p2, patient_damages, sim_scores, inheritance=None,
         scores.append((score, gene))
 
     #scores.sort(reverse=True)
-    return max(scores)
+    if scores:
+        return max(scores)
 
 def print_match(p1, p2, score, top):
     print('%s <-> %s: %.4f' % (p1, p2, score))
@@ -156,7 +167,7 @@ def print_match(p1, p2, score, top):
         if score >= 0.0001:
             print('    %.4f: %s (%s)' % (score, gene, inh))
 
-def script(pheno_sim, exomiser_dir, inheritance=None,
+def script(pheno_sim, exomiser_dir, inheritance=None, id_file=None,
            control_damage_file=None, method=None):
     pheno_scores = read_sim(pheno_sim)
     pair_scores = {}
@@ -166,16 +177,25 @@ def script(pheno_sim, exomiser_dir, inheritance=None,
 
     if control_damage_file:
         control_damage = read_gene_damages(control_damage_file)
-        logging.info('Read control damage info from: {}'.format(control_damage_eile))
+        logging.info('Read control damage info: {}'.format(control_damage_file))
     else:
         control_damage = None
 
+    if id_file:
+        pheno_to_geno = read_pheno_to_geno_file(id_file)
+        logging.info('Read patient IDs: {}'.format(id_file))
+    else:
+        pheno_to_geno = {}
+
     patient_damages = defaultdict(dict)
     for pid in pheno_scores:
-        ezr_filename = os.path.join(exomiser_dir, pid + '.ezr')
+        geno_id = pheno_to_geno.get(pid, pid)
+        ezr_filename = os.path.join(exomiser_dir, geno_id + '.ezr')
         if os.path.isfile(ezr_filename):
             patient_damage = read_exomizer_vcf(ezr_filename)
             patient_damages[pid] = patient_damage
+        else:
+            logging.error('Missing EZR for: {}'.format(pid))
 
     logging.info('Read gene damage info for {} patients'.format(len(patient_damages)))
     logging.info('Using inheritance: {}'.format(inheritance))
@@ -188,7 +208,8 @@ def script(pheno_sim, exomiser_dir, inheritance=None,
         top = top_genes(p1, p2, patient_damages, pair_scores,
                         inheritance=inheritance, control_damage=control_damage,
                         method=method)
-        print('{}\t{}\t{}\t{:.8f}'.format(p1, p2, top[1], top[0]))
+        top_score, top_gene = top if top else (float('nan'), '')
+        print('{}\t{}\t{}\t{:.8f}'.format(p1, p2, top_gene, top_score))
 
 
 def parse_args(args):
@@ -203,6 +224,7 @@ def parse_args(args):
     parser.add_argument('--method', default=None,
                         choices=['avg', 'pc'])
     parser.add_argument("--control-damage-file")
+    parser.add_argument("--id-file", default=None)
 
     return parser.parse_args(args)
 
