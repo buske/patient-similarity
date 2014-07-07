@@ -15,7 +15,7 @@ from numpy import array
 KO_THRESHOLD = 0.87  # between nonframeshift and splicing
 
 def read_exomizer_vcf(filename):
-    gene_scores = defaultdict(lambda: [None, []])  # gene -> (pheno, variant_scores)
+    gene_scores = defaultdict(lambda: [None, [], None])  # gene -> (pheno, variant_scores, combined_score)
     with open(filename) as ifp:
         for line in ifp:
             line = line.strip()
@@ -35,9 +35,10 @@ def read_exomizer_vcf(filename):
             gene = info['GENE']
             pheno = float(info['PHENO_SCORE'])
             geno = float(info['VARIANT_SCORE'])
-
+            combined = float(info['COMBINED_SCORE'])
             gene_scores[gene][0] = pheno
             gene_scores[gene][1].extend([geno] * n_alleles)
+            gene_scores[gene][2] = combined
 
     for gene in gene_scores:
         # Sort and add a zero so every one has at least 2 values
@@ -112,7 +113,7 @@ def score_gene(gene, p1, p2, patient_damages, sim_scores,
             score_rec /= control_gene_damage[2] +1
 
     if not inheritance:
-        return max((score_dom, 'D'), (score_rec, 'r'))
+        return max(score_dom, score_rec)
     elif inheritance == 'AD':
         return score_dom
     elif inheritance == 'AR':
@@ -122,15 +123,12 @@ def score_gene(gene, p1, p2, patient_damages, sim_scores,
 
 def average_score(gene, p1, p2, patient_damages, sim_scores,
                   inheritance=None, control_damage=None):
-    assert inheritance == 'AD'
     p1_damage = patient_damages[p1][gene]
     p2_damage = patient_damages[p2][gene]
-    gene_pheno = (p1_damage[0] + p2_damage[0]) / 2
-    gene_geno = (p1_damage[1][0] + p2_damage[1][0]) / 2
-    return (gene_pheno + gene_geno) / 2
+    return (p1_damage[2] + p2_damage[2]) / 2
 
 def top_genes(p1, p2, patient_damages, sim_scores, inheritance=None,
-              control_damage=None, method='avg'):
+              control_damage=None, method=None):
     p1_genes = patient_damages[p1]
     p2_genes = patient_damages[p2]
     shared_genes = set(p1_genes) & set(p2_genes)
@@ -159,7 +157,7 @@ def print_match(p1, p2, score, top):
             print('    %.4f: %s (%s)' % (score, gene, inh))
 
 def script(pheno_sim, exomiser_dir, inheritance=None,
-           control_damage_file=None, method='avg'):
+           control_damage_file=None, method=None):
     pheno_scores = read_sim(pheno_sim)
     pair_scores = {}
     for p1, matches in pheno_scores.items():
@@ -168,6 +166,7 @@ def script(pheno_sim, exomiser_dir, inheritance=None,
 
     if control_damage_file:
         control_damage = read_gene_damages(control_damage_file)
+        logging.info('Read control damage info from: {}'.format(control_damage_eile))
     else:
         control_damage = None
 
@@ -179,6 +178,7 @@ def script(pheno_sim, exomiser_dir, inheritance=None,
             patient_damages[pid] = patient_damage
 
     logging.info('Read gene damage info for {} patients'.format(len(patient_damages)))
+    logging.info('Using inheritance: {}'.format(inheritance))
 
     for p1 in sorted(pheno_scores):
         matches = pheno_scores[p1]
@@ -198,9 +198,9 @@ def parse_args(args):
     parser = ArgumentParser(description=description)
     parser.add_argument("pheno_sim")
     parser.add_argument("exomiser_dir")
-    parser.add_argument('--inheritance', default='AD',
+    parser.add_argument('-I', '--inheritance', default=None,
                         choices=['AD', 'AR'])
-    parser.add_argument('--method', default='avg',
+    parser.add_argument('--method', default=None,
                         choices=['avg', 'pc'])
     parser.add_argument("--control-damage-file")
 
