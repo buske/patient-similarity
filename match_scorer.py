@@ -7,6 +7,8 @@ Given all the information for a pair of patients, computer a match score, with g
 import sys
 import os
 import logging
+import csv
+
 from collections import defaultdict
 
 KO_THRESHOLD = 0.87  # between nonframeshift and splicing
@@ -78,13 +80,13 @@ def read_sim(filename, ids={}):
 def read_pheno_to_geno_file(filename):
     pheno_to_geno = {}
     with open(filename) as ifp:
-        for line in ifp:
-            line = line.strip()
-            if not line or line.startswith('#'): continue
-            tokens = line.split('\t')
-            pid, pheno, geno = tokens[:3]
-            assert pheno not in pheno_to_geno
-            pheno_to_geno[pheno] = geno
+        reader = csv.DictReader(ifp, delimiter=',')
+        for row in reader:
+            pid = row['Report ID'].strip()
+            extern_id = row['Identifier'].strip()
+            if not extern_id: continue
+            assert extern_id not in pheno_to_geno
+            pheno_to_geno[extern_id] = pid
 
     return pheno_to_geno
 
