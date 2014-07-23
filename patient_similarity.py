@@ -265,8 +265,8 @@ class HPOIC:
         return ic
 
     def information_content(self, terms):
-        """Return the information content of the given terms"""
-        return sum([self.get_term_ic(term) for term in terms])
+        """Return the information content of the given terms, without backoff"""
+        return sum([self.term_ic.get(term, 0) for term in terms])
 
     def ls_information_content(self, ancestors):
         """Return the "joint" information content of the given bag of terms"""
