@@ -1,10 +1,12 @@
 #!/usr/bin/env python
 
 """
-
+Compute phenotypic similarity between all pairs of patients in patients.hpo. 
+A number of different similarity measures are supported, specifiable with
+the --score option.
 """
 
-__author__ = 'Orion Buske'
+__author__ = 'Orion Buske (buske@cs.toronto.edu)'
 
 import os
 import sys
@@ -22,7 +24,7 @@ EPS = 1e-9
 
 def load_hpo(hpo_filename):
     hpo = HPO(hpo_filename)
-    #hpo.filter_to_descendants('HP:0000001')
+    # Only use phenotypic abnormalities
     hpo.filter_to_descendants('HP:0000118')
     logging.info('Found {} terms'.format(len(hpo)))
     return hpo
@@ -50,8 +52,6 @@ class HPOIC:
         lss = self.get_link_strengths(hpo.root, term_ic)
         logging.info('Link strength calculated for {}/{} terms'.format(len(lss), len(hpo)))
 
-        t = hpo['HP:0000291']
-        logging.info('{}: {}, {}'.format(t, term_ic[t], sum([lss[x] for x in t.ancestors() - set([t])])))
         for p in t.parents:
             logging.info('  {}: {}'.format(p, term_ic[p]))
             for c in p.children:
@@ -172,31 +172,6 @@ class HPOIC:
     def get_link_strengths(cls, root, term_ic):
         eps = EPS
         lss = {}
-#         for term in term_ic:
-#             assert term not in lss
-#             ls = 0
-#             if term.parents:
-#                 ic = term_ic[term]
-#                 ls = ic - max([term_ic[p] for p in term.parents])
-
-#             lss[term] = ls
-#             assert ls >= -eps, ls
-
-#         def recurse(node):
-#             if node in term_ic:
-#                 ancestor_ic = 0
-#                 for a in node.ancestors():
-#                     if a != node:
-#                         try:
-#                             ancestor_ic += lss[a]
-#                         except KeyError:
-#                             return
-
-#                 lss[node] = term_ic[node] - ancestor_ic
-#                 for child in node.children:
-#                     recurse(child)
-
-#         recurse(root)
 
         # P(term&parents) = P(term|parents) P(parents)
         # P(term|parents) = P(term&parents) / P(parents)
