@@ -338,6 +338,9 @@ def compare_patients(hpoic, patient1, patient2, scores=None):
     if not scores or 'simgic' in scores:
         out['simgic'] = hpoic.information_content(common_ancestors) / hpoic.information_content(all_ancestors)
 
+    if not scores or 'icca' in scores:
+        out['icca'] = hpoic.information_content(common_ancestors)
+
     if not scores or 'jz' in scores:
         p1_ancestor_counts = ancestor_counts(p1_terms)
         p2_ancestor_counts = ancestor_counts(p2_terms)
@@ -553,7 +556,7 @@ def parse_args(args):
     parser.add_argument('--log', dest='loglevel', choices=['DEBUG', 'INFO', 'WARNING', 'ERROR', 'CRITICAL'], default='WARNING')
     parser.add_argument('--proto', metavar="file", help="Hpo file of disease prototypes to compare against as well")
     parser.add_argument('-s', '--score', dest='scores', action='append', default=[],
-                        choices=['jaccard', 'resnik', 'lin', 'jc', 'owlsim', 'ob', 'jz', 'ui', 'simgic'],
+                        choices=['jaccard', 'resnik', 'lin', 'jc', 'owlsim', 'ob', 'jz', 'ui', 'simgic', 'icca'],
                         help='Include this score in the output for each pair of patients')
 
     return parser.parse_args(args)
