@@ -17,8 +17,6 @@ class HPError(Exception):
 class HPObsoleteError(HPError):
     pass
 
-
-
 def get_descendants(root, acc=None):
     """Add to acc all descendants of root"""
     if acc is None:
@@ -37,7 +35,6 @@ def get_ancestors(root, acc=None):
     return acc
 
 
-
 class HP(object):
     """HPO graph node
 
@@ -53,8 +50,6 @@ class HP(object):
         self.children = set()
         self.alts = set()
         self._parent_hps = set()
-        self._ancestors = None
-
         for line in lines:
             line = line.strip()
             field, value = line.split(': ', 1)
@@ -83,13 +78,10 @@ class HP(object):
             raise
 
     def __str__(self):
-        return '{}: ({})'.format(self.id, self.name)
+        return str(self.id)
 
     def __repr__(self):
         return str(self)
-
-    def __lt__(self, o):
-        return self.id < o.id
 
     def link(self, hps):
         """Link to objects for parents and children, given lookup dict"""
@@ -102,9 +94,7 @@ class HP(object):
         return len(self._parent_hps) == 0
 
     def ancestors(self):
-        if self._ancestors is None:
-            self._ancestors = get_ancestors(self)
-        return self._ancestors
+        return get_ancestors(self)
 
 def _iter_hp_terms(reader):
     term_lines = None
@@ -202,7 +192,6 @@ class HPO(object):
             node.parents.clear()
             node.children.clear()
             node._parent_hps.intersection_update(safe_hps)
-            node._ancestors = None
 
         # Re-link
         for node in safe_nodes:
@@ -221,7 +210,18 @@ class HPO(object):
     def __len__(self):
         return len(set(self.hps.values()))
 
+    def descendant_terms(self, root_hp):
+        root = self.hps[root_hp]
+        
+        descendants = get_descendants(root)
+        terms = set()
+        for node in descendants:
+            terms.add(node.id)
+            terms.update(node.alts)
 
+        return terms
+
+        
 def script(hpo_filename):
     hpo = HPO(hpo_filename)
     hpo.filter_to_descendants('HP:0000118')
