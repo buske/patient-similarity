@@ -14,6 +14,7 @@ import logging
 from collections import defaultdict
 import xml.etree.ElementTree as ET
 
+logger = logging.getLogger(__name__)
 
 class Orphanet:
     def __init__(self, lookup_filename, prevalence_filename):
@@ -39,7 +40,7 @@ class Orphanet:
             assert orphanum not in lookup
             lookup[orphanum] = omim
 
-        logging.info('Found {:d} Orphanet->OMIM entries'.format(len(lookup)))
+        logger.info('Found {:d} Orphanet->OMIM entries'.format(len(lookup)))
         return lookup
 
     @classmethod
@@ -82,7 +83,7 @@ class Orphanet:
 
             prevalence[id] = prev
 
-        logging.info('Found {:d} prevalences ({:d} dropped)'.format(len(prevalence), n_total - len(prevalence)))
+        logger.info('Found {:d} prevalences ({:d} dropped)'.format(len(prevalence), n_total - len(prevalence)))
         return prevalence
 
 

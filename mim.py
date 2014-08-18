@@ -24,6 +24,7 @@ FREQUENCIES = {'very rare':  0.01,
                'obligate':   1.0}
 fraction_frequency_re = re.compile(r'of|/')
 
+logger = logging.getLogger(__name__)
 
 class Disease:
     def __init__(self, db, id, name, phenotype_freqs):
@@ -36,7 +37,7 @@ class MIM:
     def __init__(self, filename):
         self.diseases = list(self.iter_diseases(filename))
         for i in range(5):
-            logging.debug(self.diseases[i].__dict__)
+            logger.debug(self.diseases[i].__dict__)
 
     def __iter__(self):
         return iter(self.diseases)
@@ -83,7 +84,7 @@ class MIM:
             try:
                 num, denom = fraction_frequency_re.split(s)
             except:
-                logging.error("Error parsing frequency: {!r}".format(s))
+                logger.error("Error parsing frequency: {!r}".format(s))
                 freq = default
             else:
                 freq = float(num) / float(denom)
