@@ -37,7 +37,7 @@ def get_ancestors(root, acc=None):
     return acc
 
 
-class HP(object):
+class HPNode(object):
     """HPO graph node
 
     Attributes:
@@ -138,7 +138,7 @@ class HPO(object):
             
             for lines in _iter_hp_terms(ifp):
                 try:
-                    hp = HP(lines)
+                    hp = HPNode(lines)
                 except HPError:
                     continue
                 
