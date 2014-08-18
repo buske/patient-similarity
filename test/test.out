@@ -1,7 +1,7 @@
-#A	B	simgic	simgic_ls
-FHS 1	FHS 2	0.142661	0.199402
-FHS 1	Dubowitz 1	0.194089	0.245725
-FHS 1	Dubowitz 2	0.169846	0.279501
-FHS 2	Dubowitz 1	0.122301	0.159499
-FHS 2	Dubowitz 2	0.163740	0.244134
-Dubowitz 1	Dubowitz 2	0.294508	0.348056
+#A	B	simgic
+FHS 1	FHS 2	0.142661
+FHS 1	Dubowitz 1	0.194089
+FHS 1	Dubowitz 2	0.169846
+FHS 2	Dubowitz 1	0.122301
+FHS 2	Dubowitz 2	0.163740
+Dubowitz 1	Dubowitz 2	0.294508

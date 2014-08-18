@@ -52,11 +52,6 @@ class HPOIC:
         lss = self.get_link_strengths(hpo.root, term_ic)
         logging.info('Link strength calculated for {}/{} terms'.format(len(lss), len(hpo)))
 
-        for p in t.parents:
-            logging.info('  {}: {}'.format(p, term_ic[p]))
-            for c in p.children:
-                logging.info('    {}: {}'.format(c, term_ic[c]))
-
         self.term_ic = term_ic
         self.lss = lss
 
@@ -342,7 +337,6 @@ def compare_patients(hpoic, patient1, patient2, scores=None):
 
     if not scores or 'simgic' in scores:
         out['simgic'] = hpoic.information_content(common_ancestors) / hpoic.information_content(all_ancestors)
-        out['simgic_ls'] = hpoic.ls_information_content(common_ancestors) / hpoic.ls_information_content(all_ancestors)
 
     if not scores or 'jz' in scores:
         p1_ancestor_counts = ancestor_counts(p1_terms)
