@@ -8,7 +8,6 @@ the --score option.
 
 __author__ = 'Orion Buske (buske@cs.toronto.edu)'
 
-import os
 import sys
 import logging
 

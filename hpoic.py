@@ -1,6 +1,7 @@
 #!/usr/bin/env python
 
 """
+Module that provides information-content functionality for the HPO.
 """
 
 __author__ = 'Orion Buske (buske@cs.toronto.edu)'
