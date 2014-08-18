@@ -554,7 +554,7 @@ def parse_args(args):
     parser.add_argument('--use-phenotype-frequency', default=False, action='store_true')
     parser.add_argument('--use-patient-phenotypes', default=False, action='store_true')
     parser.add_argument('--log', dest='loglevel', choices=['DEBUG', 'INFO', 'WARNING', 'ERROR', 'CRITICAL'], default='WARNING')
-    parser.add_argument('--proto', metavar="file", help="Hpo file of disease prototypes to compare against as well")
+    parser.add_argument('--proto', metavar="file", help="HPO file of disease prototypes to compare against as well")
     parser.add_argument('-s', '--score', dest='scores', action='append', default=[],
                         choices=['jaccard', 'resnik', 'lin', 'jc', 'owlsim', 'ob', 'jz', 'ui', 'simgic', 'icca'],
                         help='Include this score in the output for each pair of patients')
