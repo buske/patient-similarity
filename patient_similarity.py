@@ -204,12 +204,15 @@ def compare_patients(hpoic, patient1, patient2, scores=None):
     return out
 
 def script(patient_hpo_filename, hpo_filename, disease_phenotype_filename, 
-           orphanet_lookup_filename, orphanet_prevalence_filename, proto=None, 
+           orphanet_lookup_filename=None, orphanet_prevalence_filename=None, proto=None, 
            use_disease_prevalence=False, use_phenotype_frequency=False, 
            use_patient_phenotypes=False, scores=None):
     hpo = load_hpo(hpo_filename)
     mim = MIM(disease_phenotype_filename)
-    orphanet = Orphanet(orphanet_lookup_filename, orphanet_prevalence_filename)
+
+    orphanet = None
+    if orphanet_lookup_filename and orphanet_prevalance_filename:
+        orphanet = Orphanet(orphanet_lookup_filename, orphanet_prevalence_filename)
 
     patients = [patient 
                 for patient in Patient.iter_from_file(patient_hpo_filename, hpo)
@@ -223,7 +226,7 @@ def script(patient_hpo_filename, hpo_filename, disease_phenotype_filename,
     if use_patient_phenotypes:
         use_patient_phenotypes = patients
 
-    hpoic = HPOIC(hpo, mim, orphanet, patients=use_patient_phenotypes,
+    hpoic = HPOIC(hpo, mim, orphanet=orphanet, patients=use_patient_phenotypes,
                   use_disease_prevalence=use_disease_prevalence,
                   use_phenotype_frequency=use_phenotype_frequency)
 
@@ -263,8 +266,10 @@ def parse_args(args):
     parser.add_argument('patient_hpo_filename', metavar='patients.hpo')
     parser.add_argument('hpo_filename', metavar='hp.obo')
     parser.add_argument('disease_phenotype_filename', metavar='phenotype_annotations.tab')
-    parser.add_argument('orphanet_lookup_filename', metavar='orphanet_lookup')
-    parser.add_argument('orphanet_prevalence_filename', metavar='orphanet_prevalence')
+    parser.add_argument('--orphanet-lookup', metavar='en_product1.xml', 
+                        dest='orphanet_lookup_filename', default=None)
+    parser.add_argument('--orphanet-prevalence', metavar='en_product2.xml',
+                        dest='orphanet_prevalence_filename', default=None)
     parser.add_argument('--use-disease-prevalence', default=False, action='store_true')
     parser.add_argument('--use-phenotype-frequency', default=False, action='store_true')
     parser.add_argument('--use-patient-phenotypes', default=False, action='store_true')

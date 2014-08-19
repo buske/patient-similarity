@@ -18,12 +18,12 @@ def _bound(p, eps=EPS):
     return min(max(p, eps), 1-eps)
 
 class HPOIC:
-    def __init__(self, hpo, mim, orphanet, patients=None,
+    def __init__(self, hpo, mim, orphanet=None, patients=None,
                  use_disease_prevalence=False,
                  use_phenotype_frequency=False):
         logger.info('HPO root: {}'.format(hpo.root.id))
 
-        term_freq = self.get_term_frequencies(mim, hpo, orphanet, patients=patients,
+        term_freq = self.get_term_frequencies(mim, hpo, orphanet=orphanet, patients=patients,
                                               use_disease_prevalence=use_disease_prevalence, 
                                               use_phenotype_frequency=use_phenotype_frequency)
         logger.info('Total term frequency mass: {}'.format(sum(term_freq.values())))
