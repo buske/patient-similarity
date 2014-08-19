@@ -33,14 +33,30 @@ class Disease:
         self.name = name
         self.phenotype_freqs = phenotype_freqs
 
+    def __str__(self):
+        return '{}:{}'.format(self.db, self.id)
+
 class MIM:
-    def __init__(self, filename):
-        self.diseases = list(self.iter_diseases(filename))
+    def __init__(self, filename, db=None):
+        """Read disease informaton from file.
+
+        db: database to restrict to (e.g. 'OMIM'), or None to include all
+        """
+        diseases = list(self.iter_diseases(filename))
+        if db is None:
+            self.diseases = diseases
+        else:
+            self.diseases = [d for d in diseases if d.db == db]
+            logger.warning('Filtered to the {} diseases in {}'.format(len(self.diseases), db))
+
         for i in range(5):
             logger.debug(self.diseases[i].__dict__)
 
     def __iter__(self):
         return iter(self.diseases)
+
+    def __len__(self):
+        return len(self.diseases)
 
     @classmethod
     def iter_disease_lines(cls, filename):
