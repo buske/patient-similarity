@@ -16,7 +16,7 @@ from random import sample
 from mim import MIM
 from patient import Patient
 from hpoic import HPOIC
-from patient_similarity import load_hpo, compare_patients
+from patient_similarity import compare_patients
 
 logger = logging.getLogger(__name__)
 DEFAULT_TERMS = 1
@@ -88,7 +88,7 @@ def calc_distribution(hpo, mim, hpoic, n_replicates, n_terms, score):
 def script(hpo_filename, disease_phenotype_filename, 
            out_filebase, n_replicates=DEFAULT_REPLICATES, n_terms=DEFAULT_TERMS,
            score=DEFAULT_SCORE):
-    hpo = load_hpo(hpo_filename)
+    hpo = HPO(hpo_filename, new_root='HP:0000118')
     mim = MIM(disease_phenotype_filename, db='OMIM')
     hpoic = HPOIC(hpo, mim)
 

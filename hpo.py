@@ -124,7 +124,12 @@ class HPO(object):
     hps: {hp -> HP}
     root: HP
     """
-    def __init__(self, filename):
+    def __init__(self, filename, new_root=None):
+        """Load the HPO ontology specified in the OBO file 'filename'.
+
+        If new_root is specified (an HPO term ID), the HPO will be truncated to 
+        only include that node and descendants.
+        """
         self.hps = {}
         self.root = None
 
@@ -166,6 +171,10 @@ class HPO(object):
         else:
             logger.warning("Warning: found {:d} root nodes, leaving root as None".format(len(roots)))
             self.root = None
+
+        if new_root:
+            assert new_root in self.hps
+            self.filter_to_descendants(new_root)
 
 
     def filter_to_descendants(self, root_hp):

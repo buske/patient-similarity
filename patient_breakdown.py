@@ -15,14 +15,14 @@ from collections import defaultdict
 
 from mim import MIM
 from orphanet import Orphanet
-from patient_similarity import PatientComparator, Patient, load_hpo
+from patient_similarity import PatientComparator, Patient
 
 
 def script(patient1, patient2, patient_hpo_filename, hpo_filename, 
            disease_phenotype_filename, 
            orphanet_lookup_filename, orphanet_prevalence_filename, 
            **kwargs):
-    hpo = load_hpo(hpo_filename)
+    hpo = HPO(hpo_filename, new_root='HP:0000118')
     patients = dict([(patient.id, patient)
                      for patient in Patient.iter_from_file(patient_hpo_filename, hpo)
                      if patient.hp_terms])

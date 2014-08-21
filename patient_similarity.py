@@ -20,14 +20,6 @@ from orphanet import Orphanet
 from patient import Patient
 
 
-def load_hpo(hpo_filename):
-    hpo = HPO(hpo_filename)
-    # Only use phenotypic abnormalities
-    hpo.filter_to_descendants('HP:0000118')
-    logging.info('Found {} terms'.format(len(hpo)))
-    return hpo
-
-
 def similarity_breakdown(hpoic, patient1, patient2):
     p1_terms = set(patient1.hp_terms)
     p2_terms = set(patient2.hp_terms)
@@ -207,7 +199,7 @@ def script(patient_hpo_filename, hpo_filename, disease_phenotype_filename,
            orphanet_lookup_filename=None, orphanet_prevalence_filename=None, proto=None, 
            use_disease_prevalence=False, use_phenotype_frequency=False, 
            use_patient_phenotypes=False, scores=None):
-    hpo = load_hpo(hpo_filename)
+    hpo = HPO(hpo_filename, new_root='HP:0000118')
     mim = MIM(disease_phenotype_filename)
 
     orphanet = None
