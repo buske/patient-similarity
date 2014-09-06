@@ -12,6 +12,7 @@ import csv
 from collections import defaultdict
 
 KO_THRESHOLD = 0.87  # between nonframeshift and splicing
+EZR_SUFFIX = 'ezr'
 
 def read_exomizer_vcf(filename):
     gene_scores = defaultdict(lambda: [None, [], None])  # gene -> (pheno, variant_scores, combined_score)
@@ -64,6 +65,8 @@ def read_gene_damages(filename):
 def read_sim(filename, ids={}):
     sim_scores = defaultdict(list)  # id1 -> [(score, id2), ...]
     with open(filename) as ifp:
+        header = ifp.readline()
+        assert header.startswith('A\tB\t')
         for line in ifp:
             if not line or line.startswith('#'): continue
             tokens = line.strip().split('\t')
@@ -139,8 +142,8 @@ def average_score(gene, p1, p2, patient_damages, sim_scores,
     p2_damage = patient_damages[p2][gene]
     return (p1_damage[2] + p2_damage[2]) / 2
 
-def top_genes(p1, p2, patient_damages, sim_scores, inheritance=None,
-              control_damage=None, method=None):
+def get_scored_genes(p1, p2, patient_damages, sim_scores, inheritance=None,
+                     control_damage=None, method=None):
     p1_genes = patient_damages[p1]
     p2_genes = patient_damages[p2]
     shared_genes = set(p1_genes) & set(p2_genes)
@@ -158,9 +161,7 @@ def top_genes(p1, p2, patient_damages, sim_scores, inheritance=None,
                             inheritance=inheritance, control_damage=control_damage)
         scores.append((score, gene))
 
-    #scores.sort(reverse=True)
-    if scores:
-        return max(scores)
+    return scores
 
 def print_match(p1, p2, score, top):
     print('%s <-> %s: %.4f' % (p1, p2, score))
@@ -169,8 +170,19 @@ def print_match(p1, p2, score, top):
         if score >= 0.0001:
             print('    %.4f: %s (%s)' % (score, gene, inh))
 
+def read_solution_genes(filename):
+    solutions = {}
+    with open(filename) as ifp:
+        for line in ifp:
+            patient, gene = line.rstrip('\n').split('\t')
+            assert patient not in solutions
+            solutions[patient] = gene
+
+    return solutions
+
 def script(pheno_sim, exomiser_dir, inheritance=None, id_file=None,
-           control_damage_file=None, method=None):
+           control_damage_file=None, solution_gene_file=None,
+           method=None, ezr_suffix=EZR_SUFFIX):
     pheno_scores = read_sim(pheno_sim)
     pair_scores = {}
     for p1, matches in pheno_scores.items():
@@ -183,6 +195,12 @@ def script(pheno_sim, exomiser_dir, inheritance=None, id_file=None,
     else:
         control_damage = None
 
+    if solution_gene_file:
+        solution_genes = read_solution_genes(solution_gene_file)
+        logging.info('Read solution genes: {}'.format(solution_gene_file))
+    else:
+        solution_genes = None
+
     if id_file:
         pheno_to_geno = read_pheno_to_geno_file(id_file)
         logging.info('Read patient IDs: {}'.format(id_file))
@@ -192,7 +210,7 @@ def script(pheno_sim, exomiser_dir, inheritance=None, id_file=None,
     patient_damages = defaultdict(dict)
     for pid in pheno_scores:
         geno_id = pheno_to_geno.get(pid, pid)
-        ezr_filename = os.path.join(exomiser_dir, geno_id + '.ezr')
+        ezr_filename = os.path.join(exomiser_dir, geno_id + '.' + ezr_suffix)
         if os.path.isfile(ezr_filename):
             patient_damage = read_exomizer_vcf(ezr_filename)
             patient_damages[pid] = patient_damage
@@ -207,11 +225,30 @@ def script(pheno_sim, exomiser_dir, inheritance=None, id_file=None,
         #matches.sort(reverse=True)
         #for score, p2 in matches[:1]:
         score, p2 = max(matches)
-        top = top_genes(p1, p2, patient_damages, pair_scores,
-                        inheritance=inheritance, control_damage=control_damage,
-                        method=method)
-        top_score, top_gene = top if top else (float('nan'), '')
-        print('{}\t{}\t{}\t{:.8f}'.format(p1, p2, top_gene, top_score))
+        scored_genes = get_scored_genes(p1, p2, patient_damages, pair_scores,
+                                        inheritance=inheritance, control_damage=control_damage,
+                                        method=method)
+        if solution_genes:
+            # Report rank of solution
+            solution = solution_genes[p1]
+            scored_genes.sort(reverse=True)
+            rank = [(i + 1) for (i, (_, gene)) in enumerate(scored_genes) if gene == solution]
+            if rank:
+                rank = str(rank[0])
+            else:
+                rank = 'NA'
+
+            top_score, top_gene = (rank, solution)
+        else:
+            # Report score of top gene
+            top = max(scored_genes)
+            if top:
+                top_score, top_gene = top
+                top_score = '{:.8f}'.format(top_score)
+            else:
+                top_score, top_gene = ('NA', '')
+
+        print('\t'.join([p1, p2, top_gene, top_score]))
 
 
 def parse_args(args):
@@ -226,7 +263,9 @@ def parse_args(args):
     parser.add_argument('--method', default=None,
                         choices=['avg', 'pc'])
     parser.add_argument("--control-damage-file")
+    parser.add_argument("--solution-gene-file")
     parser.add_argument("--id-file", default=None)
+    parser.add_argument("--ezr-suffix", default=EZR_SUFFIX)
 
     return parser.parse_args(args)
 
