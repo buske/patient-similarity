@@ -6,16 +6,19 @@ Representation of a patient, with phenotypes described with HPO terms.
 
 __author__ = 'Orion Buske (buske@cs.toronto.edu)'
 
+import csv
 import logging
 
 logger = logging.getLogger(__name__)
 
 class Patient:
-    def __init__(self, id, hp_terms, neg_hp_terms=None, onset=None):
+    def __init__(self, id, hp_terms, neg_hp_terms=None, onset=None, diagnoses=None, external_id=None):
         self.id = id
         self.hp_terms = hp_terms
         self.neg_hp_terms = neg_hp_terms
         self.onset = onset
+        self.diagnoses = diagnoses
+        self.external_id = external_id
         self._ancestors = None
 
     def __repr__(self):
@@ -34,7 +37,7 @@ class Patient:
         return self._ancestors
 
     @classmethod
-    def from_line(cls, line, hpo, missing_terms=None):
+    def from_row(cls, row, hpo, missing_terms=None):
         def resolve_terms(terms, missing_terms=missing_terms):
             nodes = []
             for term in terms:
@@ -48,21 +51,27 @@ class Patient:
                     nodes.append(node)
             return nodes
 
-        entry = dict(zip(['id', 'hps', 'no_hps', 'onset'], line.strip().split('\t')))
-        id = entry['id']
-        hp_terms = entry.get('hps', [])
+        pid = row['Patient ID']
+        external_id = row['External ID']
+
+        hp_terms = row['HPO+']
         if hp_terms:
             hp_terms = resolve_terms(hp_terms.split(','))
 
-        neg_hp_terms = entry.get('no_hps', [])
+        neg_hp_terms = row['HPO-']
         if neg_hp_terms:
             neg_hp_terms = resolve_terms(neg_hp_terms.split(','))
 
-        onset = entry.get('onset')
+        onset = row.get('AOO')
         if onset:
-            onset = resolve_terms(onset.split(','))
+            onset = set(onset.split(','))
 
-        return Patient(id, hp_terms, neg_hp_terms)
+        diagnoses = row.get('Diagnoses')
+        if diagnoses:
+            diagnoses = set(diagnoses.split(','))
+
+        return Patient(id=pid, hp_terms=hp_terms, neg_hp_terms=neg_hp_terms, 
+                       onset=onset, diagnoses=diagnoses, external_id=external_id)
         
 
     @classmethod
@@ -70,8 +79,9 @@ class Patient:
         missing_terms = set()
 
         with open(filename) as ifp:
-            for line in ifp:
-                yield cls.from_line(line, hpo, missing_terms)
+            reader = csv.DictReader(ifp, delimiter='\t')
+            for row in reader:
+                yield cls.from_row(row, hpo, missing_terms)
 
         if missing_terms:
             logger.warning('Could not find {} terms: {}'.format(len(missing_terms), ','.join(missing_terms)))
