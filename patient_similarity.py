@@ -203,7 +203,7 @@ def script(patient_hpo_filename, hpo_filename, disease_phenotype_filename,
     mim = MIM(disease_phenotype_filename)
 
     orphanet = None
-    if orphanet_lookup_filename and orphanet_prevalance_filename:
+    if orphanet_lookup_filename and orphanet_prevalence_filename:
         orphanet = Orphanet(orphanet_lookup_filename, orphanet_prevalence_filename)
 
     patients = [patient 
@@ -223,13 +223,10 @@ def script(patient_hpo_filename, hpo_filename, disease_phenotype_filename,
                   use_phenotype_frequency=use_phenotype_frequency)
 
     total_patient_logprob = 0
-    total_patient_ls_logprob = 0
     for patient in patients:
         total_patient_logprob += hpoic.information_content(patient.hp_terms)
-        total_patient_ls_logprob += hpoic.ls_information_content(patient.ancestors())
 
     logging.info('Total patient logprob: {:.1f}'.format(-total_patient_logprob))
-    logging.info('Total patient ls logprob: {:.1f}'.format(-total_patient_ls_logprob))
 
     header = None
     for i in range(len(patients)):
@@ -242,7 +239,7 @@ def script(patient_hpo_filename, hpo_filename, disease_phenotype_filename,
             sims = compare_patients(hpoic, patient, o, scores=scores)
             if header is None:
                 header = sorted(sims)
-                print('#A\tB\t{}'.format('\t'.join(header)))
+                print('\t'.join(['A', 'B'] + header))
 
             sim_strs = ['{:.6f}'.format(sims[sim]) for sim in header]
             for sim, sim_str in zip(header, sim_strs):
