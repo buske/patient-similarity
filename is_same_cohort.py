@@ -1,7 +1,6 @@
 #!/usr/bin/env python
 
 """
-Given all the information for a pair of patients, computer a match score, with gene and variant info
 """
 
 
@@ -10,27 +9,16 @@ import os
 import math
 import logging
 import csv
+import string
+
 from collections import defaultdict
 from itertools import combinations, product
 from numpy import array
 
 
 solutions = """
+174 F0000009 F0000010 F0000011 F0000012 F0000013 F0000014 F0000015 F0000016 F0000017 F0000018 F0000019 F0000020 F0000021
 MFDM C1038 233
-329 423 419
-330 C1020
-376 474
-419 411
-439 554 568
-468 526
-549 552 550 551
-570 268
-584 483
-59 412
-C1002 C1001
-C1026 516 517 C1010
-C1033 C1032 C1034 372 368 367 366 365 373 370 371
-C1040 260
 UDP_1019 UDP_1995 UDP_3510 UDP_2058 UDP_4626
 UDP_1248 UDP_887
 UDP_1258 UDP_2467
@@ -91,44 +79,45 @@ for line in solutions.strip().split('\n'):
         else:
             cohort_lookup[cohort] = cohorts
 
-def read_pc_ids(filename):
+def read_id_lookup(filename):
     ids = {}  # id -> external
     with open(filename) as ifp:
-        reader = csv.DictReader(ifp)
+        reader = csv.DictReader(ifp, delimiter='\t')
         for row in reader:
-            patient_id = row['Report ID'].strip()
-            external_id = row['Identifier'].strip()
+            patient_id = row['Patient ID'].strip()
+            external_id = row['External ID'].strip()
             if external_id:
                 ids[patient_id] = external_id
             
     return ids
 
 def get_cohort(p):
-    if p.startswith('UDP'):
+    if p.startswith('UDP') or p.startswith('DDN'):
         return p
     else:
-        cohort = p.split('_')[0]
+        cohort = p.split('_')[0].rstrip(string.ascii_lowercase)
         if cohort == '455CA': return '455'
         return cohort
 
 def is_same_cohort(c1, c2):
     return c1 == c2 or (c1 in cohort_lookup and c2 in cohort_lookup[c1])
 
-def script(pheno_sim, pc_file=None):
+def script(pheno_sim, id_file=None):
     ids = None
-    if pc_file:
-        ids = read_pc_ids(pc_file)
+    if id_file:
+        ids = read_id_lookup(id_file)
 
     with open(pheno_sim) as ifp:
-        header = ifp.readline().strip().lstrip('#')
-        print('resp\t{}'.format(header))
+        # Burn and replace header
+        header = ifp.readline()
+        print('resp')
+
         for line in ifp:
             line = line.strip()
             if not line: continue
 
             tokens = line.split('\t')
             p1, p2 = tokens[:2]
-            scores = list(map(float, tokens[2:]))
             
             if ids:
                 p1 = ids.get(p1, p1)
@@ -137,14 +126,14 @@ def script(pheno_sim, pc_file=None):
             c1 = get_cohort(p1)
             c2 = get_cohort(p2)
             
-            print('{:d}\t{}\t{}\t{}'.format(is_same_cohort(c1, c2), p1, p2, '\t'.join(map(str, scores))))
+            print('{:d}'.format(is_same_cohort(c1, c2)))
 
 def parse_args(args):
     from argparse import ArgumentParser
     description = __doc__.strip()
     
     parser = ArgumentParser(description=description)
-    parser.add_argument("--pc-file")
+    parser.add_argument("--id-file")
     parser.add_argument("pheno_sim")
 
     return parser.parse_args(args)
