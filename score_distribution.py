@@ -13,6 +13,7 @@ import pickle
 from numpy import array
 from random import sample
 
+from hpo import HPO
 from mim import MIM
 from patient import Patient
 from hpoic import HPOIC
