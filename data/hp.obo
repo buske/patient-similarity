@@ -1,12 +1,13 @@
 format-version: 1.2
-data-version: 2014-06-09
-date: 09:06:2014 11:36
-saved-by: hecht
-auto-generated-by: OBO-Edit 2.1.1-beta6
+data-version: releases/2014-08-20
+date: 25:06:2014 08:55
+saved-by: Peter Robinson, Sebastian Koehler, Sandra Doelken, Chris Mungall, Monarch Initiative, et al
+auto-generated-by: OBO-Edit 2.3
 subsetdef: hposlim_core "Core clinical terminology"
 subsetdef: secondary_consequence "Consequence of a disorder in another organ system."
 default-namespace: human_phenotype
 ontology: hp
+logical-definition-view-relation: has_part
 
 [Term]
 id: HP:0000001
@@ -462,15 +463,18 @@ is_a: HP:0000056 ! Abnormality of the clitoris
 [Term]
 id: HP:0000058
 name: Abnormality of the labia
+def: "An anomaly of the labia, the externally visible portions of the vulva." [HPO:probinson]
 is_a: HP:0000055 ! Abnormality of female external genitalia
 
 [Term]
 id: HP:0000059
 name: Hypoplastic labia majora
+def: "Undergrowth of the outer labia." [HPO:probinson]
 synonym: "Hypoplasia of labia majora" EXACT []
 synonym: "Small labia majora" EXACT []
 xref: UMLS:C1858540 "Hypoplastic labia majora"
 is_a: HP:0000066 ! Labial hypoplasia
+is_a: HP:0012881 ! Abnormality of the labia majora
 
 [Term]
 id: HP:0000060
@@ -508,13 +512,14 @@ id: HP:0000063
 name: Fused labia minora
 def: "Fusion of the labia minora as a result of labial adhesions resulting in vaginal obstruction." [HPO:curators]
 xref: UMLS:C1837532 "Fused labia minora"
-is_a: HP:0000058 ! Abnormality of the labia
+is_a: HP:0012880 ! Abnormality of the labia minora
 
 [Term]
 id: HP:0000064
 name: Hypoplastic labia minora
 xref: UMLS:C1849295 "Hypoplastic labia minora"
 is_a: HP:0000066 ! Labial hypoplasia
+is_a: HP:0012880 ! Abnormality of the labia minora
 
 [Term]
 id: HP:0000065
@@ -1109,7 +1114,7 @@ is_a: HP:0000008 ! Abnormality of female internal genitalia
 
 [Term]
 id: HP:0000138
-name: Ovarian cysts
+name: Ovarian cyst
 alt_id: HP:0000146
 def: "The presence of one or more `cysts` (MPATH:62) of the `ovary` (FMA:7209)." [HPO:probinson]
 synonym: "Cystic abnormalities of the ovaries" EXACT []
@@ -1188,7 +1193,7 @@ synonym: "Polycystic ovary" EXACT []
 synonym: "Polycystic ovary disease" EXACT []
 synonym: "Sclerocystic ovaries" EXACT []
 xref: UMLS:C0032460 "Polycystic ovaries"
-is_a: HP:0000138 ! Ovarian cysts
+is_a: HP:0000138 ! Ovarian cyst
 
 [Term]
 id: HP:0000148
@@ -1450,6 +1455,7 @@ xref: UMLS:C0432090 "Cleft hard palate NOS"
 xref: UMLS:C0432103 "Submucous cleft palate"
 xref: UMLS:C1845577 "Submucous clefting"
 is_a: HP:0000175 ! Cleft palate
+is_a: HP:0100737 ! Abnormality of the hard palate
 
 [Term]
 id: HP:0000177
@@ -2775,7 +2781,7 @@ id: HP:0000359
 name: Abnormality of the inner ear
 def: "An abnormality of the `inner ear` (FMA:60909)." [HPO:probinson]
 synonym: "Inner ear abnormality" EXACT []
-is_a: HP:0000598 ! Abnormality of the ear
+is_a: HP:0000370 ! Abnormality of the middle ear
 
 [Term]
 id: HP:0000360
@@ -3827,6 +3833,7 @@ def: "Inflammation of the cornea." [HPO:curators]
 subset: hposlim_core
 xref: MeSH:D007634 "Keratitis"
 xref: UMLS:C0022568 "Keratitis"
+is_a: HP:0000481 ! Abnormality of the cornea
 is_a: HP:0011495 ! Abnormality of corneal epithelium
 is_a: HP:0100533 ! Inflammatory abnormality of the eye
 
@@ -4583,6 +4590,7 @@ synonym: "Retinal hemorrhages" EXACT []
 xref: MeSH:D012166 "Retinal hemorrhage"
 xref: UMLS:C0035317 "Retinal hemorrhage"
 is_a: HP:0008046 ! Abnormality of the retinal vasculature
+is_a: HP:0011029 ! Internal hemorrhage
 is_a: HP:0011885 ! Hemorrhage of the eye
 
 [Term]
@@ -5558,7 +5566,8 @@ name: Agenesis of maxillary lateral incisor
 def: "`Agenesis` (MPATH:57) of one or more maxillary lateral incisor, comprising the `maxillary lateral primary incisor` (FMA84217) and `maxillary lateral secondary incisor` (FMA:55724)." [HPO:ibailleulforestier]
 synonym: "Absent upper lateral incisors" EXACT []
 xref: UMLS:C1849950 "Absent upper lateral incisors"
-is_a: HP:0006485 ! Agenesis of incisor
+is_a: HP:0200153 ! Agenesis of lateral incisor
+is_a: HP:0200160 ! Agenesis of maxillary incisor
 
 [Term]
 id: HP:0000691
@@ -5828,6 +5837,7 @@ def: "Behavior characterized by an abnormal limitation to few interests and acti
 synonym: "Restricted behavior" EXACT []
 synonym: "RESTRICTIVE BEHAVIOR, INTERESTS, AND ACTIVITIES" RELATED [HPO:skoehler]
 synonym: "Restrictive behaviour" EXACT []
+is_a: HP:0000708 ! Behavioral abnormality
 is_a: HP:0000729 ! Autistic behavior
 
 [Term]
@@ -7482,6 +7492,7 @@ alt_id: HP:0005075
 def: "An abnormal appearance of the long bones with resemblance to a dumbbell, a short bar with a weight at each end. That is, the long bone is shortened and displays flaring (widening) of the metaphyses." [HPO:probinson]
 synonym: "Dumbbell widening of long bone metaphyses" EXACT []
 is_a: HP:0003016 ! Metaphyseal widening
+is_a: HP:0011314 ! Abnormality of long bone morphology
 
 [Term]
 id: HP:0000951
@@ -8042,6 +8053,7 @@ xref: MeSH:D017496 "Hypopigmentation"
 xref: UMLS:C1844614 "Mild localized pigmentation abnormalities"
 xref: UMLS:C1876214 "HYPOPIGMENTATION"
 is_a: HP:0001000 ! Abnormality of skin pigmentation
+is_a: HP:0011121 ! Abnormality of skin morphology
 
 [Term]
 id: HP:0001011
@@ -9179,6 +9191,7 @@ alt_id: HP:0001174
 def: "For children from birth to 4 years of age the palm width is more than 2 SD above the mean; for children from 4 to 16 years of age the palm width is above the 95th centile; or, the width of the palm appears disproportionately wide for the length." [HPO:probinson, pmid:19125433]
 comment: Hand width is measured across the palm at the level of the MCPJ (radial aspect of the second MCPJ to the ulnar aspect of the fifth MCPJ) [Hall et al., 2007]. Caution is advised with the subjective assessment as short metacarpals can mimic a broad palm. In persons with polydactyly that includes a supernumerary metacarpal, that should be separately coded and the measurement technique from Hall et al, [2007] would need to be modified to account for the supernumerary digit (i.e., with postaxial polydactyly, measure to the sixth MCPJ).
 synonym: "Broad hand" EXACT []
+synonym: "Broad hands" EXACT [HPO:skoehler]
 synonym: "Wide palm" EXACT []
 xref: UMLS:C0264142 "Broad hands"
 xref: UMLS:C1849956 "Short broad hands"
@@ -9285,6 +9298,7 @@ synonym: "Tapered fingertips" EXACT []
 synonym: "Tapering fingers" EXACT []
 xref: SNOMEDCT:249768009 "Tapering fingers"
 xref: UMLS:C0426886 "Tapering fingers"
+is_a: HP:0001167 ! Abnormality of finger
 is_a: HP:0100807 ! Long fingers
 
 [Term]
@@ -9374,6 +9388,7 @@ synonym: "Triphalangeal thumbs" EXACT []
 synonym: "Triphalangy of thumb" EXACT []
 xref: SNOMEDCT:205308004 "Triphalangeal thumb"
 xref: UMLS:C0241397 "Triphalangeal thumb"
+is_a: HP:0001172 ! Abnormality of the thumb
 is_a: HP:0009602 ! Abnormality of thumb phalanx
 
 [Term]
@@ -9537,6 +9552,7 @@ comment: The condition known as "hitchhiker's thumb" means, that the distal phal
 subset: hposlim_core
 synonym: "Abducted thumb" EXACT []
 xref: UMLS:C1857269 "Hitchhiker thumb"
+is_a: HP:0001172 ! Abnormality of the thumb
 is_a: HP:0009466 ! Radial deviation of finger
 is_a: HP:0009603 ! Deviation/Displacement of the thumb
 is_a: HP:0009617 ! Abnormality of the distal phalanx of the thumb
@@ -10621,6 +10637,7 @@ synonym: "Limited extension at elbows" EXACT []
 synonym: "Limited forearm extension" EXACT []
 synonym: "Restricted elbow extension" EXACT []
 xref: UMLS:C1865003 "Limited elbow extension"
+is_a: HP:0001376 ! Limitation of joint mobility
 is_a: HP:0002996 ! Limited elbow movement
 
 [Term]
@@ -12606,7 +12623,6 @@ synonym: "situs oppositus" EXACT []
 synonym: "situs transversus" EXACT []
 xref: UMLS:C0037221 "Situs inversus viscerum"
 is_a: HP:0001651 ! Dextrocardia
-is_a: HP:0003363 ! Abdominal situs inversus
 is_a: HP:0011534 ! Abnormal spatial orientation of the cardiac segments
 
 [Term]
@@ -13530,8 +13546,10 @@ id: HP:0001836
 name: Camptodactyly of toe
 def: "Camptodactyly is a painless flexion contracture of the proximal interphalangeal (PIP) joint that is usually gradually progressive. This term refers to camptodactyly of one or more toes." [HPO:probinson]
 synonym: "Camptodactyly (feet)" EXACT []
+is_a: HP:0001760 ! Abnormality of the foot
 is_a: HP:0005830 ! Flexion contracture of toe
 is_a: HP:0012385 ! Camptodactyly
+is_a: HP:0100492 ! Joint contractures involving the joints of the feet
 
 [Term]
 id: HP:0001837
@@ -13614,7 +13632,6 @@ is_a: HP:0100258 ! Preaxial polydactyly
 [Term]
 id: HP:0001842
 name: Acroosteolysis (feet)
-is_a: HP:0009134 ! Osteolysis involving bones of the feet
 is_a: HP:0010177 ! Osteolytic defects of the phalanges of the toes
 
 [Term]
@@ -16829,6 +16846,7 @@ id: HP:0002281
 name: Gray matter heterotopias
 def: "Gray matter heterotopia is a neurological disorder caused by clumps of grey matter being located in the wrong part of the brain. It is characterized as a type of cortical malformation. The neurons in heterotopia may appear to be normal, except for their mislocation; nuclear studies have shown glucose metabolism equal to that of normally positioned gray matter. The condition causes a variety of symptoms, but usually includes some degree of epilepsy or recurring seizures, and often affects the brain's ability to function on higher levels. Symptoms range from nonexistent to profound, in which case heterotopia can result in severe seizure disorder, loss of motor skills, and mental retardation." [DDD:ssisodiya, HPO:curators]
 xref: UMLS:C1839544 "Gray matter heterotopias"
+is_a: HP:0002269 ! Abnormality of neuronal migration
 is_a: HP:0002282 ! Heterotopia
 
 [Term]
@@ -17299,6 +17317,7 @@ synonym: "Sleep disturbances" EXACT [HPO:skoehler]
 synonym: "Sleep dysfunction" EXACT []
 xref: UMLS:C0851578 "Sleep Disturbances"
 is_a: HP:0000708 ! Behavioral abnormality
+is_a: HP:0012638 ! Abnormality of nervous system physiology
 
 [Term]
 id: HP:0002361
@@ -19805,11 +19824,12 @@ is_a: HP:0008518 ! Aplasia/Hypoplasia involving the vertebral column
 
 [Term]
 id: HP:0002773
-name: Small vertebral bodies
+name: obsolete Small vertebral bodies
+comment: Removed/merged after speaking with Peter. The defintion was: "has_part some \n    ('decreased size'\n     and ('inheres in' some 'bony vertebral centrum'))"
 synonym: "Small vertebrae" EXACT []
 xref: UMLS:C1857133 "Small vertebral bodies"
-is_a: HP:0003312 ! Abnormal form of the vertebral bodies
-is_a: HP:0008479 ! Hypoplastic vertebral bodies
+is_obsolete: true
+replaced_by: HP:0008479
 
 [Term]
 id: HP:0002777
@@ -21563,6 +21583,7 @@ xref: UMLS:C0011989 "Diaphyseal sclerosis"
 xref: UMLS:C0029464 "Osteosclerosis"
 is_a: HP:0000940 ! Abnormal diaphysis morphology
 is_a: HP:0006392 ! Increased density of long bones
+is_a: HP:0011001 ! Increased bone mineral density
 
 [Term]
 id: HP:0003037
@@ -23676,12 +23697,14 @@ name: Elevated intracellular cystine
 def: "An increased concentration of `cystine` (CHEBI:17376) within cells. This finding can be demonstrated on leukocytes, but is not specific to blood cells." [HPO:probinson]
 comment: Cystine is a dimeric amino acid formed by the oxidation of two cysteine residues to form a disulfide bond.
 xref: UMLS:C1857392 "Elevated white blood cell cystine"
+is_a: HP:0004339 ! Abnormality of sulfur amino acid metabolism
 is_a: HP:0010918 ! Abnormality of cysteine metabolism
 
 [Term]
 id: HP:0003359
 name: Decreased urinary sulfate
 def: "Decreased concentration of `sulfate` (CHEBI:16189) in the urine." [HPO:probinson]
+is_a: HP:0004369 ! Decreased purine levels
 is_a: HP:0012612 ! Abnormal urinary sulfate concentration
 
 [Term]
@@ -23707,6 +23730,7 @@ def: "A left-right reversal (or \"mirror reflection\") of the anatomical locatio
 synonym: "Situs inversus visceralis" EXACT []
 synonym: "Situs inversus viscerum" EXACT []
 xref: UMLS:C0037221 "Situs inversus viscerum"
+is_a: HP:0001696 ! Situs inversus totalis
 is_a: HP:0011620 ! Abnormality of abdominal situs
 
 [Term]
@@ -26150,6 +26174,7 @@ id: HP:0003849
 name: Flared metaphyses of the upper limbs
 is_a: HP:0003015 ! Flared metaphyses
 is_a: HP:0003856 ! Upper limb metaphyseal widening
+is_a: HP:0009809 ! Abnormality of upper limb metaphysis
 
 [Term]
 id: HP:0003850
@@ -28203,6 +28228,7 @@ id: HP:0004293
 name: Synostosis of second metacarpal-trapezoid
 def: "Fusion of the second metacarpal-trapezoid." [HPO:probinson]
 synonym: "Fusion of second metacarpal-trapezoid" EXACT []
+is_a: HP:0009702 ! Carpal synostosis
 is_a: HP:0009705 ! Synostosis involving the 2nd metacarpal
 is_a: HP:0100328 ! Carpometacarpal synostosis
 
@@ -28287,7 +28313,6 @@ alt_id: HP:0007120
 def: "Involuntary contractions of muscle leading to involuntary movements of extremities, neck, trunk, or face." [HPO:probinson]
 synonym: "Involuntary muscle contractions" EXACT []
 xref: UMLS:C0235086 "Involuntary muscle contraction"
-is_a: HP:0011804 ! Abnormality of muscle physiology
 is_a: HP:0100022 ! Abnormality of movement
 created_by: peter
 creation_date: 2008-02-20T12:18:00Z
@@ -29025,6 +29050,7 @@ name: Enterocolitis
 def: "An inflammation of the colon and small intestine. However, most conditions are either categorized as Enteritis (inflammation of the small intestine) or Colitis (inflammation of the large intestine)." [HPO:sdoelken]
 xref: MeSH:D004760 "Enterocolitis"
 xref: UMLS:C0014356 "Enterocolitis"
+is_a: HP:0004386 ! Gastrointestinal inflammation
 is_a: HP:0100282 ! Acute colitis
 created_by: peter
 creation_date: 2008-03-18T09:02:00Z
@@ -29391,6 +29417,7 @@ synonym: "Agammaglobulinaemia" EXACT []
 xref: MeSH:D000361 "Agammaglobulinemia"
 xref: UMLS:C0001768 "Agammaglobulinaemia"
 is_a: HP:0004313 ! Hypogammaglobulinemia
+is_a: HP:0010701 ! Abnormal immunoglobulin level
 created_by: peter
 creation_date: 2008-03-18T09:47:00Z
 
@@ -30214,7 +30241,7 @@ alt_id: HP:0008429
 def: "Reduced size of `cervical vertebrae` (FMA:72063)." [HPO:probinson]
 synonym: "Small cervical vertebrae" EXACT []
 xref: UMLS:C1851130 "Small cervical vertebral bodies"
-is_a: HP:0002773 ! Small vertebral bodies
+is_a: HP:0008479 ! Hypoplastic vertebral bodies
 
 [Term]
 id: HP:0004630
@@ -31714,10 +31741,12 @@ is_a: HP:0004035 ! Abnormality of the styloid process
 
 [Term]
 id: HP:0004986
-name: Rudimentary to absent fibulae
+name: obsolete Rudimentary to absent fibulae
 def: "Absent or nearly absent fibula." [HPO:curators]
+comment: This is a legacy term that actually states the same as "Rudimentary fibula"
 synonym: "Small to absent fibula" EXACT []
-is_a: HP:0002990 ! Fibular aplasia
+is_obsolete: true
+replaced_by: HP:0006381
 
 [Term]
 id: HP:0004987
@@ -35923,6 +35952,7 @@ id: HP:0005950
 name: Laryngeal web
 def: "A membrane-like structure that extends across the laryngeal lumen close to the level of the vocal cords." [HPO:probinson]
 comment: Manifestations may appear at any age (hoarse or weak voice and frequent upper respiratory infections) but onset usually occurs during infancy (respiratory distress, stridor and an unusual cry).
+synonym: "LARYNGEAL WEBS" EXACT [HPO:skoehler]
 synonym: "Partial laryngeal atresia" EXACT []
 is_a: HP:0001600 ! Abnormality of the larynx
 
@@ -36171,6 +36201,7 @@ synonym: "Wide phalanges" EXACT []
 synonym: "Widened phalanges" EXACT []
 xref: UMLS:C1855185 "Widened phalanges"
 is_a: HP:0009803 ! Short phalanx of finger
+is_a: HP:0011297 ! Abnormality of digit
 
 [Term]
 id: HP:0006011
@@ -37131,6 +37162,7 @@ id: HP:0006293
 name: Agenesis of maxillary central incisor
 def: "`Agenesis` (MPATH:57) of `upper secondary incisor` (FMA:55712) or of `upper central primary incisor` (FMA:84216)." [HPO:ibailleulforestier]
 is_a: HP:0006289 ! Agenesis of central incisor
+is_a: HP:0200160 ! Agenesis of maxillary incisor
 
 [Term]
 id: HP:0006297
@@ -37396,6 +37428,7 @@ id: HP:0006355
 name: Agenesis of mandibular central incisor
 def: "`Agenesis` (MPATH:57) of `lower secondary incisor` (FMA:55713) or `lower primary incisor` (FMA:84215)." [HPO:ibailleulforestier]
 is_a: HP:0006289 ! Agenesis of central incisor
+is_a: HP:0200161 ! Agenesis of mandibular incisor
 
 [Term]
 id: HP:0006357
@@ -37514,8 +37547,12 @@ is_a: HP:0005750 ! Contractures of the joints of the lower limbs
 [Term]
 id: HP:0006381
 name: Rudimentary fibula
+alt_id: HP:0004986
+def: "Absent or nearly absent fibula. (Does not include aplastic)" []
+synonym: "Rudimentary to absent fibulae" EXACT []
+synonym: "Small to absent fibula" EXACT []
 xref: UMLS:C1855279 "Rudimentary fibula"
-is_a: HP:0004986 ! Rudimentary to absent fibulae
+is_a: HP:0003038 ! Fibular hypoplasia
 
 [Term]
 id: HP:0006383
@@ -38026,6 +38063,7 @@ synonym: "Camptomelia" EXACT []
 synonym: "Diaphyseal bowing" EXACT []
 synonym: "Diaphyseal bowing of long bones" EXACT []
 is_a: HP:0006504 ! Anomaly of the limb diaphyses
+is_a: HP:0011314 ! Abnormality of long bone morphology
 created_by: peter
 creation_date: 2008-03-28T05:56:00Z
 
@@ -39485,6 +39523,7 @@ synonym: "Angiomyolipoma" EXACT []
 xref: MeSH:D018207 "Angiomyolipoma"
 xref: UMLS:C1860714 "Multiple bilateral renal angiomyolipoma"
 is_a: HP:0008696 ! Renal hamartoma
+is_a: HP:0009726 ! Renal neoplasm
 
 [Term]
 id: HP:0006773
@@ -41981,6 +42020,7 @@ is_a: HP:0001010 ! Hypopigmentation of the skin
 id: HP:0007446
 name: Palmoplantar blistering
 def: "A type of blistering that affects the skin of the palms of the hands and the soles of the feet." [HPO:probinson]
+is_a: HP:0011356 ! Regional abnormality of skin
 is_a: HP:0100871 ! Abnormality of the palm
 is_a: HP:0100872 ! Abnormality of the plantar skin of foot
 
@@ -42906,6 +42946,7 @@ name: Decreased central vision
 alt_id: HP:0001091
 alt_id: HP:0007969
 synonym: "Central visual loss" EXACT []
+is_a: HP:0000505 ! Visual impairment
 is_a: HP:0000572 ! Visual loss
 
 [Term]
@@ -43367,6 +43408,7 @@ alt_id: HP:0008015
 def: "The presence of an increased number of twists and turns of retinal blood vessels (arteries, arterioles, veins, venules)." [HPO:probinson]
 synonym: "Tortuosity of main retinal vessels" EXACT []
 is_a: HP:0000631 ! Retinal arterial tortuosity
+is_a: HP:0008046 ! Abnormality of the retinal vasculature
 
 [Term]
 id: HP:0007769
@@ -43962,6 +44004,7 @@ synonym: "Vitreous haemorrhage" RELATED []
 xref: MeSH:D014823 "Vitreous hemorrhage"
 xref: UMLS:C0042909 "Vitreous Hemorrhage"
 is_a: HP:0004327 ! Abnormality of the vitreous humor
+is_a: HP:0011029 ! Internal hemorrhage
 is_a: HP:0011885 ! Hemorrhage of the eye
 
 [Term]
@@ -46600,7 +46643,7 @@ name: Narrow anterio-posterior vertebral body diameter
 alt_id: HP:0005732
 def: "An abnormal reduction of the anterioposterior diameter of the `vertebral body` (FMA:11945)." [HPO:probinson]
 synonym: "Reduced sagittal diameter of vertebrae" EXACT []
-is_a: HP:0002773 ! Small vertebral bodies
+is_a: HP:0008479 ! Hypoplastic vertebral bodies
 
 [Term]
 id: HP:0008475
@@ -46629,7 +46672,11 @@ is_a: HP:0010891 ! Morbus Scheuermann
 [Term]
 id: HP:0008479
 name: Hypoplastic vertebral bodies
+alt_id: HP:0002773
+synonym: "Small vertebrae" EXACT []
+synonym: "Small vertebral bodies" EXACT []
 xref: UMLS:C1850294 "Hypoplastic vertebral bodies"
+is_a: HP:0003312 ! Abnormal form of the vertebral bodies
 is_a: HP:0008417 ! Vertebral hypoplasia
 
 [Term]
@@ -47348,8 +47395,10 @@ is_a: HP:0000091 ! Abnormality of the renal tubule
 [Term]
 id: HP:0008683
 name: Enlarged labia minora
+def: "Increase in size of the folds of skin between the outer labia." [HPO:probinson]
 xref: UMLS:C1849358 "Enlarged labia minora"
 is_a: HP:0000065 ! Labial hypertrophy
+is_a: HP:0012880 ! Abnormality of the labia minora
 
 [Term]
 id: HP:0008684
@@ -47385,7 +47434,7 @@ name: Hypertrophic labia minora
 alt_id: HP:0008662
 synonym: "Labia minora hypertrophy" EXACT []
 xref: UMLS:C1853570 "Labia minora hypertrophy"
-is_a: HP:0000058 ! Abnormality of the labia
+is_a: HP:0012880 ! Abnormality of the labia minora
 
 [Term]
 id: HP:0008695
@@ -47525,7 +47574,7 @@ is_a: HP:0011026 ! Aplasia/Hypoplasia of the vagina
 [Term]
 id: HP:0008729
 name: Absence of labia majora
-is_a: HP:0000058 ! Abnormality of the labia
+is_a: HP:0012881 ! Abnormality of the labia majora
 
 [Term]
 id: HP:0008730
@@ -50284,6 +50333,7 @@ synonym: "Symphalangism of the distal and middle phalanges of the 5th finger" EX
 synonym: "Symphalangism of the terminal and middle phalanges of the 5th finger" EXACT []
 xref: UMLS:C1868573 "Fifth finger distal interphalangeal joint symphalangism"
 is_a: HP:0001204 ! Distal symphalangism (hands)
+is_a: HP:0004218 ! Symphalangism of the 5th finger
 is_a: HP:0004225 ! Abnormality of the distal phalanx of the 5th finger
 is_a: HP:0009178 ! Symphalangism of middle phalanx of 5th finger
 created_by: doelkens
@@ -50897,6 +50947,7 @@ alt_id: HP:0009475
 def: "Fusion of the terminal/distal and middle phalanges of the 4th finger." [HPO:curators]
 synonym: "Symphalangism of the distal and middle phalanges of the 4th finger" EXACT []
 is_a: HP:0001204 ! Distal symphalangism (hands)
+is_a: HP:0004197 ! Symphalangism of the 4th finger
 is_a: HP:0009282 ! Abnormality of the distal phalanx of the 4th finger
 is_a: HP:0009308 ! Symphalangism of middle phalanx of 4th finger
 created_by: doelkens
@@ -51961,6 +52012,7 @@ synonym: "Symphalangism of the distal and middle phalanges of the 3rd finger" EX
 is_a: HP:0001204 ! Distal symphalangism (hands)
 is_a: HP:0009357 ! Abnormality of the distal phalanx of the 3rd finger
 is_a: HP:0009435 ! Symphalangism of middle phalanx of 3rd finger
+is_a: HP:0009445 ! Symphalangism of the 3rd finger
 created_by: doelkens
 creation_date: 2009-01-14T03:16:46Z
 
@@ -52138,6 +52190,7 @@ alt_id: HP:0004159
 def: "Dissolution or degeneration of bone tissue of the phalanges of the 3rd finger." [HPO:curators]
 synonym: "Lytic defects of middle finger phalanges" EXACT []
 is_a: HP:0009316 ! Abnormality of the phalanges of the 3rd finger
+is_a: HP:0009699 ! Osteolytic defects of the hand bones
 is_a: HP:0009771 ! Osteolytic defects of the phalanges of the hand
 created_by: doelkens
 creation_date: 2009-01-14T04:09:01Z
@@ -53102,6 +53155,7 @@ alt_id: HP:0004105
 def: "Abnormality of the phalanges of the 2nd (index) finger." [HPO:curators]
 synonym: "Abnormality of 2nd finger phalanges" EXACT []
 is_a: HP:0004100 ! Abnormality of the 2nd finger
+is_a: HP:0005918 ! Abnormality of phalanx of finger
 is_a: HP:0009774 ! Triangular shaped phalanges of the hand
 created_by: doelkens
 creation_date: 2009-01-21T10:15:07Z
@@ -53151,6 +53205,7 @@ alt_id: HP:0004117
 def: "Triangular shaped phalanges of the 2nd finger. A triangular or so called delta shaped phalanx is a typical result after a bracket epiphysis of the affected phalanx." [HPO:curators]
 synonym: "Triangular index finger phalanges" EXACT []
 is_a: HP:0009541 ! Abnormality of the phalanges of the 2nd finger
+is_a: HP:0009774 ! Triangular shaped phalanges of the hand
 created_by: doelkens
 creation_date: 2009-01-21T10:19:34Z
 
@@ -53186,6 +53241,7 @@ name: Osteolytic defects of the phalanges of the 2nd finger
 alt_id: HP:0004114
 synonym: "Lytic defect in index finger phalanges" EXACT []
 is_a: HP:0009541 ! Abnormality of the phalanges of the 2nd finger
+is_a: HP:0009699 ! Osteolytic defects of the hand bones
 is_a: HP:0009771 ! Osteolytic defects of the phalanges of the hand
 created_by: doelkens
 creation_date: 2009-01-21T10:20:26Z
@@ -53315,6 +53371,7 @@ def: "Fusion of the terminal/distal and middle phalanges of the 2nd finger." [HP
 synonym: "Symphalangism of the distal and middle phalanges of the 2nd finger" EXACT []
 is_a: HP:0001204 ! Distal symphalangism (hands)
 is_a: HP:0009542 ! Abnormality of the distal phalanx of the 2nd finger
+is_a: HP:0009545 ! Symphalangism of the 2nd finger
 is_a: HP:0009574 ! Symphalangism of middle phalanx of 2nd finger
 created_by: doelkens
 creation_date: 2009-01-28T04:16:02Z
@@ -53733,6 +53790,7 @@ alt_id: HP:0004064
 def: "A structural anomaly of one or more phalanges of the thumb." [HPO:probinson]
 synonym: "Abnormality of thumb phalanges" EXACT []
 is_a: HP:0001172 ! Abnormality of the thumb
+is_a: HP:0005918 ! Abnormality of phalanx of finger
 is_a: HP:0009774 ! Triangular shaped phalanges of the hand
 created_by: doelkens
 creation_date: 2009-01-29T01:10:39Z
@@ -54011,6 +54069,7 @@ creation_date: 2009-01-29T05:09:41Z
 id: HP:0009635
 name: Synostosis of thumb phalanx
 def: "Fusion of a phalanx of the thumb with another bone." [HPO:probinson]
+is_a: HP:0009602 ! Abnormality of thumb phalanx
 is_a: HP:0009618 ! Abnormality of the proximal phalanx of the thumb
 is_a: HP:0009849 ! Symphalangism of middle phalanx of finger
 created_by: doelkens
@@ -54199,6 +54258,7 @@ def: "Dissolution or degeneration of bone tissue of one or more phalanges of the
 comment: Osteolytic lesions are visible on radiography as demarcated areas of radiolucency ('darkness').
 synonym: "Osteolytic defects of the phalanges of the thumb" EXACT []
 is_a: HP:0009602 ! Abnormality of thumb phalanx
+is_a: HP:0009699 ! Osteolytic defects of the hand bones
 is_a: HP:0009771 ! Osteolytic defects of the phalanges of the hand
 created_by: doelkens
 creation_date: 2009-01-29T05:29:26Z
@@ -54226,6 +54286,8 @@ synonym: "Symphalangism of the distal and proximal phalanges of the thumb" EXACT
 is_a: HP:0001204 ! Distal symphalangism (hands)
 is_a: HP:0009617 ! Abnormality of the distal phalanx of the thumb
 is_a: HP:0009635 ! Synostosis of thumb phalanx
+is_a: HP:0009700 ! Synostosis involving bones of the fingers
+is_a: HP:0009773 ! Symphalangism affecting the phalanges of the hand
 created_by: doelkens
 creation_date: 2009-01-29T05:29:26Z
 
@@ -54238,6 +54300,7 @@ comment: A triangular or so called delta shaped phalanx is a typical result afte
 synonym: "Triangular shaped phalanges of the thumb" EXACT []
 synonym: "Triangular thumb phalanges" EXACT []
 is_a: HP:0009602 ! Abnormality of thumb phalanx
+is_a: HP:0009774 ! Triangular shaped phalanges of the hand
 created_by: doelkens
 creation_date: 2009-01-29T05:29:26Z
 
@@ -55298,6 +55361,7 @@ def: "Increased width of the phalanges of the hand." [HPO:curators]
 synonym: "Widening of phalanges of the hand" EXACT []
 xref: UMLS:C1842230 "Broad phalanges"
 is_a: HP:0001500 ! Broad finger
+is_a: HP:0005918 ! Abnormality of phalanx of finger
 is_a: HP:0006009 ! Broad phalanx
 created_by: doelkens
 creation_date: 2009-02-02T11:38:04Z
@@ -56609,6 +56673,7 @@ synonym: "Fleshy upturned lobules" EXACT []
 synonym: "Lobe, uplifted" EXACT []
 synonym: "UPLIFTED EARLOBES" RELATED [HPO:skoehler]
 synonym: "Upturned earlobe" EXACT []
+synonym: "UPTURNED EARLOBES" RELATED [HPO:skoehler]
 xref: UMLS:C1856117 "Fleshy upturned lobules"
 is_a: HP:0000363 ! Abnormality of earlobe
 created_by: peter
@@ -56975,6 +57040,7 @@ def: "This term applies if one or more of the phalanges of the 2nd finger are ei
 synonym: "Partial/complete duplication of phalanges of the 2nd finger" EXACT []
 is_a: HP:0009541 ! Abnormality of the phalanges of the 2nd finger
 is_a: HP:0009946 ! Polydactyly affecting the 2nd finger
+is_a: HP:0009997 ! Duplication of phalanx of hand
 created_by: doelkens
 creation_date: 2009-05-15T01:00:37Z
 
@@ -57113,6 +57179,7 @@ def: "This term applies if one or more of the phalanges of the 3rd finger are ei
 synonym: "Partial/complete duplication of phalanges of the 3rd finger" EXACT []
 is_a: HP:0009316 ! Abnormality of the phalanges of the 3rd finger
 is_a: HP:0009958 ! Polydactyly affecting the 3rd finger
+is_a: HP:0009997 ! Duplication of phalanx of hand
 created_by: doelkens
 creation_date: 2009-05-26T09:54:51Z
 
@@ -57243,6 +57310,7 @@ def: "This term applies if one or more of the phalanges of the 4th finger are ei
 synonym: "Partial/complete duplication of phalanges of the 4th finger" EXACT []
 is_a: HP:0009172 ! Abnormality of the phalanges of the 4th finger
 is_a: HP:0009971 ! Polydactyly affecting the 4th finger
+is_a: HP:0009997 ! Duplication of phalanx of hand
 created_by: doelkens
 creation_date: 2009-05-26T02:19:28Z
 
@@ -57486,6 +57554,7 @@ name: Duplication of phalanx of hand
 alt_id: HP:0009143
 def: "This term applies if one or more of the phalanges of the hand are either partially duplicated, depending on severity leading to a broad or bifid appearance of the phalanges, or completely duplicated." [HPO:sdoelken]
 synonym: "Duplication of finger bones" EXACT []
+is_a: HP:0001167 ! Abnormality of finger
 is_a: HP:0004275 ! Duplication of hand bones
 is_a: HP:0005918 ! Abnormality of phalanx of finger
 created_by: doelkens
@@ -58324,6 +58393,7 @@ id: HP:0010082
 name: Symphalangism affecting the distal phalanx of the hallux
 is_a: HP:0001859 ! Distal symphalangism (feet)
 is_a: HP:0010053 ! Abnormality of the distal phalanx of the hallux
+is_a: HP:0010064 ! Symphalangism affecting the phalanges of the hallux
 is_a: HP:0010091 ! Symphalangism affecting the proximal phalanx of the hallux
 is_a: HP:0010191 ! Symphalangism affecting the distal phalanges of the toes
 created_by: doelkens
@@ -59148,6 +59218,7 @@ creation_date: 2009-05-29T01:39:26Z
 [Term]
 id: HP:0010177
 name: Osteolytic defects of the phalanges of the toes
+is_a: HP:0009134 ! Osteolysis involving bones of the feet
 is_a: HP:0010161 ! Abnormality of the phalanges of the toes
 created_by: doelkens
 creation_date: 2009-05-29T01:39:26Z
@@ -59657,6 +59728,7 @@ synonym: "Sclerotic ivory phalangeal epiphyses" EXACT []
 xref: UMLS:C1857651 "Sclerotic ivory phalangeal epiphyses"
 is_a: HP:0005920 ! Abnormality of the epiphyses of the phalanges of the hand
 is_a: HP:0010583 ! Ivory epiphyses
+is_a: HP:0011001 ! Increased bone mineral density
 is_a: HP:0100899 ! Sclerosis of finger phalanx
 created_by: doelkens
 creation_date: 2009-07-06T03:31:52Z
@@ -61317,6 +61389,7 @@ creation_date: 2009-07-16T12:44:41Z
 id: HP:0010419
 name: Symphalangism affecting the distal phalanx of the 2nd toe
 is_a: HP:0001859 ! Distal symphalangism (feet)
+is_a: HP:0010353 ! Symphalangism affecting the phalanges of the 2nd toe
 is_a: HP:0010356 ! Abnormality of the distal phalanx of the 2nd toe
 is_a: HP:0010410 ! Symphalangism affecting the middle phalanx of the 2nd toe
 created_by: doelkens
@@ -61695,6 +61768,7 @@ alt_id: HP:0003242
 def: "The presence of both ovarian and testicular tissues either in the same or in opposite gonads. Affected persons have ambiguous genitalia and may have 46,XX or 46,XY karyotypes or 46,XX/XY mosaicism." [HPO:curators]
 synonym: "Testicular and ovarian tissue present" EXACT []
 is_a: HP:0000062 ! Ambiguous genitalia
+is_a: HP:0000811 ! Abnormal external genitalia
 created_by: peter
 creation_date: 2009-09-15T08:28:15Z
 
@@ -61817,6 +61891,7 @@ id: HP:0010475
 name: Cloacal exstrophy
 def: "Cloacal exstrophy is a severe anterior abdominal wall defect in which the two hemibladders are visible and are separated by a midline intestinal plate, an omphalocele, and an imperforate anus." [HPO:probinson]
 xref: UMLS:C0345217 "Cloacal exstrophy"
+is_a: HP:0010866 ! Abdominal wall defect
 is_a: HP:0012620 ! Cloacal abnormality
 is_a: HP:0100548 ! Exstrophy
 created_by: peter
@@ -63822,6 +63897,7 @@ synonym: "Central pulverulent cataract" EXACT []
 synonym: "Pulverulent nuclear cataract" EXACT []
 is_a: HP:0010693 ! Pulverulent Cataract
 is_a: HP:0010925 ! Nuclear punctate cataract
+is_a: HP:0100018 ! Nuclear cataract
 created_by: peter
 creation_date: 2010-03-20T02:53:02Z
 
@@ -64186,6 +64262,7 @@ xref: UMLS:C0265513 "Osteopathia striata"
 is_a: HP:0000944 ! Abnormality of the metaphyses
 is_a: HP:0004348 ! Abnormality of bone mineral density
 is_a: HP:0010766 ! Ectopic calcification
+is_a: HP:0011314 ! Abnormality of long bone morphology
 created_by: doelkens
 creation_date: 2010-04-21T07:30:24Z
 
@@ -66540,6 +66617,7 @@ creation_date: 2011-02-10T06:14:16Z
 
 [Term]
 id: HP:0010999
+is_anonymous: true
 name: Aplasia of the optic tract
 is_a: HP:0011000 ! Aplasia/Hypoplasia of the optic tract
 created_by: sdoelken
@@ -66789,6 +66867,7 @@ creation_date: 2011-03-02T06:17:46Z
 id: HP:0011027
 name: Abnormality of the fallopian tube
 def: "An abnormality of the `fallopian tube` (FMA:18245)." [HPO:probinson]
+comment: The Fallopian tubes (also known as oviducts, uterine tubes, and salpinges) are ducts that lead from the ovaries into the uterus.
 is_a: HP:0000008 ! Abnormality of female internal genitalia
 created_by: peter
 creation_date: 2011-03-02T06:36:01Z
@@ -67748,7 +67827,6 @@ creation_date: 2011-06-19T11:04:20Z
 id: HP:0011134
 name: Low-grade fever
 def: "Mild fever that does not exceed 38.5 degree centrigrade." [HPO:probinson]
-xref: SO:0000881
 is_a: HP:0001945 ! Fever
 created_by: peter
 creation_date: 2011-06-19T12:19:44Z
@@ -68191,6 +68269,7 @@ alt_id: HP:0010840
 def: "EEG discharges recorded in particular areas of the A localized (focal) abnormality in cerebral electrical activity recorded along the scalp by electroencephalography (EEG)." [HPO:jalbers]
 comment: Note that a focal EEG abnormality is not synonymous with "focal epileptiform discharges" because a focal EEG abnormality is not necessarily epileptiform (e.g., it could be a focal slowing).
 synonym: "Focal EEG Abnormality" EXACT []
+is_a: HP:0002353 ! EEG abnormality
 is_a: HP:0011182 ! Epileptiform EEG discharges
 created_by: hecht
 creation_date: 2011-11-19T10:39:02Z
@@ -69276,6 +69355,7 @@ synonym: "Wide/broad thumb" EXACT []
 synonym: "Wide/broad thumb phalanges" EXACT []
 xref: SNOMEDCT:249773003 "Broad thumbs"
 xref: UMLS:C0426891 "Broad thumb"
+is_a: HP:0001172 ! Abnormality of the thumb
 is_a: HP:0009602 ! Abnormality of thumb phalanx
 is_a: HP:0009768 ! Broad phalanges of the hand
 created_by: hecht
@@ -70286,7 +70366,7 @@ creation_date: 2012-03-16T06:38:44Z
 [Term]
 id: HP:0011422
 name: Abnormality of chloride homeostasis
-def: "An abnormality of `chloride` (CHEBI:17996 homeostasis or concentration in the body." [HPO:probinson]
+def: "An abnormality of `chloride` (CHEBI:17996) homeostasis or concentration in the body." [HPO:probinson]
 is_a: HP:0003111 ! Abnormality of ion homeostasis
 created_by: peter
 creation_date: 2012-03-16T06:09:15Z
@@ -71073,6 +71153,8 @@ creation_date: 2012-04-06T09:55:43Z
 id: HP:0011512
 name: Hyperpigmentation of the fundus
 def: "Increased amount of pigmentation of the retina." [DDD:ncarter]
+synonym: "Hyperpigmented fundi" EXACT []
+synonym: "Hyperpigmented fundus" EXACT []
 is_a: HP:0008051 ! Abnormality of the retinal pigment epithelium
 created_by: peter
 creation_date: 2012-04-06T10:34:11Z
@@ -74692,6 +74774,7 @@ id: HP:0011935
 name: Decreased urinary urate
 def: "Decreased concentration of `urate` (CHEBI:46819) in the urine." [HPO:probinson]
 comment: Xanthine oxidase oxidizes oxypurines such as xanthine and hypoxanthine to uric acid. Uric acid is the final oxidation product of purine catabolism.
+is_a: HP:0004369 ! Decreased purine levels
 is_a: HP:0012610 ! Abnormality of urinary uric acid concentration
 created_by: peter
 creation_date: 2012-06-10T02:19:49Z
@@ -75490,7 +75573,7 @@ name: Hepatocellular adenoma
 def: "A benign tumor of the liver of presumably epithelial origin." [HPO:probinson]
 synonym: "Hepatic adenoma" EXACT []
 synonym: "Liver cell adenoma" EXACT []
-xref: MPATH:MPATH:353 "hepatocellular adenoma"
+xref: MPATH:MPATH\:353 "hepatocellular adenoma"
 is_a: HP:0002896 ! Neoplasm of the liver
 created_by: peter
 creation_date: 2012-07-27T01:24:44Z
@@ -75526,7 +75609,7 @@ def: "Benign neoplasia derived from lipoblasts or lipocytes of white or brown fa
 subset: hposlim_core
 xref: MEDRA:10024612 "Lipoma"
 xref: MeSH:D008067 "Lipoma"
-xref: MPATH:MPATH:417 "lipoma"
+xref: MPATH:MPATH\:417 "lipoma"
 xref: SNOMEDCT:93163002 "Lipoma"
 xref: UMLS:C0023798 "Lipoma"
 is_a: HP:0012031 ! Lipomatous tumor
@@ -78501,6 +78584,7 @@ synonym: "Midface hyperplasia" EXACT []
 synonym: "Midface hypertrophy" EXACT []
 synonym: "OVERGROWTH OF THE MAXILLA" RELATED [HPO:skoehler]
 xref: UMLS:C0240309 "Maxillary hyperplasia"
+is_a: HP:0000309 ! Abnormality of the midface
 is_a: HP:0000326 ! Abnormality of the maxilla
 created_by: peter
 creation_date: 2013-10-13T02:55:54Z
@@ -80595,6 +80679,7 @@ id: HP:0012611
 name: Increased urinary urate
 def: "Elevanted concentration of `urate` (CHEBI:46819) in the urine." [HPO:probinson]
 comment: Xanthine oxidase oxidizes oxypurines such as xanthine and hypoxanthine to uric acid. Uric acid is the final oxidation product of purine catabolism.
+is_a: HP:0004369 ! Decreased purine levels
 is_a: HP:0012610 ! Abnormality of urinary uric acid concentration
 created_by: peter
 creation_date: 2014-01-17T11:57:29Z
@@ -80612,6 +80697,7 @@ creation_date: 2014-01-17T11:58:23Z
 id: HP:0012613
 name: Increased urinary sulfate
 def: "Elevated concentration of `sulfate` (CHEBI:16189) in the urine." [HPO:probinson]
+is_a: HP:0004369 ! Decreased purine levels
 is_a: HP:0012612 ! Abnormal urinary sulfate concentration
 created_by: peter
 creation_date: 2014-01-17T11:58:51Z
@@ -80677,6 +80763,7 @@ creation_date: 2014-01-17T12:27:06Z
 id: HP:0012621
 name: Persistent cloaca
 def: "Developmental anomaly in which the vagina, bladder, and rectum fuse resulting in a common channel." [HPO:probinson]
+is_a: HP:0010866 ! Abdominal wall defect
 is_a: HP:0012620 ! Cloacal abnormality
 created_by: peter
 creation_date: 2014-01-17T12:28:30Z
@@ -81554,6 +81641,7 @@ id: HP:0012721
 name: Venous malformation
 def: "A vascular malformation resulting from a developmental error of venous tissue composed of dysmorphic channels lined by flattened endothelium and exhibiting slow turnover. A venous malformation may present as a blue patch on the skin ranging to a soft blue mass. Venous malformations are easily compressible and usually swell in thewhen venous pressure increases (e.g., when held in a dependent position or when a child cries). They may be relatively localized or quite extensive within an anatomic region." [HPO:probinson]
 comment: Venous malformations are always present at birth, and usually involve the skin of the face, limbs, or trunk.
+synonym: "VENOUS MALFORMATIONS" EXACT [HPO:skoehler]
 is_a: HP:0002624 ! Venous abnormality
 created_by: peter
 creation_date: 2014-03-23T01:20:33Z
@@ -82947,6 +83035,295 @@ created_by: hecht
 creation_date: 2014-06-09T11:33:16Z
 
 [Term]
+id: HP:0012880
+name: Abnormality of the labia minora
+def: "An anomaly of the labia minora, the folds of skin between the outer labia." [HPO:probinson]
+is_a: HP:0000058 ! Abnormality of the labia
+created_by: hecht
+creation_date: 2014-06-11T07:44:31Z
+
+[Term]
+id: HP:0012881
+name: Abnormality of the labia majora
+def: "An anomaly of the outer labia." [HPO:probinson]
+is_a: HP:0000058 ! Abnormality of the labia
+created_by: hecht
+creation_date: 2014-06-11T07:46:41Z
+
+[Term]
+id: HP:0012882
+name: Hyperplastic labia majora
+def: "Overgrowth of the outer labia." [HPO:probinson]
+synonym: "Enlarged labia majora" EXACT []
+synonym: "Hyperplasia of labia majora" EXACT []
+is_a: HP:0012881 ! Abnormality of the labia majora
+created_by: hecht
+creation_date: 2014-06-11T07:54:42Z
+
+[Term]
+id: HP:0012883
+name: Fallopian tube cyst
+def: "A fluid filled sac located in the Fallopian tube." [HPO:probinson]
+is_a: HP:0011027 ! Abnormality of the fallopian tube
+created_by: hecht
+creation_date: 2014-06-11T08:00:04Z
+
+[Term]
+id: HP:0012884
+name: Fallopian tube torsion
+def: "A twisting of the Fallopian tube. Sudden onset with sharp, colicky pelvic pain associated with nausea, vomiting, bowel, and bladder symptoms is the usual presentation." [HPO:probinson, pmid:24251052]
+comment: Fallopian tube torsion, though rare, should be considered in women of reproductive age with unilateral pelvic pain. Early diagnostic laparoscopy is important for an accurate diagnosis and could salvage the tube.
+is_a: HP:0011027 ! Abnormality of the fallopian tube
+created_by: hecht
+creation_date: 2014-06-11T08:01:57Z
+
+[Term]
+id: HP:0012885
+name: Fallopian tube duplication
+def: "The presence of a supernumerary Fallopian tube." [HPO:probinson, pmid:23532389]
+comment: Accessory fallopian tube is the congenital anomaly attached to the ampullary part of main tube. This accessory tube is common site of pyosalpinx, hydrosalpinx, cystic swelling and torsion.
+synonym: "Accessory fallopian tube" EXACT []
+is_a: HP:0011027 ! Abnormality of the fallopian tube
+created_by: hecht
+creation_date: 2014-06-11T08:05:41Z
+
+[Term]
+id: HP:0012886
+name: Hemorrhagic ovarian cyst
+def: "An abdominal mass formed by bleeding into a follicular ovarian cyst or corpus luteum cyst." [HPO:probinson, pmid:12928726]
+comment: The clinical signs and symptoms of hemorrhagic ovarian cyst (HOC) are variable and include such patients as asymptomatic cases or patients showing symptoms of acute abdomen. HOC is detected as pelvic masses by ultrasonography, but it is often misdiagnosed with other organic masses because of its variable clinical and sonographic findings, and in some cases may lead to laparotomy.
+is_a: HP:0000138 ! Ovarian cyst
+created_by: hecht
+creation_date: 2014-06-11T09:26:15Z
+
+[Term]
+id: HP:0012887
+name: Ovarian serous cystadenoma
+def: "A cystic tumor of the ovary, containing thin, clear, yellow serous fluid and varying amounts of solid tissue." [HPO:probinson, PMID:23766763]
+comment: Ovarian serous cystadenoma HAS a malignant potential several times greater than that of mucinous cystadenoma. It can be unilocular, parvilocular, or multilocular. It is often bilateral and papillary. The cysts may vary greatly in size.
+synonym: "Serous ovarian cyst" RELATED []
+xref: MeSH:D018293 "Cystadenoma, Serous"
+is_a: HP:0000138 ! Ovarian cyst
+created_by: hecht
+creation_date: 2014-06-11T09:32:06Z
+
+[Term]
+id: HP:0012888
+name: Abnormality of the uterine cervix
+def: "An anomaly of the neck of the uterus (lower part of the uterus), called the `uterine cervix` (FMA:17740)." [HPO:probinson]
+is_a: HP:0000130 ! Abnormality of the uterus
+created_by: hecht
+creation_date: 2014-06-11T09:40:02Z
+
+[Term]
+id: HP:0012889
+name: Cervical endometriosis
+def: "Abnormal growth of endometrial cells (which are normally limited to the uterus) within the cervix." [HPO:probinson]
+is_a: HP:0012888 ! Abnormality of the uterine cervix
+created_by: hecht
+creation_date: 2014-06-11T09:42:02Z
+
+[Term]
+id: HP:0012890
+name: Posteriorly placed anus
+def: "Posterior malposition of the anus." [UToronto:htrang]
+is_a: HP:0004397 ! Ectopic anus
+created_by: peter
+creation_date: 2014-06-23T10:55:41Z
+
+[Term]
+id: HP:0012891
+name: High posterior hairline
+def: "Hair on the neck extends less inferiorly than usual." [UToronto:htrang]
+is_a: HP:0009553 ! Abnormality of the hairline
+created_by: peter
+creation_date: 2014-06-23T10:57:10Z
+
+[Term]
+id: HP:0012892
+name: Facial muscle hypertrophy
+def: "Muscle hypertrophy affecting the facial muscles." [UToronto:htrang]
+is_a: HP:0003712 ! Muscle hypertrophy
+created_by: peter
+creation_date: 2014-06-23T10:58:42Z
+
+[Term]
+id: HP:0012893
+name: Neck muscle hypertrophy
+def: "Muscle hypertrophy affecting the muscles of the neck." [UToronto:htrang]
+is_a: HP:0003712 ! Muscle hypertrophy
+created_by: peter
+creation_date: 2014-06-23T10:59:17Z
+
+[Term]
+id: HP:0012894
+name: Paraspinal muscle hypertrophy
+def: "Muscle hypertrophy affecting the paraspinal muscles." [UToronto:htrang]
+is_a: HP:0003712 ! Muscle hypertrophy
+created_by: peter
+creation_date: 2014-06-23T10:59:48Z
+
+[Term]
+id: HP:0012895
+name: Scapular muscle hypertrophy
+def: "Muscle hypertrophy affecting the scapular muscles." [UToronto:htrang]
+is_a: HP:0003712 ! Muscle hypertrophy
+created_by: peter
+creation_date: 2014-06-23T11:00:11Z
+
+[Term]
+id: HP:0012896
+name: Abnormal motor evoked potentials
+def: "An anomaly identified by motor evoked potentials (MEPs). MEPs are measured following single-pulse or repetitive transcranial magnetic stimulation and can be used for the assessment of the excitability of the motor cortex and the integrity of conduction along the central and peripheral motor pathways." [HPO:probinson, pmid:10402095]
+is_a: HP:0001311 ! Abnormal nervous system electrophysiology
+created_by: peter
+creation_date: 2014-06-23T11:04:24Z
+
+[Term]
+id: HP:0012897
+name: Abnormal upper-limb motor evoked potentials
+def: "An anomaly identified by motor evoked potentials (MEPs) in the arm." [UToronto:htrang]
+synonym: "Abnormal motor evoked potentials in the upper limb" EXACT []
+is_a: HP:0012896 ! Abnormal motor evoked potentials
+created_by: peter
+creation_date: 2014-06-23T11:08:22Z
+
+[Term]
+id: HP:0012898
+name: Abnormal lower-limb motor evoked potentials
+def: "An anomaly identified by motor evoked potentials (MEPs) in the leg." [UToronto:htrang]
+synonym: "Abnormal motor evoked potentials in the lower limb" EXACT []
+is_a: HP:0012896 ! Abnormal motor evoked potentials
+created_by: peter
+creation_date: 2014-06-23T11:09:22Z
+
+[Term]
+id: HP:0012899
+name: Handgrip myotonia
+def: "Difficulty releasing one's grip associated with prolonged first handgrip relaxation times." [pmid:22987687, UToronto:htrang]
+synonym: "Grip myotonia" EXACT []
+is_a: HP:0002486 ! Myotonia
+created_by: peter
+creation_date: 2014-06-23T11:10:53Z
+
+[Term]
+id: HP:0012900
+name: Myotonia of the face
+def: "Slowed relaxation of muscles in the face." [UToronto:htrang]
+is_a: HP:0002486 ! Myotonia
+created_by: peter
+creation_date: 2014-06-23T11:14:55Z
+
+[Term]
+id: HP:0012901
+name: Myotonia of the jaw
+def: "Slowed relaxation of muscles in the jaw." [UToronto:htrang]
+is_a: HP:0002486 ! Myotonia
+created_by: peter
+creation_date: 2014-06-23T11:18:29Z
+
+[Term]
+id: HP:0012902
+name: Myotonia of the lower limb
+def: "Slowed relaxation of muscles in the leg." [UToronto:htrang]
+is_a: HP:0002486 ! Myotonia
+created_by: peter
+creation_date: 2014-06-23T11:18:59Z
+
+[Term]
+id: HP:0012903
+name: Myotonia of the upper limb
+def: "Slowed relaxation of muscles in the arm." [UToronto:htrang]
+is_a: HP:0002486 ! Myotonia
+created_by: peter
+creation_date: 2014-06-23T11:19:18Z
+
+[Term]
+id: HP:0012904
+name: Cold-sensitive myotonia
+def: "An involuntary and painless delay in the relaxation of skeletal muscle following contraction or electrical stimulation that is  induced by exposure to cold." [pmid:14617673, UToronto:htrang]
+is_a: HP:0002486 ! Myotonia
+created_by: peter
+creation_date: 2014-06-23T11:20:32Z
+
+[Term]
+id: HP:0012905
+name: Euryblepharon
+def: "Euryblepharon is a congenital eyelid anomaly characterized by horizontal enlargement of the palpebral fissure. The eyelid is shortened vertically compared with the horizontal dimension, with associated lateral canthal malpositioning and lateral ectropion abnormally wide lid opening." [HPO:probinson, pmid:15249382, pmid:15530943, pmid:24719364]
+comment: The palpebral fissure length may be increased with an enlargement of the palpebral aperture. The lateral part is usually more everted defining euryblepharon. The whole length eversion of the lower lid defines congenital ectropion. Euryblepharon is characteristic of the Kabuki syndrome.
+is_a: HP:0000492 ! Abnormality of the eyelid
+created_by: peter
+creation_date: 2014-06-23T11:43:42Z
+
+[Term]
+id: HP:0030000
+name: EMG: Repetitive nerve stimulation abnormality
+def: "Abnormality observed upon electromyography when nerve studied is electrically stimulated six to ten times at 2 or 3 Hertz." [UToronto:HTrang]
+is_a: HP:0003457 ! EMG abnormality
+
+[Term]
+id: HP:0030001
+name: Lagopthalmos
+def: "A condition in which the eyelids do not close to cover the eye completely. " []
+comment: Some common causes of lagophthalmos are Bell's palsy and other types of facial paralysis, stroke, infection,  and trauma. The inability to blink and effectively close the eyes leads to corneal exposure and excessive evaporation of the tear film. The main purpose when treating lagophthalmos is to prevent exposure keratitis and reestablish eyelid function.
+xref: pmid:20590416
+is_a: HP:0000492 ! Abnormality of the eyelid
+
+[Term]
+id: HP:0030002
+name: Nocturnal lagophthalmos
+def: "The inability to close the eyelids during sleep." []
+comment: Lagophthalmos is associated with exposure keratopathy, poor sleep, and persistent exposure-related symptoms. There are a variety of causes of lagophthalmos, grouped as proptosis/eye exposure etiologies and palpebral insufficiency etiologies.
+xref: pmid:16671223
+is_a: HP:0030001 ! Lagopthalmos
+
+[Term]
+id: HP:0030003
+name: Paralytic lagophthalmos
+def: "A type of lagophthalmos that occurs in association with facial nerve palsy." []
+comment: Patients with facial nerve palsy have a characteristic facial asymmetry and drooping of the angle of mouth. The temporal and zygomatic branches of facial nerve supply the forehead and eyelid muscles. Their involvement in a disease leads to paralysis of orbicularis oculi muscle resulting in lagophthalmos and ectropion.
+xref: pmid:24618488
+is_a: HP:0030001 ! Lagopthalmos
+
+[Term]
+id: HP:0030004
+name: Cicatricial lagophthalmos
+def: "A type of lagophthalmos that occurs following trauma or surgery." []
+is_a: HP:0030001 ! Lagopthalmos
+
+[Term]
+id: HP:0030005
+name: Capillary leak
+def: "An acute phenomenon characterized by hypotension and anasarca due to the loss of plasma volume into peripheral tissues, with evidence of decreased plasma volume (hemoconcentration) and protein loss from the intravascular space (hypoalbuminemia) during acute episodes." []
+synonym: "Increased capillary permeability" EXACT []
+synonym: "Systemic capillary leak syndrome" RELATED []
+xref: pmid:24467750
+xref: pmid:24808988
+xref: UToronto:HTrang
+is_a: HP:0002597 ! Abnormality of the vasculature
+
+[Term]
+id: HP:0030006
+name: Single fiber EMG abnormality
+def: "Abnormality in single fiber EMG recording, a technique that allows identification of action potentials (APs) from individual muscle fibers." []
+xref: UToronto:HTrang
+is_a: HP:0003457 ! EMG abnormality
+
+[Term]
+id: HP:0030007
+name: EMG: Positive sharp waves
+def: "These are spontaneous firing action potentials stimulated by needle movement of an injured muscle fiber. There is propagation to, but not past, the needle tip. This inhibits the display of the negative deflection of the waveform." []
+xref: pmid:15961866
+xref: UToronto:HTrang
+is_a: HP:0003482 ! EMG: axonal abnormality
+
+[Term]
+id: HP:0040004
+name: Abnormality of corneal shape
+is_a: HP:0000481 ! Abnormality of the cornea
+created_by: koehlers
+
+[Term]
 id: HP:0100000
 name: Early onset of sexual maturation
 def: "An early onset of puberty, in this case early does not refer to precocious." [HPO:probinson]
@@ -83061,6 +83438,7 @@ creation_date: 2010-05-14T09:29:27Z
 [Term]
 id: HP:0100011
 name: Scleral schwannoma
+is_a: HP:0000591 ! Abnormality of the sclera
 is_a: HP:0100008 ! Schwannoma
 is_a: HP:0100012 ! Neoplasm of the eye
 created_by: doelkens
@@ -85054,6 +85432,7 @@ name: Abnormality of the medullary cavity of the long bones
 def: "An abnormality of the medullary cavity (medulla, innermost part), which is the central cavity of bone shafts where red bone marrow and/or yellow bone marrow (adipose tissue) is stored." [HPO:sdoelken]
 synonym: "Abnormality of the marrow cavity of the long bones" EXACT []
 is_a: HP:0000940 ! Abnormal diaphysis morphology
+is_a: HP:0011314 ! Abnormality of long bone morphology
 created_by: doelkens
 creation_date: 2010-07-14T05:09:21Z
 
@@ -85945,6 +86324,7 @@ is_a: HP:0010746 ! Hypoplasia of the phalanges of the toes
 
 [Term]
 id: HP:0100368
+is_anonymous: true
 name: Short phalanx of the 5th toe
 def: "Developmental hypoplasia of one or more `phalanx of little toe` (FMA:32902)." [HPO:probinson]
 synonym: "Hypoplastic/small phalanges of the 5th toe" EXACT []
@@ -86706,18 +87086,21 @@ is_a: HP:0010389 ! Symphalangism affecting the phalanges of the 5th toe
 id: HP:0100476
 name: Symphalangism affecting the distal phalanx of the 3rd toe
 is_a: HP:0001859 ! Distal symphalangism (feet)
+is_a: HP:0010365 ! Symphalangism affecting the phalanges of the 3rd toe
 is_a: HP:0100470 ! Symphalangism affecting the middle phalanx of the 3rd toe
 
 [Term]
 id: HP:0100477
 name: Symphalangism affecting the distal phalanx of the 4th toe
 is_a: HP:0001859 ! Distal symphalangism (feet)
+is_a: HP:0010377 ! Symphalangism affecting the phalanges of the 4th toe
 is_a: HP:0100471 ! Symphalangism affecting the middle phalanx of the 4th toe
 
 [Term]
 id: HP:0100478
 name: Symphalangism affecting the distal phalanx of the 5th toe
 is_a: HP:0001859 ! Distal symphalangism (feet)
+is_a: HP:0010389 ! Symphalangism affecting the phalanges of the 5th toe
 is_a: HP:0100472 ! Symphalangism affecting the middle phalanx of the 5th toe
 
 [Term]
@@ -86829,6 +87212,7 @@ synonym: "Proximal interphalangeal finger joint contractures" EXACT []
 is_a: HP:0001220 ! Interphalangeal joint contracture of finger
 is_a: HP:0006261 ! Abnormality of phalangeal joints of the hand
 is_a: HP:0012385 ! Camptodactyly
+is_a: HP:0012785 ! Flexion contracture of finger
 created_by: doelkens
 creation_date: 2010-12-14T10:46:57Z
 
@@ -86866,6 +87250,7 @@ comment: Mast cells (or mastocytes) can be found in several types of tissues and
 synonym: "Abnormality of mastocytes" EXACT []
 is_a: HP:0003549 ! Abnormality of connective tissue
 is_a: HP:0010974 ! Abnormality of myeloid leukocytes
+is_a: HP:0010987 ! Abnormality of cellular immune system
 created_by: doelkens
 creation_date: 2010-12-17T04:02:08Z
 
@@ -87398,6 +87783,7 @@ id: HP:0100553
 name: Hemihypertrophy of lower limb
 def: "Overgrowth of only one leg." [HPO:probinson]
 is_a: HP:0001528 ! Hemihypertrophy
+is_a: HP:0002814 ! Abnormality of the lower limb
 is_a: HP:0100559 ! Lower limb asymmetry
 created_by: doelkens
 creation_date: 2010-12-21T03:58:40Z
@@ -87407,6 +87793,7 @@ id: HP:0100554
 name: Hemihypertrophy of upper limb
 def: "Overgrowth of only one arm." [HPO:probinson]
 is_a: HP:0001528 ! Hemihypertrophy
+is_a: HP:0002817 ! Abnormality of the upper limb
 is_a: HP:0100560 ! Upper limb asymmetry
 created_by: doelkens
 creation_date: 2010-12-21T03:58:55Z
@@ -87448,6 +87835,7 @@ name: Hemiatrophy of upper limb
 alt_id: HP:0200052
 def: "Unilateral atrophy (reduction in size) of an arm." [HPO:probinson]
 synonym: "Hemihypotrophy of upper limb" EXACT []
+is_a: HP:0002817 ! Abnormality of the upper limb
 is_a: HP:0100556 ! Hemiatrophy
 is_a: HP:0100560 ! Upper limb asymmetry
 created_by: doelkens
@@ -89274,7 +89662,7 @@ id: HP:0100777
 name: Exostoses
 def: "An exostosis is a benign growth the projects outward from the bone surface. It is cappped by cartilage, and arises from a bone that develops from cartilage." [HPO:probinson]
 xref: MeSH:D005096 "Exostoses"
-xref: MPATH:MP:0009877 "exostosis"
+xref: MPATH:MP\:0009877 "exostosis"
 is_a: HP:0010622 ! Neoplasm of the skeletal system
 created_by: doelkens
 creation_date: 2011-06-07T05:34:49Z
@@ -89310,6 +89698,7 @@ creation_date: 2011-06-07T05:50:21Z
 id: HP:0100781
 name: Abnormality of the sacroiliac joint
 def: "An anomaly of the `sacroiliac joint` (FMA:21440)." [HPO:probinson]
+is_a: HP:0001367 ! Abnormal joint morphology
 is_a: HP:0002867 ! Abnormality of the ilium
 is_a: HP:0005107 ! Abnormality of the sacrum
 created_by: doelkens
@@ -91681,4 +92070,35 @@ is_a: HP:0000951 ! Abnormality of the skin
 is_a: HP:0100495 ! Mastocytosis
 created_by: sebastiankohler
 creation_date: 2013-06-14T09:22:02Z
+
+[Term]
+id: HP:0200153
+name: Agenesis of lateral incisor
+is_a: HP:0006485 ! Agenesis of incisor
+
+[Term]
+id: HP:0200154
+name: Agenesis of mandibular lateral incisor
+is_a: HP:0200153 ! Agenesis of lateral incisor
+is_a: HP:0200161 ! Agenesis of mandibular incisor
+
+[Term]
+id: HP:0200158
+name: Agenesis of permanent mandibular lateral incisor
+is_a: HP:0200154 ! Agenesis of mandibular lateral incisor
+
+[Term]
+id: HP:0200159
+name: Agenesis of primary mandibular lateral incisor
+is_a: HP:0200154 ! Agenesis of mandibular lateral incisor
+
+[Term]
+id: HP:0200160
+name: Agenesis of maxillary incisor
+is_a: HP:0006485 ! Agenesis of incisor
+
+[Term]
+id: HP:0200161
+name: Agenesis of mandibular incisor
+is_a: HP:0006485 ! Agenesis of incisor
 
