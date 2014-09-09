@@ -1,7 +1,7 @@
 #!/usr/bin/env python
 
 """
-Given all the information for a pair of patients, computer a match score, with gene and variant info
+Given patient similarity scores, incorporate genetic information and report candidate genes.
 """
 
 import sys
@@ -13,6 +13,9 @@ from collections import defaultdict
 
 KO_THRESHOLD = 0.87  # between nonframeshift and splicing
 EZR_SUFFIX = 'ezr'
+N_MATCHES = 5  # phenotype matches/patient
+N_GENES = 5  # genes/match
+
 
 def read_exomizer_vcf(filename):
     gene_scores = defaultdict(lambda: [None, [], None])  # gene -> (pheno, variant_scores, combined_score)
@@ -93,7 +96,7 @@ def read_pheno_to_geno_file(filename):
 
     return pheno_to_geno
 
-def score_gene(gene, p1, p2, patient_damages, sim_scores, 
+def pc_score(gene, p1, p2, patient_damages, sim_scores, 
                inheritance=None, control_damage=None):
     p1_damage = patient_damages[p1][gene]
     p2_damage = patient_damages[p2][gene]
@@ -152,7 +155,7 @@ def get_scored_genes(p1, p2, patient_damages, sim_scores, inheritance=None,
     if method == 'avg':
         gene_scorer = average_score
     elif method == 'pc':
-        gene_scorer = score_gene
+        gene_scorer = pc_score
     else:
         raise NotImplementedError('Unknown method: {}'.format(method))
 
@@ -162,13 +165,6 @@ def get_scored_genes(p1, p2, patient_damages, sim_scores, inheritance=None,
         scores.append((score, gene))
 
     return scores
-
-def print_match(p1, p2, score, top):
-    print('%s <-> %s: %.4f' % (p1, p2, score))
-    for (score, gene) in top:
-        score, inh = score
-        if score >= 0.0001:
-            print('    %.4f: %s (%s)' % (score, gene, inh))
 
 def read_solution_genes(filename):
     solutions = {}
@@ -222,33 +218,30 @@ def script(pheno_sim, exomiser_dir, inheritance=None, id_file=None,
 
     for p1 in sorted(pheno_scores):
         matches = pheno_scores[p1]
-        #matches.sort(reverse=True)
-        #for score, p2 in matches[:1]:
-        score, p2 = max(matches)
-        scored_genes = get_scored_genes(p1, p2, patient_damages, pair_scores,
-                                        inheritance=inheritance, control_damage=control_damage,
-                                        method=method)
-        if solution_genes:
-            # Report rank of solution
-            solution = solution_genes[p1]
+        matches.sort(reverse=True)
+        for pheno_score, p2 in matches[:N_MATCHES]:
+            scored_genes = get_scored_genes(p1, p2, patient_damages, pair_scores,
+                                            inheritance=inheritance, control_damage=control_damage,
+                                            method=method)
             scored_genes.sort(reverse=True)
-            rank = [(i + 1) for (i, (_, gene)) in enumerate(scored_genes) if gene == solution]
-            if rank:
-                rank = str(rank[0])
-            else:
-                rank = 'NA'
+            top_n = scored_genes[:N_GENES]
+            output = [p1, p2, pheno_score]
+            if solution_genes:
+                # Report rank and score of true gene
+                true_gene = solution_genes[p1]
+                hit = [(i + 1) for (i, (_, gene)) in enumerate(scored_genes) if gene == true_gene]
+                rank = hit[0] if hit else 'NA'
 
-            top_score, top_gene = (rank, solution)
-        else:
-            # Report score of top gene
-            top = max(scored_genes)
-            if top:
-                top_score, top_gene = top
-                top_score = '{:.8f}'.format(top_score)
-            else:
-                top_score, top_gene = ('NA', '')
+                output.append('{}:{}'.format(true_gene, rank))
 
-        print('\t'.join([p1, p2, top_gene, top_score]))
+            # Report scores of top genes
+            if top_n:
+                for top_score, top_gene in top_n:
+                    output.append('{}:{}'.format(top_gene, top_score))
+            else:
+                output.append('NA')
+
+            print('\t'.join(map(str, output)))
 
 
 def parse_args(args):
