@@ -62,9 +62,10 @@ class Patient:
         if neg_hp_terms:
             neg_hp_terms = resolve_terms(neg_hp_terms.split(','))
 
+
         onset = row.get('AOO')
         if onset:
-            onset = set(onset.split(','))
+            assert onset.startswith('HP:') and len(onset) == 10, 'Invalid onset: {!r}'.format(onset)
 
         diagnoses = row.get('Diagnoses')
         if diagnoses:

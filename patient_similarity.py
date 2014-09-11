@@ -19,6 +19,21 @@ from mim import MIM
 from orphanet import Orphanet
 from patient import Patient
 
+AOOS = {
+    'HP:0003577': 1.5,  # Congenital onset
+    'HP:0003623': 3.0,  # Neonatal onset
+    'HP:0003593': 4.0,  # Infantile onset
+    'HP:0011463': 5.0,  # Childhood onset
+    'HP:0003621': 6.0,  # Juvenile onset;
+    'HP:0003581': 8.0,  # Adult onset
+    
+    'HP:0011460': 1.0,  # Embryonal onset
+    'HP:0011461': 2.0,  # Fetal onset
+    'HP:0011462': 7.0,  # Young adult onset
+    'HP:0003596': 8.0,  # Middle age onset
+    'HP:0003584': 9.0,  # Late onset
+    }
+
 
 def similarity_breakdown(hpoic, patient1, patient2):
     p1_terms = set(patient1.hp_terms)
@@ -57,14 +72,25 @@ def similarity_breakdown(hpoic, patient1, patient2):
 
     return clusters
 
+def get_aoo_penalty(aoo1, aoo2, neutral_dist=2.0, max_dist=5.0):
+    """Get penalty between 1 (worst match) and 0 (no penalty) for age of onsets"""
+    if aoo1 and aoo2:
+        dist = abs(AOOS[aoo1] - AOOS[aoo2])
+        return max(min(dist, max_dist) - neutral_dist, 0) / (max_dist - neutral_dist)
+    else:
+        # If missing either or both AOOs, no penalty
+        return 0
 
-def compare_patients(hpoic, patient1, patient2, scores=None):
+def compare_patients(hpoic, patient1, patient2, scores=None, use_aoo=False):
     logging.debug('Comparing patients: {}, {}'.format(patient1.id, patient2.id))
 
     p1_terms = patient1.hp_terms
     p2_terms = patient2.hp_terms
     assert p1_terms and p2_terms
     out = {}
+
+    if use_aoo:
+        out['aoo'] = get_aoo_penalty(patient1.onset, patient2.onset)
 
 #     logging.debug('Patient 1 terms and IC')
 #     for t in p1_terms:
@@ -198,7 +224,7 @@ def compare_patients(hpoic, patient1, patient2, scores=None):
 def script(patient_hpo_filename, hpo_filename, disease_phenotype_filename, 
            orphanet_lookup_filename=None, orphanet_prevalence_filename=None, proto=None, 
            use_disease_prevalence=False, use_phenotype_frequency=False, 
-           use_patient_phenotypes=False, scores=None):
+           use_patient_phenotypes=False, use_aoo=False, scores=None):
     hpo = HPO(hpo_filename, new_root='HP:0000118')
     mim = MIM(disease_phenotype_filename)
 
@@ -236,7 +262,7 @@ def script(patient_hpo_filename, hpo_filename, disease_phenotype_filename,
             compare_against.extend(proto)
 
         for o in compare_against:
-            sims = compare_patients(hpoic, patient, o, scores=scores)
+            sims = compare_patients(hpoic, patient, o, scores=scores, use_aoo=use_aoo)
             if header is None:
                 header = sorted(sims)
                 print('\t'.join(['A', 'B'] + header))
@@ -262,6 +288,7 @@ def parse_args(args):
     parser.add_argument('--use-disease-prevalence', default=False, action='store_true')
     parser.add_argument('--use-phenotype-frequency', default=False, action='store_true')
     parser.add_argument('--use-patient-phenotypes', default=False, action='store_true')
+    parser.add_argument('--use-aoo', default=False, action='store_true')
     parser.add_argument('--log', dest='loglevel', choices=['DEBUG', 'INFO', 'WARNING', 'ERROR', 'CRITICAL'], default='WARNING')
     parser.add_argument('--proto', metavar="file", help="HPO file of disease prototypes to compare against as well")
     parser.add_argument('-s', '--score', dest='scores', action='append', default=[],

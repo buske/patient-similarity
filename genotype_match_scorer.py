@@ -9,39 +9,77 @@ import os
 import logging
 import csv
 
+from math import log10
 from collections import defaultdict
+from bisect import bisect_left, bisect_right
+from numpy import array
+from scipy.stats import kendalltau
 
 KO_THRESHOLD = 0.87  # between nonframeshift and splicing
 EZR_SUFFIX = 'ezr'
+EZR_FORMAT = 'ezr2'
 N_MATCHES = 5  # phenotype matches/patient
 N_GENES = 5  # genes/match
 
+EZR_FORMATS = {
+    'ezr1': {
+        'gene': 'GENE',
+        'pheno': 'PHENO_SCORE',
+        'geno': 'VARIANT_SCORE',
+        'combined': 'COMBINED_SCORE',
+        },
+    'ezr2': {
+        'gene': 'EXOMISER_GENE',
+        'pheno': 'EXOMISER_GENE_PHENO_SCORE',
+        'geno': 'EXOMISER_VARIANT_SCORE',
+        'combined': 'EXOMISER_GENE_COMBINED_SCORE',
+        },
+    'test': {
+        'gene': 'GENE',
+        'pheno': 'GENE_PHENO_SCORE',
+        'geno': 'VARIANT_SCORE',
+        'combined': 'GENE_COMBINED_SCORE',
+        }
+    }
 
-def read_exomizer_vcf(filename):
+def read_exomizer_vcf(filename, format=EZR_FORMAT):
     gene_scores = defaultdict(lambda: [None, [], None])  # gene -> (pheno, variant_scores, combined_score)
+    col_names = EZR_FORMATS[format]
     with open(filename) as ifp:
         for line in ifp:
             line = line.strip()
             if not line or line.startswith('#'): continue
 
-            tokens = line.split('\t')
-            info = dict([part.split('=') for part in tokens[7].split(';')])
-            gt = tokens[9]
-            if gt == '-':
-                n_alleles = 1  # edge case for error with triallelics and exomizer
-            else:
-                n_alleles = gt.count('1')
-            if not 1 <= n_alleles <= 2:
-                logging.error('Unexpected gt: {!r}'.format(gt))
-                continue
+            try:
+                tokens = line.split('\t')
+                qual = float(tokens[5])
+                if qual < 30: continue
 
-            gene = info['GENE']
-            pheno = float(info['PHENO_SCORE'])
-            geno = float(info['VARIANT_SCORE'])
-            combined = float(info['COMBINED_SCORE'])
-            gene_scores[gene][0] = pheno
-            gene_scores[gene][1].extend([geno] * n_alleles)
-            gene_scores[gene][2] = combined
+                info = dict([part.split('=') for part in tokens[7].split(';') if '=' in part])
+                gt = tokens[9]
+                if gt == '-':
+                    n_alleles = 1  # edge case for error with triallelics and exomizer
+                else:
+                    n_alleles = gt.count('1')
+                if not 1 <= n_alleles <= 2:
+                    logging.error('Unexpected gt: {!r}'.format(gt))
+                    continue
+
+                if col_names['pheno'] not in info:
+                    col_names = EZR_FORMATS['test']
+                    assert col_names['pheno'] in info
+                    logging.error('SWITCHING TO TEST EZR FORMAT FOR FILE: {}!!!!'.format(filename))
+
+                gene = info[col_names['gene']].upper()
+                pheno = float(info[col_names['pheno']])
+                geno = float(info[col_names['geno']])
+                combined = float(info[col_names['combined']])
+                gene_scores[gene][0] = pheno
+                gene_scores[gene][1].extend([geno] * n_alleles)
+                gene_scores[gene][2] = combined
+            except:
+                logging.error('Error parsing line: {}'.format(line))
+                raise
 
     for gene in gene_scores:
         # Sort and add a zero so every one has at least 2 values
@@ -83,6 +121,7 @@ def read_sim(filename, ids={}):
     logging.info('Read similarity scores for {} pairs'.format(len(sim_scores)))
     return sim_scores
 
+
 def read_pheno_to_geno_file(filename):
     pheno_to_geno = {}
     with open(filename) as ifp:
@@ -96,8 +135,9 @@ def read_pheno_to_geno_file(filename):
 
     return pheno_to_geno
 
+
 def pc_score(gene, p1, p2, patient_damages, sim_scores, 
-               inheritance=None, control_damage=None):
+              inheritance=None, control_damage=None, *args, **kwargs):
     p1_damage = patient_damages[p1][gene]
     p2_damage = patient_damages[p2][gene]
 
@@ -111,11 +151,11 @@ def pc_score(gene, p1, p2, patient_damages, sim_scores,
     for other in set(patient_damages) - set([p1, p2]):
         other_damage = patient_damages[other].get(gene)
         if other_damage:
-            pheno_similarity = max(sim_scores[p1, other], sim_scores[p2, other]) + 0.0001
-            if other_damage[1][0] + 0.02 >= geno_1st:
+            pheno_similarity = max(sim_scores[p1, other], sim_scores[p2, other]) + 0.001
+            if other_damage[1][0] + 0.01 >= geno_1st:
                 # hurt chances of dominant model
                 score_dom *= pheno_similarity
-            if other_damage[1][1] + 0.02 >= geno_2nd:
+            if other_damage[1][1] + 0.01 >= geno_2nd:
                 # hurt chances of recessive model
                 score_rec *= pheno_similarity
 
@@ -139,8 +179,51 @@ def pc_score(gene, p1, p2, patient_damages, sim_scores,
     else:
         raise NotImplementedError('Unexpected inheritance: {}'.format(inheritance))
 
-def average_score(gene, p1, p2, patient_damages, sim_scores,
-                  inheritance=None, control_damage=None):
+
+def new_score(gene, p1, p2, patient_damages, sim_scores,
+              inheritance=None, *args, **kwargs):
+    p1_damage = patient_damages[p1][gene]
+    p2_damage = patient_damages[p2][gene]
+
+    pheno_score = min(p1_damage[0], p2_damage[0])
+    pheno_score = min(pheno_score / 0.6, 1.0)
+    # [ dom, rec ]
+    geno_scores = [min(p1_damage[1][0], p2_damage[1][0]), min(p1_damage[1][1], p2_damage[1][1])]
+
+    # [ dom, rec ]
+    inh_scores = [pheno_score * x for x in geno_scores]
+
+    def get_quantile(a, x):
+        return bisect_left(a, x) / len(a)
+
+
+    # Collect 1st and 2nd variant scores for other patients
+    o_variant_scores = [[], []]
+    o_pheno_scores = []
+    for other in set(patient_damages) - set([p1, p2]):
+        o_pheno_scores.append(sim_scores[p1, other])
+        other_damage = patient_damages[other].get(gene)
+        for i in [0, 1]:
+            if other_damage:
+                damage = other_damage[1][i]
+            else:
+                damage = 0.0
+            o_variant_scores[i].append(damage)
+
+    logging.debug('Comparing {} - {} - {}'.format(p1, p2, gene))
+    logging.debug('  Pheno: {}'.format(o_pheno_scores))
+    for i in [0, 1]:
+        logging.debug('  Geno[{}]: {}'.format(i, o_variant_scores[i]))
+        tau, pvalue = kendalltau(o_pheno_scores, o_variant_scores[i])
+        logging.debug('  cor btwn pheno-sim and var for gene: {} ({})'.format(tau, pvalue))
+        inh_scores[i] = -log10(pvalue)
+
+    if not inheritance:
+        return max(inh_scores)
+    else:
+        raise NotImplementedError('Unexpected inheritance: {}'.format(inheritance))
+
+def average_score(gene, p1, p2, patient_damages, *args, **kwargs):
     p1_damage = patient_damages[p1][gene]
     p2_damage = patient_damages[p2][gene]
     return (p1_damage[2] + p2_damage[2]) / 2
@@ -156,11 +239,13 @@ def get_scored_genes(p1, p2, patient_damages, sim_scores, inheritance=None,
         gene_scorer = average_score
     elif method == 'pc':
         gene_scorer = pc_score
+    elif method == 'new':
+        gene_scorer = new_score
     else:
         raise NotImplementedError('Unknown method: {}'.format(method))
 
     for gene in shared_genes:
-        score = gene_scorer(gene, p1, p2, patient_damages, sim_scores,
+        score = gene_scorer(gene, p1, p2, patient_damages, sim_scores=sim_scores,
                             inheritance=inheritance, control_damage=control_damage)
         scores.append((score, gene))
 
@@ -170,15 +255,17 @@ def read_solution_genes(filename):
     solutions = {}
     with open(filename) as ifp:
         for line in ifp:
-            patient, gene = line.rstrip('\n').split('\t')
+            patient, genes = line.rstrip('\n').split('\t')
+            genes = genes.strip().upper().split(',')
             assert patient not in solutions
-            solutions[patient] = gene
+            if genes:
+                solutions[patient] = set(genes)
 
     return solutions
 
 def script(pheno_sim, exomiser_dir, inheritance=None, id_file=None,
            control_damage_file=None, solution_gene_file=None,
-           method=None, ezr_suffix=EZR_SUFFIX):
+           method=None, ezr_suffix=EZR_SUFFIX, ezr_format=EZR_FORMAT):
     pheno_scores = read_sim(pheno_sim)
     pair_scores = {}
     for p1, matches in pheno_scores.items():
@@ -193,7 +280,8 @@ def script(pheno_sim, exomiser_dir, inheritance=None, id_file=None,
 
     if solution_gene_file:
         solution_genes = read_solution_genes(solution_gene_file)
-        logging.info('Read solution genes: {}'.format(solution_gene_file))
+        n_overlap = len(set(pheno_scores).intersection(solution_genes))
+        logging.info('Read candidate genes for {} patients ({} with phenotypes)'.format(len(solution_genes), n_overlap))
     else:
         solution_genes = None
 
@@ -204,22 +292,36 @@ def script(pheno_sim, exomiser_dir, inheritance=None, id_file=None,
         pheno_to_geno = {}
 
     patient_damages = defaultdict(dict)
+    incomplete_patients = set()
     for pid in pheno_scores:
         geno_id = pheno_to_geno.get(pid, pid)
         ezr_filename = os.path.join(exomiser_dir, geno_id + '.' + ezr_suffix)
         if os.path.isfile(ezr_filename):
-            patient_damage = read_exomizer_vcf(ezr_filename)
+            try:
+                patient_damage = read_exomizer_vcf(ezr_filename, format=ezr_format)
+            except:
+                logging.error('Encountered error reading file: {}'.format(ezr_filename))
+                raise
+
             patient_damages[pid] = patient_damage
         else:
             logging.error('Missing EZR for: {}'.format(pid))
+            incomplete_patients.add(pid)
 
-    logging.info('Read gene damage info for {} patients'.format(len(patient_damages)))
+    logging.info('Read gene damage info for {} patients with phenotypes'.format(len(patient_damages)))
     logging.info('Using inheritance: {}'.format(inheritance))
 
     for p1 in sorted(pheno_scores):
+        if p1 in incomplete_patients or p1 not in solution_genes: continue
+
         matches = pheno_scores[p1]
         matches.sort(reverse=True)
-        for pheno_score, p2 in matches[:N_MATCHES]:
+        i = 0
+        for pheno_score, p2 in matches:
+            if p2 in incomplete_patients: continue
+            if i >= N_MATCHES: break
+            i += 1
+
             scored_genes = get_scored_genes(p1, p2, patient_damages, pair_scores,
                                             inheritance=inheritance, control_damage=control_damage,
                                             method=method)
@@ -227,12 +329,12 @@ def script(pheno_sim, exomiser_dir, inheritance=None, id_file=None,
             top_n = scored_genes[:N_GENES]
             output = [p1, p2, pheno_score]
             if solution_genes:
-                # Report rank and score of true gene
-                true_gene = solution_genes[p1]
-                hit = [(i + 1) for (i, (_, gene)) in enumerate(scored_genes) if gene == true_gene]
-                rank = hit[0] if hit else 'NA'
+                # Report rank and score of top true/candidate gene
+                true_genes = solution_genes[p1]
+                hit = [((i + 1), gene) for (i, (_, gene)) in enumerate(scored_genes) if gene in true_genes]
+                hit_rank, hit_gene = hit[0] if hit else ('NA', 'NA')
 
-                output.append('{}:{}'.format(true_gene, rank))
+                output.append('{}:{}'.format(hit_gene, hit_rank))
 
             # Report scores of top genes
             if top_n:
@@ -254,11 +356,12 @@ def parse_args(args):
     parser.add_argument('-I', '--inheritance', default=None,
                         choices=['AD', 'AR'])
     parser.add_argument('--method', default=None,
-                        choices=['avg', 'pc'])
+                        choices=['avg', 'pc', 'new'])
     parser.add_argument("--control-damage-file")
     parser.add_argument("--solution-gene-file")
     parser.add_argument("--id-file", default=None)
     parser.add_argument("--ezr-suffix", default=EZR_SUFFIX)
+    parser.add_argument("--ezr-format", default=EZR_FORMAT)
 
     return parser.parse_args(args)
 
@@ -267,7 +370,7 @@ def main(args=sys.argv[1:]):
     script(**vars(args))
 
 if __name__ == '__main__':
-    logging.basicConfig(level=logging.INFO)
+    logging.basicConfig(level=logging.DEBUG)
     main()
         
 
