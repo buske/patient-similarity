@@ -10,6 +10,7 @@ import logging
 import csv
 
 from collections import defaultdict
+from bisect import bisect_right
 
 KO_THRESHOLD = 0.87  # between nonframeshift and splicing
 EZR_SUFFIX = 'ezr'
@@ -18,7 +19,7 @@ N_GENES = 5  # genes/match
 
 
 def read_exomizer_vcf(filename):
-    gene_scores = defaultdict(lambda: [None, [], None])  # gene -> (pheno, variant_scores, combined_score)
+    gene_scores = defaultdict(lambda: {'pheno': None, 'geno': [], 'combined': None, 'cadd': []})
     with open(filename) as ifp:
         for line in ifp:
             line = line.strip()
@@ -39,14 +40,18 @@ def read_exomizer_vcf(filename):
             pheno = float(info['PHENO_SCORE'])
             geno = float(info['VARIANT_SCORE'])
             combined = float(info['COMBINED_SCORE'])
-            gene_scores[gene][0] = pheno
-            gene_scores[gene][1].extend([geno] * n_alleles)
-            gene_scores[gene][2] = combined
+            cadd = float(info['CADD']) if 'CADD' in info else None
+            gene_scores[gene]['pheno'] = pheno
+            gene_scores[gene]['geno'].extend([geno] * n_alleles)
+            gene_scores[gene]['combined'] = combined
+            gene_scores[gene]['cadd'].extend([cadd] * n_alleles)
 
     for gene in gene_scores:
         # Sort and add a zero so every one has at least 2 values
-        gene_scores[gene][1].append(0)
-        gene_scores[gene][1].sort(reverse=True)
+        gene_scores[gene]['geno'].append(0)
+        gene_scores[gene]['geno'].sort(reverse=True)
+        gene_scores[gene]['cadd'].append(float('nan'))
+        gene_scores[gene]['cadd'].sort(reverse=True)
 
     return dict(gene_scores)
 
@@ -101,10 +106,10 @@ def pc_score(gene, p1, p2, patient_damages, sim_scores,
     p1_damage = patient_damages[p1][gene]
     p2_damage = patient_damages[p2][gene]
 
-    pheno_score = min(p1_damage[0], p2_damage[0])
+    pheno_score = min(p1_damage['pheno'], p2_damage['pheno'])
     pheno_score = min((pheno_score + 0.1) / 0.7, 1)
-    geno_1st = min(p1_damage[1][0], p2_damage[1][0])
-    geno_2nd = min(p1_damage[1][1], p2_damage[1][1])
+    geno_1st = min(p1_damage['geno'][0], p2_damage['geno'][0])
+    geno_2nd = min(p1_damage['geno'][1], p2_damage['geno'][1])
 
     score_dom = pheno_score * geno_1st
     score_rec = pheno_score * geno_2nd
@@ -112,10 +117,10 @@ def pc_score(gene, p1, p2, patient_damages, sim_scores,
         other_damage = patient_damages[other].get(gene)
         if other_damage:
             pheno_similarity = max(sim_scores[p1, other], sim_scores[p2, other]) + 0.0001
-            if other_damage[1][0] + 0.02 >= geno_1st:
+            if other_damage['geno'][0] + 0.02 >= geno_1st:
                 # hurt chances of dominant model
                 score_dom *= pheno_similarity
-            if other_damage[1][1] + 0.02 >= geno_2nd:
+            if other_damage['geno'][1] + 0.02 >= geno_2nd:
                 # hurt chances of recessive model
                 score_rec *= pheno_similarity
 
@@ -139,14 +144,24 @@ def pc_score(gene, p1, p2, patient_damages, sim_scores,
     else:
         raise NotImplementedError('Unexpected inheritance: {}'.format(inheritance))
 
-def average_score(gene, p1, p2, patient_damages, sim_scores,
-                  inheritance=None, control_damage=None):
+def average_score(gene, p1, p2, patient_damages, *args, **kwargs):
     p1_damage = patient_damages[p1][gene]
     p2_damage = patient_damages[p2][gene]
-    return (p1_damage[2] + p2_damage[2]) / 2
+    return (p1_damage['combined'] + p2_damage['combined']) / 2
+
+def cadd_score(gene, p1, p2, patient_damages, cadd_distributions, *args, **kwargs):
+    p1_damage = patient_damages[p1][gene]
+    p2_damage = patient_damages[p2][gene]
+
+    pheno_score = min(p1_damage['pheno'], p2_damage['pheno'])
+    for inh in [0, 1]:
+        geno = min(p1_damage['geno'][inh], p2_damage['geno'][inh])
+        p = bisect_right(cadd_distributions[inh], geno) / len(cadd_distributions[inh])
+        
+        print('\t'.join(map(str, [p1, p2, gene, p])))
 
 def get_scored_genes(p1, p2, patient_damages, sim_scores, inheritance=None,
-                     control_damage=None, method=None):
+                     control_damage=None, method=None, cadd_distributions=None):
     p1_genes = patient_damages[p1]
     p2_genes = patient_damages[p2]
     shared_genes = set(p1_genes) & set(p2_genes)
@@ -156,12 +171,15 @@ def get_scored_genes(p1, p2, patient_damages, sim_scores, inheritance=None,
         gene_scorer = average_score
     elif method == 'pc':
         gene_scorer = pc_score
+    elif method == 'cadd':
+        gene_scorer = cadd_score
     else:
         raise NotImplementedError('Unknown method: {}'.format(method))
 
     for gene in shared_genes:
         score = gene_scorer(gene, p1, p2, patient_damages, sim_scores,
-                            inheritance=inheritance, control_damage=control_damage)
+                            inheritance=inheritance, control_damage=control_damage,
+                            cadd_distributions=cadd_distributions)
         scores.append((score, gene))
 
     return scores
@@ -176,14 +194,34 @@ def read_solution_genes(filename):
 
     return solutions
 
+def load_cadd_distribution(filename):
+    distribution = {}  # gene -> distribution
+    with open(filename) as ifp:
+        for line in ifp:
+            tokens = line.rstrip('\n').split('\t')
+            gene = tokens[0]
+            gene_distribution = map(float, tokens[1:])
+            distribution[gene] = gene_distribution
+
+    return distribution
+
+def load_cadd_distributions(base):
+    return [load_cadd_distribution(base + '.0.txt'),
+            load_cadd_distribution(base + '.1.txt')]
+
 def script(pheno_sim, exomiser_dir, inheritance=None, id_file=None,
            control_damage_file=None, solution_gene_file=None,
-           method=None, ezr_suffix=EZR_SUFFIX):
+           cadd_base=None, method=None, ezr_suffix=EZR_SUFFIX):
     pheno_scores = read_sim(pheno_sim)
     pair_scores = {}
     for p1, matches in pheno_scores.items():
         for score, p2 in matches:
             pair_scores[(p1, p2)] = score
+
+    if cadd_base:
+        cadd_distributions = load_cadd_distributions(cadd_base)
+    else:
+        cadd_distributions = None
 
     if control_damage_file:
         control_damage = read_gene_damages(control_damage_file)
@@ -222,7 +260,7 @@ def script(pheno_sim, exomiser_dir, inheritance=None, id_file=None,
         for pheno_score, p2 in matches[:N_MATCHES]:
             scored_genes = get_scored_genes(p1, p2, patient_damages, pair_scores,
                                             inheritance=inheritance, control_damage=control_damage,
-                                            method=method)
+                                            method=method, cadd_distributions=cadd_distributions)
             scored_genes.sort(reverse=True)
             top_n = scored_genes[:N_GENES]
             output = [p1, p2, pheno_score]
@@ -254,8 +292,9 @@ def parse_args(args):
     parser.add_argument('-I', '--inheritance', default=None,
                         choices=['AD', 'AR'])
     parser.add_argument('--method', default=None,
-                        choices=['avg', 'pc'])
+                        choices=['avg', 'pc', 'cadd'])
     parser.add_argument("--control-damage-file")
+    parser.add_argument("--cadd-base")
     parser.add_argument("--solution-gene-file")
     parser.add_argument("--id-file", default=None)
     parser.add_argument("--ezr-suffix", default=EZR_SUFFIX)
