@@ -82,10 +82,10 @@ for line in solutions.strip().split('\n'):
 def read_id_lookup(filename):
     ids = {}  # id -> external
     with open(filename) as ifp:
-        reader = csv.DictReader(ifp, delimiter='\t')
+        reader = csv.DictReader(ifp, delimiter=',')
         for row in reader:
-            patient_id = row['Patient ID'].strip()
-            external_id = row['External ID'].strip()
+            patient_id = row['Report ID'].strip()
+            external_id = row['Identifier'].strip()
             if external_id:
                 ids[patient_id] = external_id
             
