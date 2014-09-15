@@ -50,8 +50,9 @@ def read_exomizer_vcf(filename, format=EZR_FORMAT):
     col_names = EZR_FORMATS[format]
     with open(filename) as ifp:
         for line in ifp:
+            if line.startswith('#'): continue
             try:
-                tokens = line.split('\t')
+                tokens = line.rstrip('\n').split('\t')
                 qual = float(tokens[5])
                 if qual < 30: continue
 
@@ -74,7 +75,7 @@ def read_exomizer_vcf(filename, format=EZR_FORMAT):
                 pheno = float(info[col_names['pheno']])
                 geno = float(info[col_names['geno']])
                 combined = float(info[col_names['combined']])
-                cadd = float(info['CADD']) if 'CADD' in info else None
+                cadd = float(info.get('CADD', 'nan'))
                 gene_scores[gene]['pheno'] = pheno
                 gene_scores[gene]['geno'].extend([geno] * n_alleles)
                 gene_scores[gene]['combined'] = combined
@@ -237,11 +238,17 @@ def cadd_score(gene, p1, p2, patient_damages, cadd_distributions, *args, **kwarg
     p2_damage = patient_damages[p2][gene]
 
     pheno_score = min(p1_damage['pheno'], p2_damage['pheno'])
+    scores = []
     for inh in [0, 1]:
         geno = min(p1_damage['geno'][inh], p2_damage['geno'][inh])
-        p = bisect_right(cadd_distributions[inh], geno) / len(cadd_distributions[inh])
-        
-        print('\t'.join(map(str, [p1, p2, gene, p])))
+        if gene in cadd_distributions[inh]:
+            p = 1 - bisect_right(cadd_distributions[inh][gene], geno) / len(cadd_distributions[inh][gene])
+        else:
+            p = float('nan')
+
+        scores.append(p)
+
+    return max(scores)
 
 def get_scored_genes(p1, p2, patient_damages, sim_scores, inheritance=None,
                      control_damage=None, method=None, cadd_distributions=None):
@@ -287,7 +294,7 @@ def load_cadd_distribution(filename):
         for line in ifp:
             tokens = line.rstrip('\n').split('\t')
             gene = tokens[0]
-            gene_distribution = map(float, tokens[1:])
+            gene_distribution = list(map(float, tokens[1:]))
             distribution[gene] = gene_distribution
 
     return distribution
