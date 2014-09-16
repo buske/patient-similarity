@@ -20,6 +20,7 @@ EZR_SUFFIX = 'ezr'
 EZR_FORMAT = 'ezr2'
 N_MATCHES = 5  # phenotype matches/patient
 N_GENES = 5  # genes/match
+NAN = -10000.0
 
 EZR_FORMATS = {
     'ezr1': {
@@ -75,7 +76,7 @@ def read_exomizer_vcf(filename, format=EZR_FORMAT):
                 pheno = float(info[col_names['pheno']])
                 geno = float(info[col_names['geno']])
                 combined = float(info[col_names['combined']])
-                cadd = float(info.get('CADD', 'nan'))
+                cadd = float(info.get('CADD', NAN))
                 gene_scores[gene]['pheno'] = pheno
                 gene_scores[gene]['geno'].extend([geno] * n_alleles)
                 gene_scores[gene]['combined'] = combined
@@ -88,7 +89,7 @@ def read_exomizer_vcf(filename, format=EZR_FORMAT):
         # Sort and add a zero so every one has at least 2 values
         gene_scores[gene]['geno'].append(0)
         gene_scores[gene]['geno'].sort(reverse=True)
-        gene_scores[gene]['cadd'].append(float('nan'))
+        gene_scores[gene]['cadd'].append(NAN)
         gene_scores[gene]['cadd'].sort(reverse=True)
 
     return dict(gene_scores)
@@ -157,10 +158,10 @@ def pc_score(gene, p1, p2, patient_damages, sim_scores,
         other_damage = patient_damages[other].get(gene)
         if other_damage:
             pheno_similarity = max(sim_scores[p1, other], sim_scores[p2, other]) + 0.001
-            if other_damage[1][0] + 0.01 >= geno_1st:
+            if other_damage['geno'][0] + 0.01 >= geno_1st:
                 # hurt chances of dominant model
                 score_dom *= pheno_similarity
-            if other_damage[1][1] + 0.01 >= geno_2nd:
+            if other_damage['geno'][1] + 0.01 >= geno_2nd:
                 # hurt chances of recessive model
                 score_rec *= pheno_similarity
 
@@ -239,14 +240,23 @@ def cadd_score(gene, p1, p2, patient_damages, cadd_distributions, *args, **kwarg
 
     pheno_score = min(p1_damage['pheno'], p2_damage['pheno'])
     scores = []
-    for inh in [0, 1]:
-        geno = min(p1_damage['geno'][inh], p2_damage['geno'][inh])
-        if gene in cadd_distributions[inh]:
-            p = 1 - bisect_right(cadd_distributions[inh][gene], geno) / len(cadd_distributions[inh][gene])
+    for i in [0, 1]:
+        geno = min(p1_damage['geno'][i], p2_damage['geno'][i])
+        if gene in cadd_distributions[i]:
+            p = float(bisect_left(cadd_distributions[i][gene], geno)) / len(cadd_distributions[i][gene])
         else:
-            p = float('nan')
+            p = 0.987654321
 
         scores.append(p)
+
+    for other in set(patient_damages) - set([p1, p2]):
+        other_damage = patient_damages[other].get(gene)
+        for i in [0, 1]:
+            if other_damage:
+                damage = other_damage['geno'][i]
+            else:
+                damage = 0.0
+            o_variant_scores[i].append(damage)
 
     return max(scores)
 
@@ -292,10 +302,12 @@ def load_cadd_distribution(filename):
     distribution = {}  # gene -> distribution
     with open(filename) as ifp:
         for line in ifp:
-            tokens = line.rstrip('\n').split('\t')
+            tokens = line.rstrip('\n').replace('nan', str(NAN)).split('\t')
             gene = tokens[0]
-            gene_distribution = list(map(float, tokens[1:]))
+            gene_distribution = sorted(map(float, tokens[1:]))
             distribution[gene] = gene_distribution
+
+    logging.info('Loaded CADD distributions for {} genes, e.g.:\n{}\t{}...'.format(len(distribution), gene, distribution[gene][1:10]))
 
     return distribution
 
@@ -347,11 +359,10 @@ def script(pheno_sim, exomiser_dir, inheritance=None, id_file=None,
             except:
                 logging.error('Encountered error reading file: {}'.format(ezr_filename))
                 raise
-
-            patient_damages[pid] = patient_damage
         else:
             logging.error('Missing EZR for: {}'.format(pid))
             incomplete_patients.add(pid)
+
 
     logging.info('Read gene damage info for {} patients with phenotypes'.format(len(patient_damages)))
     logging.info('Using inheritance: {}'.format(inheritance))
@@ -408,16 +419,17 @@ def parse_args(args):
     parser.add_argument("--id-file", default=None)
     parser.add_argument("--ezr-suffix", default=EZR_SUFFIX)
     parser.add_argument("--ezr-format", default=EZR_FORMAT)
+    parser.add_argument("--log", default='INFO')
 
     return parser.parse_args(args)
 
 def main(args=sys.argv[1:]):
-    args = parse_args(args)
-    script(**vars(args))
+    args = vars(parse_args(args))
+    logging.basicConfig(level=args.pop('log'))
+    script(**args)
 
 if __name__ == '__main__':
-    logging.basicConfig(level=logging.DEBUG)
-    main()
+    sys.exit(main())
         
 
 
