@@ -15,7 +15,7 @@ from collections import Counter
 
 from hpo import HPO
 from hpoic import HPOIC
-from mim import MIM
+from disease import Diseases
 from orphanet import Orphanet
 from patient import Patient
 
@@ -226,7 +226,7 @@ def script(patient_hpo_filename, hpo_filename, disease_phenotype_filename,
            use_disease_prevalence=False, use_phenotype_frequency=False, 
            use_patient_phenotypes=False, use_aoo=False, scores=None):
     hpo = HPO(hpo_filename, new_root='HP:0000118')
-    mim = MIM(disease_phenotype_filename)
+    diseases = Diseases(disease_phenotype_filename)
 
     orphanet = None
     if orphanet_lookup_filename and orphanet_prevalence_filename:
@@ -244,7 +244,7 @@ def script(patient_hpo_filename, hpo_filename, disease_phenotype_filename,
     if use_patient_phenotypes:
         use_patient_phenotypes = patients
 
-    hpoic = HPOIC(hpo, mim, orphanet=orphanet, patients=use_patient_phenotypes,
+    hpoic = HPOIC(hpo, diseases, orphanet=orphanet, patients=use_patient_phenotypes,
                   use_disease_prevalence=use_disease_prevalence,
                   use_phenotype_frequency=use_phenotype_frequency)
 

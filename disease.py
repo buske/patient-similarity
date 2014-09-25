@@ -1,4 +1,4 @@
-#!/usr/bin/env python
+#!/usr/bin/env python3
 
 """
 
@@ -13,6 +13,8 @@ import logging
 
 from collections import defaultdict
 
+DBS = set(['ORPHANET', 'OMIM', 'DECIPHER'])
+db_re = re.compile('([A-Z]+:\d+)')
 FREQUENCIES = {'very rare':  0.01, 
                'rare':       0.05, 
                'occasional': 0.075, 
@@ -27,58 +29,38 @@ fraction_frequency_re = re.compile(r'of|/')
 logger = logging.getLogger(__name__)
 
 class Disease:
-    def __init__(self, db, id, name, phenotype_freqs):
+    def __init__(self, db, id, phenotype_freqs):
         self.db = db
         self.id = id
-        self.name = name
         self.phenotype_freqs = phenotype_freqs
 
     def __str__(self):
         return '{}:{}'.format(self.db, self.id)
 
-class MIM:
+class Diseases:
     def __init__(self, filename, db=None):
-        """Read disease informaton from file.
+        """Read disease informaton from file into dict: {(db, id) -> Disease}
 
         db: database to restrict to (e.g. 'OMIM'), or None to include all
+        
+        Will use disease links in reference column (#6)
         """
-        diseases = list(self.iter_diseases(filename))
-        if db is None:
-            self.diseases = diseases
-        else:
-            self.diseases = [d for d in diseases if d.db == db]
-            logger.warning('Filtered to the {} diseases in {}'.format(len(self.diseases), db))
+        if db:
+            assert db in DBS
+            logger.info('Filtering to diseases in {}'.format(db))
 
-        for i in range(5):
-            logger.debug(self.diseases[i].__dict__)
+        diseases = dict(self.iter_diseases(filename, filter_db=db))
+
+        for i, disease in zip(range(5), diseases):
+            logger.debug(diseases[disease].__dict__)
+
+        self.diseases = diseases
 
     def __iter__(self):
         return iter(self.diseases)
 
     def __len__(self):
         return len(self.diseases)
-
-    @classmethod
-    def iter_disease_lines(cls, filename):
-        with open(filename, encoding='utf-8') as ifp:
-            cur_disease = None
-            cur_lines = []
-            for line in ifp:
-                line = line.rstrip()
-                tokens = line.split('\t')
-                if len(tokens) == 1: continue
-                disease = (tokens[0].strip(), tokens[1].strip())
-
-                if disease == cur_disease:
-                    cur_lines.append(tokens)
-                else:
-                    if cur_disease:
-                        yield cur_disease, cur_lines
-
-                    cur_lines = [tokens]
-                    cur_disease = disease
-            if cur_disease:
-                yield cur_disease, cur_lines
 
     @classmethod
     def parse_frequency(cls, s, default=None):
@@ -108,41 +90,55 @@ class MIM:
         return freq
 
     @classmethod
-    def iter_diseases(cls, filename, default_freq=None):
-        for disease, tokens_list in cls.iter_disease_lines(filename):
-            db, id = disease
-            raw_phenotypes = defaultdict(list)
-            name = None
-            for tokens in tokens_list:
-                freq = cls.parse_frequency(tokens[8])
+    def iter_diseases(cls, filename, default_freq=None, filter_db=None):
+        disease_phenotypes = defaultdict(dict)  # (db, id) -> {HP: freq, ...}
+        with open(filename, encoding='utf-8') as ifp:
+            for line in ifp:
+                line = line.rstrip()
+                tokens = line.split('\t')
+                if len(tokens) == 1: continue
+                diseases = [(tokens[0].strip(), tokens[1].strip())]
+                alt_diseases = db_re.findall(tokens[5].strip())
+                #name = tokens[2].strip().split(';')[0]
+                for alt_disease in alt_diseases:
+                    db, id = alt_disease.split(':')
+                    db = db.strip()
+                    if db in set(['IM', 'MIM']):
+                        db = 'OMIM'
+
+                    id = int(id.strip())
+                    if db in set(['PMID', 'PMS']): continue
+                    assert db in DBS, 'Unexpected DB: {!r}'.format(db)
+                    diseases.append((db, id))
+
                 hp_term = tokens[4].strip()
-                raw_phenotypes[hp_term].append(freq)
-                if not name:
-                    name = tokens[2].strip()
+                freq = cls.parse_frequency(tokens[8])
+                for disease in diseases:
+                    if filter_db is not None and disease[0] != filter_db: continue
 
-            phenotype_freqs = {}
-            for hp_term, freqs in raw_phenotypes.items():
-                non_null = [x for x in freqs if x is not None]
-                if non_null:
-                    freq = sum(non_null) / len(non_null)
-                else:
-                    freq = default_freq
+                    phenotypes = disease_phenotypes[disease]
+                    if freq is not None and hp_term in phenotypes:
+                        # Always take max annotated frequency
+                        if phenotypes[hp_term] is None or phenotypes[hp_term] < freq:
+                            phenotypes[hp_term] = freq
 
-                phenotype_freqs[hp_term] = freq
-                
-            disease = Disease(db, id, name, phenotype_freqs)
-            yield disease
+                        if phenotypes[hp_term] != freq:
+                            logging.warn('Found conflicting frequencies ({}, {}) for same disease-phenotype: {}:{} - {}'.format(phenotypes[hp_term], freq, disease[0], disease[1], hp_term))
+                    else:
+                        phenotypes[hp_term] = freq
 
+        for (db, id), phenotypes in disease_phenotypes.items():
+            disease = Disease(db, id, phenotypes)
+            yield ((db, id), disease)
 
 def script(phenotype_filename, disease_gene_filename, out_hpo, out_genes, **kwargs):
-    diseases = MIM(phenotype_filename)
+    diseases = Diseases(phenotype_filename, db='ORPHANET')
 
-    for disease in diseases:
-        phenotypes = [('' if freq is None else '{:.6f}'.format(freq), hp) 
-                      for (hp, freq) in disease.phenotype_freqs.items()]
-        phenotypes.sort(reverse=True)
-        for freq, hp in phenotypes:
-            print('\t'.join(map(str, [disease.db, disease.id, hp, freq])))
+    for id, disease in diseases.diseases.items():
+        freqs = list(disease.phenotype_freqs.values())
+        numeric = [f for f in freqs if f is not None]
+        if len(numeric) >= 5 and max(numeric) < 0.1:
+            logging.warning('Disease only has rare phenotypes with frequencies {}:{}'.format(id[0], id[1]))
 
     sys.exit(0)
 
@@ -185,8 +181,8 @@ def parse_args(args):
     return parser.parse_args(args)
 
 def main(args=sys.argv[1:]):
+    logging.basicConfig(level='INFO')
     args = parse_args(args)
-
     script(**vars(args))
 
 if __name__ == '__main__':

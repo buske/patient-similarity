@@ -14,7 +14,7 @@ from numpy import array
 from random import sample
 
 from hpo import HPO
-from mim import MIM
+from disease import Diseases
 from patient import Patient
 from hpoic import HPOIC
 from patient_similarity import compare_patients
@@ -57,7 +57,7 @@ def diseases_to_patients(diseases, hpo):
 
     return disease_patients
 
-def calc_distribution(hpo, mim, hpoic, n_replicates, n_terms, score):
+def calc_distribution(hpo, diseases, hpoic, n_replicates, n_terms, score):
     hpo_terms = set(hpo.hps.values())
     def get_random_patient(n):
         return Patient('random', sample(hpo_terms, n))
@@ -71,7 +71,7 @@ def calc_distribution(hpo, mim, hpoic, n_replicates, n_terms, score):
     patients = [get_random_patient(n_terms) for i in range(n_replicates)] 
 
     # Convert disease objects to patient objects for comparison
-    diseases = diseases_to_patients(mim, hpo)
+    diseases = diseases_to_patients(diseases, hpo)
     logging.info('Comparing against {} diseases...'.format(len(diseases)))
 
     for disease in diseases:
@@ -90,10 +90,10 @@ def script(hpo_filename, disease_phenotype_filename,
            out_filebase, n_replicates=DEFAULT_REPLICATES, n_terms=DEFAULT_TERMS,
            score=DEFAULT_SCORE):
     hpo = HPO(hpo_filename, new_root='HP:0000118')
-    mim = MIM(disease_phenotype_filename, db='OMIM')
-    hpoic = HPOIC(hpo, mim)
+    diseases = Diseases(disease_phenotype_filename, db='ORPHANET')
+    hpoic = HPOIC(hpo, diseases)
 
-    distribution = calc_distribution(hpo, mim, hpoic, n_replicates, n_terms, score)
+    distribution = calc_distribution(hpo, diseases, hpoic, n_replicates, n_terms, score)
     out_filename = get_filename(out_filebase, n_terms)
     write_distribution(distribution, out_filename)
 

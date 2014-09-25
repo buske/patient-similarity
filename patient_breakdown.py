@@ -13,7 +13,7 @@ import logging
 from math import log, exp
 from collections import defaultdict
 
-from mim import MIM
+from disease import Diseases
 from orphanet import Orphanet
 from patient_similarity import PatientComparator, Patient
 
@@ -30,9 +30,9 @@ def script(patient1, patient2, patient_hpo_filename, hpo_filename,
     p1 = patients[patient1]
     p2 = patients[patient2]
 
-    mim = MIM(disease_phenotype_filename)
+    diseases = Diseases(disease_phenotype_filename)
     orphanet = Orphanet(orphanet_lookup_filename, orphanet_prevalence_filename)
-    comparator = PatientComparator(hpo, mim, orphanet)
+    comparator = PatientComparator(hpo, diseases, orphanet)
     
     clusters = comparator.similarity_breakdown(p1, p2)
     cluster_strs = []

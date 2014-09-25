@@ -10,15 +10,15 @@ import sys
 import logging
 
 from hpo import HPO
-from mim import MIM
+from disease import Diseases
 from hpoic import HPOIC
 from patient import Patient
 
 def script(patient_hpo_filename, hpo_filename, disease_phenotype_filename, 
            **kwargs):
     hpo = HPO(hpo_filename, new_root='HP:0000118')
-    mim = MIM(disease_phenotype_filename)
-    hpoic = HPOIC(hpo, mim)
+    diseases = Diseases(disease_phenotype_filename)
+    hpoic = HPOIC(hpo, diseases)
 
     print('\t'.join(['Patient ID', 'External ID', 'IC']))
     for patient in Patient.iter_from_file(patient_hpo_filename, hpo):

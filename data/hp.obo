@@ -1,5 +1,5 @@
 format-version: 1.2
-data-version: releases/2014-09-20
+data-version: releases/2014-08-20
 date: 25:06:2014 08:55
 saved-by: Peter Robinson, Sebastian Koehler, Sandra Doelken, Chris Mungall, Monarch Initiative, et al
 auto-generated-by: OBO-Edit 2.3
@@ -7,7 +7,6 @@ subsetdef: hposlim_core "Core clinical terminology"
 subsetdef: secondary_consequence "Consequence of a disorder in another organ system."
 default-namespace: human_phenotype
 ontology: hp
-owl-axioms: Prefix(owl:=<http://www.w3.org/2002/07/owl#>)\nPrefix(rdf:=<http://www.w3.org/1999/02/22-rdf-syntax-ns#>)\nPrefix(xml:=<http://www.w3.org/XML/1998/namespace>)\nPrefix(xsd:=<http://www.w3.org/2001/XMLSchema#>)\nPrefix(rdfs:=<http://www.w3.org/2000/01/rdf-schema#>)\n\n\nOntology(\nSubClassOf(<http://purl.obolibrary.org/obo/HP_0012785> ObjectIntersectionOf(<http://purl.obolibrary.org/obo/HP_0030044> <http://purl.obolibrary.org/obo/HP_0009473>))\nAnnotationAssertion(rdfs:comment <http://purl.obolibrary.org/obo/HP_0030084> \"\")\n)
 logical-definition-view-relation: has_part
 
 [Term]
@@ -223,7 +222,7 @@ is_a: HP:0008775 ! Abnormality of the prostate
 [Term]
 id: HP:0000025
 name: Functional abnormality of male internal genitalia
-is_a: HP:0012874 ! Abnormal male reproductive system physiology
+is_a: HP:0012874 ! Abnormal male genital system physiology
 
 [Term]
 id: HP:0000026
@@ -661,9 +660,8 @@ is_a: HP:0000119 ! Abnormality of the genitourinary system
 
 [Term]
 id: HP:0000080
-name: Abnormality of reproductive system physiology
+name: Abnormality of genital physiology
 def: "An `abnormal` (PATO:0000460) `functionality` (PATO:0001509) of the `genital system` (FMA:7160)." [HPO:probinson]
-synonym: "Abnormality of genital physiology" BROAD []
 synonym: "Genital functional abnormality" EXACT []
 is_a: HP:0000078 ! Abnormality of the genital system
 
@@ -1095,7 +1093,7 @@ def: "A `decreased functionality` (PATO:0001624) of the `gonad` (FMA:18250)." [H
 comment: Reduced functioning of the gonads (ovaries or testes) with reduced production of sex hormones.
 xref: MeSH:D007006 "Hypogonadism"
 xref: UMLS:C0020619 "Hypogonadism"
-is_a: HP:0000080 ! Abnormality of reproductive system physiology
+is_a: HP:0000080 ! Abnormality of genital physiology
 is_a: HP:0008373 ! Puberty and gonadal disorders
 
 [Term]
@@ -1177,7 +1175,7 @@ is_a: HP:0100590 ! Rectal fistula
 id: HP:0000144
 name: Decreased fertility
 xref: UMLS:C0520927 "Decreased fertility"
-is_a: HP:0000080 ! Abnormality of reproductive system physiology
+is_a: HP:0000080 ! Abnormality of genital physiology
 
 [Term]
 id: HP:0000145
@@ -2635,10 +2633,8 @@ is_a: HP:0000290 ! Abnormality of the forehead
 [Term]
 id: HP:0000338
 name: Hypomimic face
-def: "A reduced degree of facial expression." [HPO:probinson]
 xref: UMLS:C1837824 "Hypomimic face"
 is_a: HP:0000301 ! Abnormality of facial musculature
-is_a: HP:0004673 ! Decreased facial expression
 
 [Term]
 id: HP:0000339
@@ -6164,7 +6160,6 @@ id: HP:0000765
 name: Abnormality of the thorax
 alt_id: HP:0100655
 def: "Any abnormality of the thorax (the region of the body formed by the sternum, the thoracic vertebrae and the ribs)." [HPO:curators]
-synonym: "Abnormality of the chest" EXACT []
 is_a: HP:0009121 ! Abnormal axial skeleton morphology
 
 [Term]
@@ -6418,7 +6413,7 @@ name: Impotence
 def: "Inability to develop or maintain an erection of the penis." [HPO:probinson]
 synonym: "Erectile dysfunction" EXACT []
 xref: UMLS:C2187990 "impotence"
-is_a: HP:0012874 ! Abnormal male reproductive system physiology
+is_a: HP:0012874 ! Abnormal male genital system physiology
 is_a: HP:0100639 ! Erectile abnormalities
 
 [Term]
@@ -7922,7 +7917,6 @@ is_a: HP:0005306 ! Capillary hemangiomas
 [Term]
 id: HP:0000997
 name: Axillary freckling
-def: "The presence in the axillary region (armpit) of an increased number of freckles, small circular spots on the skin that are darker than the surrounding skin because of deposits of melanin." [pmid:12186179]
 subset: hposlim_core
 xref: UMLS:C1860335 "Axillary freckling"
 is_a: HP:0001480 ! Freckling
@@ -11236,7 +11230,6 @@ is_a: HP:0000496 ! Abnormality of eye movement
 [Term]
 id: HP:0001480
 name: Freckling
-def: "The presence of an increased number of freckles, small circular spots on the skin that are darker than the surrounding skin because of deposits of melanin." []
 xref: UMLS:C0016689 "Freckles"
 is_a: HP:0001000 ! Abnormality of skin pigmentation
 
@@ -14468,10 +14461,9 @@ is_a: HP:0001943 ! Hypoglycemia
 [Term]
 id: HP:0001959
 name: Polydipsia
-def: "Excessive thirst manifested by excessive fluid intake." []
 xref: MeSH:D059606 "Polydipsia"
 xref: UMLS:C0085602 "POLYDYPSIA"
-is_a: HP:0030082 ! Abnormal drinking behavior
+is_a: HP:0000708 ! Behavioral abnormality
 
 [Term]
 id: HP:0001960
@@ -17961,7 +17953,7 @@ def: "Increased concentration of lactate in the cerebrospinal fluid." [HPO:curat
 synonym: "Increased cerebrospinal fluid lactate" EXACT []
 synonym: "Increased CSF lactic acid" EXACT []
 xref: UMLS:C1167918 "Increased CSF lactate"
-is_a: HP:0030085 ! Abnormal CSF lactate level
+is_a: HP:0002921 ! Abnormality of the cerebrospinal fluid
 
 [Term]
 id: HP:0002491
@@ -18023,8 +18015,7 @@ def: "An abnormality of the `cerebral white matter` (FMA:241998)." [HPO:probinso
 comment: This finding can be demonstrated by magnetic resonance imaging, especially with t2 signalling. The cerebral white matter is the region of the central nervous system that  consists mostly of glial cells and myelinated axons that interconnect the various regions of the cerebrum and the lower brain centers. It is located in the subcortex.
 synonym: "Abnormality of subcortical white matter" EXACT []
 synonym: "Cerebral white matter abnormalities" EXACT []
-synonym: "Cortical white matter abnormalities seen on MRI" RELATED [HPO:skoehler]
-synonym: "Leukoaraiosis" EXACT [pmid:3800716]
+synonym: "UBCORTICAL WHITE MATTER ABNORMALITIES SEEN ON MRI" RELATED [HPO:skoehler]
 synonym: "White matter abnormalities" EXACT []
 synonym: "White matter alterations" EXACT []
 xref: UMLS:C1866186 "White matter abnormalities"
@@ -18154,7 +18145,6 @@ id: HP:0002518
 name: Abnormality of the periventricular white matter
 synonym: "PERIVENTRICULAR WHITE MATTER ABNORMALITIES" RELATED [HPO:skoehler]
 is_a: HP:0002352 ! Leukoencephalopathy
-is_a: HP:0002500 ! Abnormality of the cerebral white matter
 
 [Term]
 id: HP:0002519
@@ -20066,7 +20056,6 @@ id: HP:0002814
 name: Abnormality of the lower limb
 def: "An abnormality of the `leg` (FMA:24979)." [HPO:probinson]
 subset: hposlim_core
-synonym: "Abnormality of the leg" EXACT []
 synonym: "Lower limb deformities" EXACT []
 xref: UMLS:C1096086 "Lower limb deformities"
 is_a: HP:0002813 ! Abnormality of limb bone morphology
@@ -20092,7 +20081,6 @@ id: HP:0002817
 name: Abnormality of the upper limb
 alt_id: HP:0003838
 def: "An abnormality of the `arm` (FMA:24890)." [HPO:probinson]
-synonym: "Abnormality of the arm" EXACT []
 is_a: HP:0002813 ! Abnormality of limb bone morphology
 
 [Term]
@@ -20835,7 +20823,7 @@ name: Rheumatoid factor positive
 def: "The presence in the serum of an autoantibody directed against the Fc portion of IgG." [HPO:probinson]
 xref: MeSH:D012217 "Rheumatoid Factor"
 xref: UMLS:C0151379 "Rheumatoid factor positive"
-is_a: HP:0030057 ! Autoimmune antibody positivity
+is_a: HP:0002960 ! Autoimmunity
 
 [Term]
 id: HP:0002924
@@ -21035,7 +21023,6 @@ is_a: HP:0100240 ! Synostosis of joints
 [Term]
 id: HP:0002949
 name: Fused cervical vertebrae
-def: "A congenital anomaly characterized by a joining (fusion) of two or more cervical vertebral bodies with one another." []
 synonym: "Cervical vertebral fusion" EXACT []
 synonym: "Fusion of cervical vertebrae" EXACT []
 xref: UMLS:C0022738 "CERVICAL VERTEBRA FUSION"
@@ -21084,7 +21071,7 @@ is_a: HP:0005372 ! Abnormality of B cell physiology
 [Term]
 id: HP:0002960
 name: Autoimmunity
-def: "The occurrence of an immune reaction against the organism's own cells or tissues." [HPO:probinson]
+def: "The occurrence of an immune reaction against the organisms own cells or tissues." [HPO:probinson]
 synonym: "Autoimmune disease" EXACT []
 synonym: "Autoimmune disorders" EXACT []
 xref: MeSH:D015551 "Autoimmunity"
@@ -21390,7 +21377,6 @@ def: "Neuroblastoma is a solid tumor that originate in neural crest cells of the
 xref: MeSH:D009447 "Neuroblastoma"
 xref: UMLS:C0700095 "Neuroblastoma"
 is_a: HP:0004376 ! Neuroblastic tumors
-is_a: HP:0030067 ! Peripheral primitive neuroectodermal neoplasm
 
 [Term]
 id: HP:0003009
@@ -23097,7 +23083,7 @@ def: "The presence in serum of antibodies against smooth muscle." [HPO:probinson
 comment: Anti smooth muscle antibody (SMA) may be present in a number of conditions including chronic active hepatitis, autoimmune hepatitis, cirrhosis, and infectious mononucleosis.
 synonym: "Smooth muscle antibody positive" EXACT []
 xref: UMLS:C0241185 "SMOOTH MUSCLE ANTIBODY POSITIVE"
-is_a: HP:0030057 ! Autoimmune antibody positivity
+is_a: HP:0002960 ! Autoimmunity
 
 [Term]
 id: HP:0003264
@@ -24255,7 +24241,7 @@ synonym: "Antineutrophil antibodies" EXACT []
 synonym: "Neutrophil antibody positive" EXACT []
 xref: MeSH:D019268 "Antibodies, Antineutrophil Cytoplasmic"
 xref: UMLS:C1858981 "Neutrophil antibody positive"
-is_a: HP:0030057 ! Autoimmune antibody positivity
+is_a: HP:0002960 ! Autoimmunity
 
 [Term]
 id: HP:0003454
@@ -24263,7 +24249,7 @@ name: Platelet antibody positive
 def: "The presence in the serum of autoantibodies directed against thrombocytes." [HPO:probinson]
 synonym: "Platelet antibody" EXACT []
 xref: UMLS:C1858980 "Platelet antibody positive"
-is_a: HP:0030057 ! Autoimmune antibody positivity
+is_a: HP:0002960 ! Autoimmunity
 
 [Term]
 id: HP:0003455
@@ -24508,7 +24494,7 @@ synonym: "Elevated antinuclear antibody" EXACT []
 synonym: "Serum antinuclear antibody" EXACT []
 xref: MeSH:D000974 "Antibodies, Antinuclear"
 xref: UMLS:C0151480 "Antinuclear antibody positive"
-is_a: HP:0030057 ! Autoimmune antibody positivity
+is_a: HP:0002960 ! Autoimmunity
 
 [Term]
 id: HP:0003494
@@ -25071,7 +25057,7 @@ synonym: "Antiphospholipid antibody" EXACT []
 synonym: "Phospholipid antibody positivity" EXACT []
 xref: MeSH:D017152 "Antibodies, Antiphospholipid"
 xref: UMLS:C0162595 "Antiphospholipid Antibody"
-is_a: HP:0030057 ! Autoimmune antibody positivity
+is_a: HP:0002960 ! Autoimmunity
 
 [Term]
 id: HP:0003614
@@ -27721,8 +27707,7 @@ alt_id: HP:0004212
 alt_id: HP:0006083
 alt_id: HP:0006181
 alt_id: HP:0009181
-def: "Clinodactyly refers to a bending or curvature of the `fifth finger` (FMA:24949) in the radial direction (i.e., towards the 4th finger)." [HPO:curators, pmid:16252026]
-comment: Minor degrees of curvature of the small finger are so common as to be considered normal.
+def: "Clinodactyly refers to a bending or curvature of the `fifth finger` (FMA:24949) in the radial direction (i.e., towards the 4th finger)." [HPO:curators]
 synonym: "Bilateral fifth digit clinodactyly" EXACT []
 synonym: "Bilateral fifth finger clinodactyly" EXACT []
 synonym: "Clinodactyly of fifth digit" EXACT []
@@ -27732,7 +27717,6 @@ synonym: "Radial deviation of the 5th finger" EXACT []
 xref: UMLS:C1850049 "Bilateral fifth finger clinodactyly"
 is_a: HP:0009179 ! Deviation of the 5th finger
 is_a: HP:0009466 ! Radial deviation of finger
-is_a: HP:0030084 ! Clinodactyly
 
 [Term]
 id: HP:0004213
@@ -35411,7 +35395,6 @@ synonym: "Toe contractures" EXACT []
 xref: UMLS:C1406835 "Toe contractures"
 is_a: HP:0001780 ! Abnormality of toe
 is_a: HP:0008366 ! Contractures involving the joints of the feet
-is_a: HP:0030044 ! Flexion contracture of digit
 is_a: HP:0100492 ! Joint contractures involving the joints of the feet
 
 [Term]
@@ -40160,7 +40143,6 @@ synonym: "Enlarged lateral ventricles" EXACT []
 synonym: "Lateral ventricle dilatation" EXACT []
 xref: UMLS:C1848503 "Lateral ventricle dilatation"
 is_a: HP:0002119 ! Ventriculomegaly
-is_a: HP:0030047 ! Abnormality of lateral ventricle
 
 [Term]
 id: HP:0006957
@@ -40621,7 +40603,7 @@ is_a: HP:0003560 ! Muscular dystrophy
 
 [Term]
 id: HP:0007082
-name: Dilated third ventricle
+name: DIlated third ventricle
 def: "An increase in size of the `third ventricle` (FMA:78454)." [HPO:probinson]
 comment: The thrid ventricle is midline between the two lateral ventricles, and it communicates between them and the fourth ventricle.
 is_a: HP:0002119 ! Ventriculomegaly
@@ -45567,7 +45549,7 @@ is_a: HP:0100763 ! Abnormality of the lymphatic system
 [Term]
 id: HP:0008230
 name: Decreased testosterone in males
-is_a: HP:0030087 ! Abnormal testosterone level
+is_a: HP:0008373 ! Puberty and gonadal disorders
 
 [Term]
 id: HP:0008231
@@ -47007,13 +46989,12 @@ is_a: HP:0007670 ! Abnormal vestibulo-ocular reflex
 [Term]
 id: HP:0008569
 name: Microtia, second degree
-def: "Median longitudinal length of the ear more than two standard deviations below the mean in the presence of some, but not all, parts of the normal ear." [eom:ae27d9699faef13a, pmid:19152421]
+def: "Median longitudinal length of the ear more than two standard deviations below the mean in the presence of some, but not all, parts of the normal ear." [pmid:19152421]
 synonym: "Cockleshell ear" RELATED []
 synonym: "Constricted helix type IV" RELATED []
 synonym: "Ear, grade II dysplasia" RELATED []
 synonym: "Mini ear" RELATED []
 synonym: "Severe cupped ear, type III" RELATED []
-synonym: "Shell ear" RELATED []
 synonym: "Snail ear" RELATED []
 is_a: HP:0008551 ! Microtia
 
@@ -55066,7 +55047,6 @@ def: "The presence of a `glioma` (MPATH:249), which is a `neoplasm` (MPATH:218) 
 comment: Gliomas can be classified as 1) ependymomas, 2) astrocytomas (including glioblastoma multiforme), 3 oligodendrogliomas, and 4) mixed gliomas, such as oligoastrocytomas.
 xref: MeSH:D005910 "Glioma"
 xref: UMLS:C0017638 "Glioma"
-is_a: HP:0030063 ! Neuroepithelial neoplasm
 is_a: HP:0100705 ! Abnormality of the glial cells
 is_a: HP:0100836 ! Malignant neoplasm of the central nervous system
 created_by: peter
@@ -56799,7 +56779,6 @@ xref: MeSH:D012175 "Retinoblastoma"
 xref: UMLS:C0694889 "RETINOBLASTOMA"
 is_a: HP:0002898 ! Embryonal neoplasm
 is_a: HP:0012777 ! Retinal neoplasm
-is_a: HP:0030063 ! Neuroepithelial neoplasm
 created_by: peter
 creation_date: 2009-05-02T06:23:25Z
 
@@ -63160,7 +63139,7 @@ name: Lung fibroma
 def: "The presence of a lung fibroma, a benign neoplasm that can present as a mass causing airway obstruction, cough, and hemoptysis, or present without symptoms as a solitary pulmonary nodule." [HPO:curators]
 xref: UMLS:C1334444 "Lung Fibroma"
 is_a: HP:0010614 ! Fibroma
-is_a: HP:0100526 ! Neoplasm of the lung
+is_a: HP:0100526 ! Neoplasm of the lungs
 created_by: sandra1
 creation_date: 2009-10-28T06:04:01Z
 
@@ -64845,7 +64824,6 @@ id: HP:0010799
 name: Pinealoma
 def: "A `neoplasm` (MPATH:218) of the `pineal gland` (FMA:62033)." [HPO:probinson]
 xref: MeSH:D010871 "Pinealoma"
-is_a: HP:0030063 ! Neuroepithelial neoplasm
 is_a: HP:0100568 ! Neoplasm of the endocrine system
 is_a: HP:0100835 ! Benign neoplasm of the central nervous system
 is_a: HP:0100836 ! Malignant neoplasm of the central nervous system
@@ -74951,7 +74929,7 @@ creation_date: 2012-06-21T08:42:03Z
 id: HP:0011953
 name: Pulmonary lymphoma
 def: "Lung parenchymal involvement with lymphoma." [DDD:tkuijpers]
-is_a: HP:0100526 ! Neoplasm of the lung
+is_a: HP:0100526 ! Neoplasm of the lungs
 created_by: peter
 creation_date: 2012-06-21T08:45:48Z
 
@@ -76319,7 +76297,6 @@ creation_date: 2012-09-10T05:22:48Z
 id: HP:0012110
 name: Hypoplasia of the pons
 def: "Underdevelopment of the `pons` (FMA:67943)." [HPO:probinson]
-synonym: "Pontine hypoplasia" EXACT []
 is_a: HP:0007361 ! Abnormality of the pons
 created_by: peter
 creation_date: 2012-09-10T05:35:36Z
@@ -77592,7 +77569,7 @@ creation_date: 2013-04-07T01:54:14Z
 
 [Term]
 id: HP:0012255
-name: Dynein arm defect of respiratory motile cilia
+name: Dynein arm defect of motile cilia
 def: "An anomaly of the dynein arms of motile cilia. This feature is usually appreciated by electron microscopy." [HPO:probinson, pmid:19606528]
 comment: The peripheral microtubules in the canonical 9 + 2 microtubular pattern of motile cilia are studded with dynein arms that contain adenosine triphosphatases and act as molecular motors to effect the sliding of the peripheral microtubular pairs relative to one another.
 is_a: HP:0005938 ! Abnormal respiratory motile cilium morphology
@@ -77617,7 +77594,7 @@ creation_date: 2013-04-07T09:38:46Z
 
 [Term]
 id: HP:0012258
-name: Abnormal axonemal organization of respiratory motile cilia
+name: Abnormal axonemal organization of motile cilia
 def: "Abnormal arrangement of the structures of the axoneme, which is the cytoskeletal structure that forms the inner core of the motile cilium and displays a canonical 9 + 2 microtubular pattern of motile cilia studded with dynein arms." [HPO:probinson, pmid:19606528]
 comment: Abnormal axonemal organization comprises anomalies such as an eccentric central pair of microtubuli, abnormal radial spokes and nexin links, reduced number of inner dynein arms, and displacement of the outer doublet.
 is_a: HP:0005938 ! Abnormal respiratory motile cilium morphology
@@ -77635,7 +77612,7 @@ creation_date: 2013-04-07T09:40:14Z
 
 [Term]
 id: HP:0012260
-name: Abnormal central microtubular pair morphology of respiratory motile cilia
+name: Abnormal central microtubular pair morphology of motile cilia
 def: "A structural anomaly of the two central microtubules of motile cilia with a 9+2 microtubuluar configuration." [HPO:probinson, pmid:19200523]
 comment: In the Foundational Model of Anatomy, the central microtubular pair is referred to as the central part of axoneme of cilium (FMA:62264).
 is_a: HP:0005938 ! Abnormal respiratory motile cilium morphology
@@ -77669,7 +77646,7 @@ creation_date: 2013-04-07T10:11:17Z
 
 [Term]
 id: HP:0012264
-name: Absent central microtubular pair morphology of respiratory motile cilia
+name: Absent central microtubular pair morphology of motile cilia
 def: "Absence of the two central microtubules of motile cilia with a 9+2 microtubuluar configuration." [HPO:probinson]
 is_a: HP:0005938 ! Abnormal respiratory motile cilium morphology
 created_by: peter
@@ -77694,8 +77671,8 @@ creation_date: 2013-04-07T10:23:08Z
 
 [Term]
 id: HP:0012267
-name: Absent respiratory ciliary axoneme radial spokes
-def: "Absence of the radial spokes of the axoneme of the respiratoy cilium." [HPO:probinson, pmid:19606528]
+name: Absent ciliary axoneme radial spokes
+def: "Absence of the radial spokes of the axoneme." [HPO:probinson, pmid:19606528]
 is_a: HP:0005938 ! Abnormal respiratory motile cilium morphology
 created_by: peter
 creation_date: 2013-04-07T01:56:53Z
@@ -78174,7 +78151,6 @@ creation_date: 2013-08-11T08:46:46Z
 id: HP:0012322
 name: Perifolliculitis
 def: "Inflammation surrounding hair follicles." [HPO:probinson]
-synonym: "Perifollicular inflammation" EXACT []
 is_a: HP:0011123 ! Inflammatory abnormality of the skin
 created_by: peter
 creation_date: 2013-08-11T09:25:58Z
@@ -78735,7 +78711,7 @@ name: Camptodactyly
 def: "The distal interphalangeal joint and/or the proximal interphalangeal joint of the fingers or toes cannot be extended to 180 degrees by either active or passive extension." [HPO:probinson]
 subset: hposlim_core
 xref: SNOMEDCT:29271008 "Camptodactyly"
-is_a: HP:0030044 ! Flexion contracture of digit
+is_a: HP:0001371 ! Flexion contracture
 created_by: hecht
 creation_date: 2013-10-20T08:08:19Z
 
@@ -81819,7 +81795,6 @@ id: HP:0012738
 name: Agenesis of canine
 def: "`Agenesis` (MPATH:57) of `canine tooth` (FMA:55636)." [HPO:probinson]
 synonym: "Absent canines" EXACT []
-is_a: HP:0001592 ! Selective tooth agenesis
 is_a: HP:0011078 ! Abnormality of canine
 created_by: peter
 creation_date: 2014-03-23T04:26:04Z
@@ -82221,6 +82196,7 @@ id: HP:0012785
 name: Flexion contracture of finger
 def: "Chronic loss of joint motion in a finger due to structural changes in non-bony tissue." [HPO:probinson]
 comment: Note that the term camptodactyly refers to a painless flexion contracture of the proximal interphalangeal (PIP) joint and not to a finger joint contracture in general.
+is_a: HP:0009473 ! Joint contracture of the hand
 created_by: peter
 creation_date: 2014-04-20T04:09:34Z
 
@@ -82339,7 +82315,7 @@ synonym: "Lymphangioleiomyomatosis" RELATED []
 synonym: "Pulmonary myomatosis" EXACT []
 xref: MeSH:D018192 "Lymphangioleiomyomatosis"
 is_a: HP:0012797 ! Lymphatic vessel neoplasm
-is_a: HP:0100526 ! Neoplasm of the lung
+is_a: HP:0100526 ! Neoplasm of the lungs
 created_by: peter
 creation_date: 2014-05-24T05:00:46Z
 
@@ -83009,10 +82985,9 @@ creation_date: 2014-06-09T11:14:47Z
 
 [Term]
 id: HP:0012874
-name: Abnormal male reproductive system physiology
+name: Abnormal male genital system physiology
 def: "An `abnormal` (PATO:0000460) `functionality` (PATO:0001509) of the male genital system." [HPO:probinson]
-synonym: "Abnormal male genital system physiology" RELATED []
-is_a: HP:0000080 ! Abnormality of reproductive system physiology
+is_a: HP:0000080 ! Abnormality of genital physiology
 created_by: hecht
 creation_date: 2014-06-09T11:20:46Z
 
@@ -83020,7 +82995,7 @@ creation_date: 2014-06-09T11:20:46Z
 id: HP:0012875
 name: Abnormal ejaculation
 def: "Abnormality in the process of ejection of semen (usually carrying sperm) from the male reproductive tract." [HPO:probinson]
-is_a: HP:0012874 ! Abnormal male reproductive system physiology
+is_a: HP:0012874 ! Abnormal male genital system physiology
 created_by: hecht
 creation_date: 2014-06-09T11:21:29Z
 
@@ -83341,774 +83316,6 @@ def: "These are spontaneous firing action potentials stimulated by needle moveme
 xref: pmid:15961866
 xref: UToronto:HTrang
 is_a: HP:0003482 ! EMG: axonal abnormality
-
-[Term]
-id: HP:0030008
-name: Cervical agenesis
-def: "Congenital absence of the cervix." []
-synonym: "Aplasia of the cervix" EXACT []
-synonym: "Cervical aplasia" EXACT []
-is_a: HP:0012888 ! Abnormality of the uterine cervix
-
-[Term]
-id: HP:0030009
-name: Cervical insufficiency
-def: "A cervix that shows a painless dilation and shortening during the second trimester of pregnancy with resultant recurrent pregnancy loss or delivery is considered incompetent" []
-comment: One of the known risk factors for preterm birth is cervical insufficiency.
-synonym: "Incompetent cervix" EXACT []
-xref: pmid:17490914
-xref: pmid:20643692
-is_a: HP:0012888 ! Abnormality of the uterine cervix
-
-[Term]
-id: HP:0030010
-name: Hydrometrocolpos
-def: "Hydrometrocolpos is an accumulation of uterine and vaginal secretions as well as menstrual blood in the uterus and vagina." []
-comment: Usually hydrometrocolpos manifests at puberty caused by an obstruction of the female genital tract.The most frequent cause of hydrometrocolpos is the presence of imperforate hymen due to failure of partial resorption of this membrane during the embryonic development.
-xref: pmid:24046799
-is_a: HP:0000142 ! Abnormality of the vagina
-
-[Term]
-id: HP:0030011
-name: Imperforate hymen
-def: "A congenital disorder where the hymen (a membrane that surrounds or partially covers the external vaginal opening) does not have an opening and completely obstructs the vagina." []
-comment: Imperformate hymen is caused by a failure of the hymen to perforate during fetal development. It is most often diagnosed in adolescent girls when menstrual blood accumulates in the vagina and sometimes also in the uterus. It can be treated by surgical incision of the hymen.
-xref: pmid:24822139
-is_a: HP:0000142 ! Abnormality of the vagina
-
-[Term]
-id: HP:0030012
-name: Abnormal female reproductive system physiology
-def: "An `abnormal` (PATO:0000460) `functionality` (PATO:0001509) of the female genital system." []
-synonym: "Abnormal female genital system physiology" RELATED []
-is_a: HP:0000080 ! Abnormality of reproductive system physiology
-
-[Term]
-id: HP:0030013
-name: Endometriosis
-def: "The presence of endometrial-like tissue outside the uterus." []
-comment: Endometriosis occurs primarily on the pelvic peritoneum, ovaries, and rectovaginal septum, and in rare cases on the diaphragm, pleura, and pericardium. Endometriosis affects 6 to 10% of women of reproductive age, 50 to 60% of women and teenage girls with pelvic pain, and up to 50% of women with infertility. Peritoneal disease, which is dependent on estrogen for growth, derives from retrograde menstruation of steroid hormone–sensitive endometrial cells and tissues, which implant on peritoneal surfaces and elicit an inflammatory response. This response is accompanied by angiogenesis, adhesions, fibrosis, scarring, neuronal infiltration, and anatomical distortion resulting in pain and infertility.
-xref: pmid:20573927
-is_a: HP:0030012 ! Abnormal female reproductive system physiology
-
-[Term]
-id: HP:0030014
-name: Female sexual dysfunction
-is_a: HP:0030012 ! Abnormal female reproductive system physiology
-
-[Term]
-id: HP:0030015
-name: Female anorgasmia
-def: "The persistent of recurrent difficulty, delay in, or absence of attaining orgasm following sufficient sexual stimulation and arousal." []
-synonym: "Female orgasmic disorder" BROAD []
-xref: pmid:16391543
-is_a: HP:0030014 ! Female sexual dysfunction
-
-[Term]
-id: HP:0030016
-name: Dyspareunia
-def: "Recurrent or persistent genital pain associated with sexual intercourse." []
-comment: Dyspareunia can develop secondary to medical problems such as vestibulitis, vaginal atrophy, or vaginal infection. It can be either physiologically or psychologically based, or a combination of the two.
-xref: pmid:16391543
-is_a: HP:0030014 ! Female sexual dysfunction
-
-[Term]
-id: HP:0030017
-name: Vaginismus
-def: "Recurrent or persistent involuntary spasms of the musculature of the outer third of the vagina that interferes with vaginal penetration, and which causes personal distress." []
-comment: Vaginismus usually develops as a conditioned response to painful penetration, or secondary to psychological/emotional factors.
-xref: pmid:16391543
-is_a: HP:0030014 ! Female sexual dysfunction
-
-[Term]
-id: HP:0030018
-name: Decreased female libido
-def: "Dminished sexual desire in female." []
-is_a: HP:0030014 ! Female sexual dysfunction
-
-[Term]
-id: HP:0030019
-name: Increased female libido
-def: "Elevated sexual desire in female" []
-is_a: HP:0030014 ! Female sexual dysfunction
-
-[Term]
-id: HP:0030021
-name: Auricular tag
-def: "Small protrusion within the pinna." [eom:1b6d89bad30b8f18, pmid:19152421]
-comment: The tag can be located on either side of the pinna.
-is_a: HP:0000377 ! Abnormality of the pinna
-
-[Term]
-id: HP:0030022
-name: Question mark ear
-def: "Cleft between the helix and the lobe." [eom:cffbc3de49dbb172, pmid:19152421]
-comment: Relatively few cases have been reported. Variation from a small notch to complete separation of the helix from the lobe is noted, there may be unilateral or bilateral involvement. The lobe is relatively laterally recessed compared to the upper portion of the ear and the scapha may be absent. This is distinct from a Cleft helix where the cleft is within the helix.
-synonym: "Constricted Ear" EXACT []
-synonym: "Cosman Ear" EXACT []
-is_a: HP:0000377 ! Abnormality of the pinna
-
-[Term]
-id: HP:0030023
-name: Quelprud Nodule
-def: "Small cartilaginous prominence on the posterior concha." [eom:193d1645eb4eced8, pmid:19152421]
-comment: This feature is best visualized when the lobe is tilted anteriorly.
-is_a: HP:0000377 ! Abnormality of the pinna
-
-[Term]
-id: HP:0030024
-name: Pretragal ectopia
-def: "Variably shaped, cartilage-containing tissue anterior to the external auditory meatus." [eom:095679c21044c851]
-comment: Pretragal ectopia refers to structures that are frequently complex and should be distinguished from preauricular tags. They may be difficult to distinguish from striated muscle hamartomas or tragal duplications. Pretragal ectopias often appear helix-like, and in such cases may be called Polyotia.
-synonym: "Accessory Tragus" RELATED []
-synonym: "Pretragal Duplication" RELATED []
-is_a: HP:0000383 ! Abnormality of periauricular region
-
-[Term]
-id: HP:0030025
-name: Auricular pit
-def: "Small indentation in the lower part of the ascending helix, concha, or in the crus helix." [eom:1fe5d46deac24493, pmid:19152421]
-comment: The location of the pits is the plane of fusion of the first branchial cleft.
-is_a: HP:0000377 ! Abnormality of the pinna
-
-[Term]
-id: HP:0030026
-name: Squared superior portion of helix
-def: "Flattening instead of curving or rounded superior helix, allowing the superior helix to run more horizontally than usual." [eom:ddce48fcd9ee46f4, pmid:19152421]
-comment: This is not to be confused with Lop ear or Satyr ear and may represent an underdevelopment of the upper third of the pinna. This is usually associated with a short ascending helix.
-is_a: HP:0011039 ! Abnormality of the helix
-
-[Term]
-id: HP:0030027
-name: Abnormality of the nasal cartilage
-def: "A morphological anomaly of the nasal cartilage." []
-is_a: HP:0010938 ! Abnormality of the external nose
-
-[Term]
-id: HP:0030028
-name: Absent nasal cartilage
-def: "Lack of a palpable nasal cartilage." [eom:73e4e8bb2eec316d, pmid:19152422]
-comment: This feature may be accompanied by a deficiency of the nasal bone. Absence of the nasal cartilage may lead to a Depressed nasal tip, which should be coded separately.
-is_a: HP:0030027 ! Abnormality of the nasal cartilage
-
-[Term]
-id: HP:0030029
-name: Splayed fingers
-def: "Divergence of digits along the A/P axis (in the plane of the palm)." [eom:ebc67f029da3caac, pmid:19125433]
-comment: This may be associated with Macrodactyly, but this should be assessed and coded separately. The affected digits should be specified.
-synonym: "Spreading of the fingers" EXACT []
-is_a: HP:0001167 ! Abnormality of finger
-
-[Term]
-id: HP:0030030
-name: Absent ray
-def: "The absence of all phalanges of a digit and the associated metacarpal /metatarsal." [eom:603438e0616f4f69, pmid:19125433]
-comment: This descriptor requires, in addition to the absence of the phalanges, absence of the metacarpal or metatarsal. Compare this to Absent thumb, Absent hallux, Absent toes, and Absent fingers. In most cases, the absent metacarpal or metatarsal can be assessed by palpation, but in some cases radiographs may be useful. This definition excludes Split hand and Split foot. If a patient meets the definition of either of those terms, they should be used and Absent ray should not.
-is_a: HP:0002813 ! Abnormality of limb bone morphology
-
-[Term]
-id: HP:0030031
-name: Small toe
-def: "Significant reduction in both length and girth of the toe compared to the contralateral toe, or alternatively, compared to a typical toe size for an age-matched individual." [eom:4d06c726e63758c5, pmid:19125433]
-comment: This is an acknowledged bundled term. There are no standards for this finding, clinical judgment must be used. The affected toes should be numbered.
-is_a: HP:0001991 ! Aplasia/Hypoplasia of toe
-
-[Term]
-id: HP:0030032
-name: Partial absence of foot
-def: "An incomplete absence of the foot, with no bony elements distal to the tarsals, but with preservation of some or all of the tarsals." [eom:6a2c173d3d7e3219, pmid:19125433]
-is_a: HP:0006494 ! Aplasia/Hypoplasia involving bones of the feet
-
-[Term]
-id: HP:0030033
-name: Small finger
-def: "Significant reduction in both length and girth of the finger compared to the contralateral finger, or alternatively, compared to a typical finger size for an age-matched individual." [eom:5b823be1388221a1, pmid:19125433]
-comment: This is a bundled term, comprising Short finger and Slender digit, but it is so widely used that it is included. This term is only used if the finger has the normal number of phalangeal segments. An appropriate alternative term for the first digit is Small thumb, when it is the only digit affected. When a thumb and one or more fingers are affected, it may be more economical to specify Small fingers, F1-5 instead of separately specifying Small thumb and Small fingers F2-5.
-is_a: HP:0006265 ! Aplasia/Hypoplasia of fingers
-
-[Term]
-id: HP:0030034
-name: Diffuse glomerular basement membrane lamellation
-def: "Presence of abnormal additional layers of the basement membrane of the glomerulus." []
-synonym: "Diffuse lamellation of the glomerular basement membrane" EXACT []
-xref: pmid:10199473
-xref: pmid:12089752
-is_a: HP:0000095 ! Abnormality of the glomerulus
-
-[Term]
-id: HP:0030035
-name: Struvite nephrolithiasis
-def: "Presence of  struvite (magnesium ammonium phosphate) containing calculi (kidney stones)." []
-synonym: "Struvite kidney stones" EXACT []
-is_a: HP:0000787 ! Nephrolithiasis
-
-[Term]
-id: HP:0030036
-name: Isothenuria
-def: "Inability of the kidneys to produce either concentrated or dilute urine." []
-comment: Isothenuria is seen in the final stages of renal failure. It reflects rapid flushing of fluid through the tubules in renal failure as the number of functioning nephrons decreases; the normal concentrating (particularly) and diluting mechanisms of the kidney do not have time to function. The consequence is that the specific gravity of the urine becomes approximately the same as that of the glomerular filtrate.
-is_a: HP:0012211 ! Abnormal renal physiology
-
-[Term]
-id: HP:0030037
-name: Bifid ureter
-def: "Incomplete duplication of the ureter." []
-synonym: "Ureter fissus" EXACT []
-xref: pmid:23513084
-is_a: HP:0000073 ! Ureteral duplication
-
-[Term]
-id: HP:0030038
-name: Enchondroma
-def: "A solitary, benign, intramedullary cartilage tumor that is often found in the short tubular bones of the hands and feet, distal femur, and proximal humerus. " []
-comment: Most patients have no symptoms. Enchondromas are often identified as incidental findings on X-ray examinations. Enchondromas usually have a radiographic appearance that is long and oval with well-defined margins.
-is_a: HP:0010622 ! Neoplasm of the skeletal system
-
-[Term]
-id: HP:0030039
-name: Fused thoracic vertebrae
-def: "A congenital anomaly characterized by a joining (fusion) of two or more thoracic vertebral bodies with one another." []
-is_a: HP:0002948 ! Vertebral fusion
-
-[Term]
-id: HP:0030040
-name: Fused lumbar vertebrae
-def: "A congenital anomaly characterized by a joining (fusion) of two or more lumbar vertebral bodies with one another." []
-is_a: HP:0002948 ! Vertebral fusion
-
-[Term]
-id: HP:0030041
-name: Schmorl's node
-def: "A Schmorl’s node is the herniation of nucleus pulposus through the cartilaginous and bony end plate into the body of the adjacent vertebra. " []
-comment: Schmorl’s nodes (SN) are common findings on imaging, and although most SNs are asymptomatic, some have been shown to become painful lesions.
-xref: pmid:22544358
-is_a: HP:0003468 ! Abnormality of the vertebrae
-
-[Term]
-id: HP:0030042
-name: Incomplete ossification of pubis
-def: "Failure to complete ossification (maturation and calcification) of the pubic bone." []
-is_a: HP:0009105 ! Abnormal ossification of the pubic bone
-
-[Term]
-id: HP:0030043
-name: Hip Subluxation
-def: "A partial dislocation of the hip joint, whereby the head of the femur is partially displaced from the socket." []
-is_a: HP:0001384 ! Abnormality of the hip joint
-
-[Term]
-id: HP:0030044
-name: Flexion contracture of digit
-def: "A bent (flexed) finger or toe joint that cannot be straightened actively or passively. It is thus a chronic loss of joint motion due to structural changes in muscle, tendons, ligaments, or skin that prevents normal movement of joints." []
-is_a: HP:0001371 ! Flexion contracture
-
-[Term]
-id: HP:0030045
-name: Serpentine fibula
-def: "Elongated curved (S-shaped) fibulae." []
-xref: pmid:21712856
-xref: pmid:3409932
-is_a: HP:0002991 ! Abnormality of the fibula
-
-[Term]
-id: HP:0030046
-name: Hypoglycosylation of alpha-dystroglycan
-def: "A reduction in the degree of glycosylation of alpha-dystroglycan in muscle tissue." []
-comment: Alpha-dystroglycan is a component of the Dystrophin Associated Protein complex (DAP) which binds to various ligands in the extracellular matrix of muscle and other tissues, including laminin-α2, perlecan, neurexin and agrin. Disruption of the interaction between α-dystroglycan and its ligands has severe consequences for muscle and brain function and structure. The pathological hallmark is reduced immunolabeling of skeletal muscle with antibodies recognizing glycosylated epitopes on alpha-dystroglycan.
-xref: pmid:18691338
-is_a: HP:0030112 ! Abnormal muscle fiber alpha dystroglycan
-
-[Term]
-id: HP:0030047
-name: Abnormality of lateral ventricle
-def: "A morphological anomal of the lateral ventricle." []
-comment: There are two lateral ventricles, one on each side of the brain. The lateral ventricle resembles a C-shaped structure that begins at an inferior horn in the temporal lobe, travels through a body in the parietal lobe and frontal lobe, and ultimately terminates at the interventricular foramen of Monro where each lateral ventricle connects to the central third ventricle.
-is_a: HP:0002118 ! Abnormality of the cerebral ventricles
-
-[Term]
-id: HP:0030048
-name: Colpocephaly
-def: "Colpocephaly is an anatomic finding in the brain manifested by occipital horns that are disproportionately enlarged in comparison with other parts of the lateral ventricles." []
-xref: pmid:4058748
-is_a: HP:0030047 ! Abnormality of lateral ventricle
-
-[Term]
-id: HP:0030049
-name: Brain abscess
-def: "A collection of pus, immune cells, and other material in the brain." []
-comment: Brain abscess usually results from a bacterial or fungal infection.
-is_a: HP:0011450 ! CNS infection
-
-[Term]
-id: HP:0030050
-name: Narcolepsy
-def: "An abnormal phenomenon characterized by a classic tetrad of excessive daytime sleepiness with irresistible sleep attacks, cataplexy (sudden bilateral loss of muscle tone), hypnagogic hallucination, and sleep paralysis." []
-comment: There are two distinct groups of patients with narcolepsy, ie, those having narcolepsy with cataplexy and those having narcolepsy without cataplexy.
-xref: pmid:21931493
-is_a: HP:0002360 ! Sleep disturbance
-
-[Term]
-id: HP:0030051
-name: Tip-toe gait
-def: "An abnormal gait pattern characterized by the failue of the heel to contact the floor at the onset of stance during gait." [pmid:24757457]
-is_a: HP:0001288 ! Gait disturbance
-
-[Term]
-id: HP:0030052
-name: Inguinal freckling
-def: "The presence in the inguinal region (groin) of an increased number of freckles, small circular spots on the skin that are darker than the surrounding skin because of deposits of melanin." []
-is_a: HP:0001480 ! Freckling
-
-[Term]
-id: HP:0030053
-name: Stiff skin
-def: "An induration (hardening) of the skin" []
-is_a: HP:0011121 ! Abnormality of skin morphology
-
-[Term]
-id: HP:0030054
-name: Perifollicular fibrosis
-def: "Presence of excess fibrous connective tissue surrounding hair follicules." []
-is_a: HP:0011355 ! Localized skin lesion
-
-[Term]
-id: HP:0030055
-name: Hyperconvex toenail
-def: "When viewed on end (with the tip of the toe pointing toward the examiner's eye) the curve of the toenail forms a tighter curve of convexity." []
-is_a: HP:0001795 ! Hyperconvex nail
-
-[Term]
-id: HP:0030056
-name: Uncombable hair
-def: "Hair that is disorderly, stands out from the scalp, and cannot be combed flat." []
-is_a: HP:0010719 ! Abnormality of hair texture
-
-[Term]
-id: HP:0030057
-name: Autoimmune antibody positivity
-def: "The presence of an antibody directed against the organism's own cells or tissues." []
-is_a: HP:0002960 ! Autoimmunity
-
-[Term]
-id: HP:0030058
-name: Sickled erythrocytes
-def: "An irreversible distortion of the morphology of an erythrocyte such that the cells are elongated and curved, resembling the blade of a sickle (the hand-held agricultural tool traditionally used to harvest grains)." []
-is_a: HP:0004447 ! Poikilocytosis
-
-[Term]
-id: HP:0030059
-name: Mitochondrial depletion
-def: "An abnormal reduction in mitochondrial DNA content of cells." [pmid:23385875]
-is_a: HP:0003287 ! Abnormality of mitochondrial metabolism
-
-[Term]
-id: HP:0030060
-name: Nervous tissue neoplasm
-def: "A neoplasm derived from nervous tissue (not necessarity a neoplasm located in the nervous system)." []
-is_a: HP:0011792 ! Neoplasm by histology
-
-[Term]
-id: HP:0030061
-name: Neuroectodermal neoplasm
-def: "A neoplasm arising in the neuroectoderm, the portion of the ectoderm of the early embryo that gives rise to the central and peripheral nervous systems, including some glial cells." []
-xref: MeSH:D017599
-is_a: HP:0030060 ! Nervous tissue neoplasm
-
-[Term]
-id: HP:0030062
-name: Craniopharyngioma
-def: "A benign pituitary-region neoplasm that originates from Rathke's pouch. Craniopharyngiomas are benign slow growing tumours that are located within the sellar and para sellar region of the central nervous system." [pmid:17425791]
-comment: Patients may present with bitemporal inferior quadrantanopia leading to bitemporal hemianopia, since the tumor may compress the optic chiasm.
-xref: MeSH:D003397
-is_a: HP:0030061 ! Neuroectodermal neoplasm
-
-[Term]
-id: HP:0030063
-name: Neuroepithelial neoplasm
-def: "A neoplasm composed of neural epithelium, not necessarily a neoplasm located in the neural epithelium or neuroepithelium." []
-xref: MeSH:D018302
-is_a: HP:0030061 ! Neuroectodermal neoplasm
-
-[Term]
-id: HP:0030064
-name: Neurocytoma
-def: "A benign brain tumor composed of neural elements which most often arise from the septum pellucidum and the walls of the lateral ventricles." []
-comment: Immunohistochemistry and electron microscopy evaluations may reveal expression of neuron specific enolase and synaptophysin and cells containing microtubuli, neurosecretory granules, and presynaptic vesicles.
-xref: MeSH:D018306
-is_a: HP:0030063 ! Neuroepithelial neoplasm
-
-[Term]
-id: HP:0030065
-name: Primitive neuroectodermal tumor
-def: "A tumor that originates in cells from the primitive neural crest. This group of tumors is characteirzed by the presence of primitive cells with elements of neuronal and/or glial differentiation. " []
-xref: MeSH:D018242
-is_a: HP:0030063 ! Neuroepithelial neoplasm
-
-[Term]
-id: HP:0030066
-name: Ependymoblastoma
-def: "A highly malignant embryonal tumor of infancy and young childhood characterized by neuroectodermal elements organized in distinctive multilayered rosettes. Ependymoblastomas are large lesions that occur in the supratentorial compartment, typically displaying a physical connection to the ventricular system. " []
-comment: Ependymoblastoma is a rare tumor that occurs in infants and young children in the first two years of life. Both sexes are affected equally. Patients present with signs and symptoms of raised intracranial pressure and hydrocephalus. Focal neurological signs may be present in older children. On MRI, ependymoblastomas are large heterogeneously enhancing lesion with associated brain edema and mass effect. Ependymoblastomas are well-circumscribed lesions, with a distinct margin between tumor and normal brain, though focal microscopic extension and leptomeningeal invasion are common. Histologically, an ependymoblastoma is a primitive neuroectodermal tumor with tumor cell arranged in multilayered rosettes consisting of an outer rim of tumor cells merging with the surrounding undifferentiated neuroectodermal cells. The tumor cells are immunopositive for S100, vimentin, cytokeratin and GFAP, and show high mitotic activity.
-is_a: HP:0030070 ! Central primitive neuroectodermal tumor
-
-[Term]
-id: HP:0030067
-name: Peripheral primitive neuroectodermal neoplasm
-def: "A primitive neuroectodermal neoplasm that occurs extracranially in soft tissue and bone." []
-is_a: HP:0030065 ! Primitive neuroectodermal tumor
-
-[Term]
-id: HP:0030068
-name: Olfactory esthesioneuroblastoma
-def: "A malignant olfactory neuroblastoma arising from the olfactory epithelium of the superior nasal cavity and cribriform plate." []
-xref: MeSH:D018304
-is_a: HP:0003006 ! Neuroblastoma
-
-[Term]
-id: HP:0030069
-name: Primary central nervous system lymphoma
-def: "A form of extranodal, high-grade non-Hodgkin B-cell neoplasm, usually large cell or immunoblastic type that originates in the brain, leptomeninges, spinal cord, or eyes and typically remains confined to the CNS. " [pmid:23696924]
-comment: Primary central nervous system lymphoma (PCNSL) is defined as the involvement of brain, leptomeninges, cerebrospinal fluid, eyes or spinal cord by an extranodal non-Hodgkin lymphoma (NHL) without evidence of a systemic lymphoma at the time of diagnosis. It represents 0.8 to 6.6% of all primary CNS tumors
-synonym: "Primary CNS lymphoma" EXACT []
-is_a: HP:0012539 ! Non-Hodgkin lymphoma
-
-[Term]
-id: HP:0030070
-name: Central primitive neuroectodermal tumor
-def: "A primitive neuroectodermal neoplasm that occurs in the central nervous system." []
-is_a: HP:0030065 ! Primitive neuroectodermal tumor
-
-[Term]
-id: HP:0030071
-name: Medulloepithelioma
-def: "A primitive neuroectodermal tumor that originates from the cells of the embryonic medullary canal." [pmid:17566306]
-comment: Medulloepithelioma is a rare primitive neuroectodermal tumour of the central nervous system usually developing in childhood, displaying highly malignant behaviour, with early progression or recurrence.
-is_a: HP:0030070 ! Central primitive neuroectodermal tumor
-
-[Term]
-id: HP:0030072
-name: Paranasal sinus neoplasm
-def: "A tumor that originates in the paranasal sinus." []
-is_a: HP:0012720 ! Neoplasm of the nose
-
-[Term]
-id: HP:0030073
-name: Pharyngeal neoplasm
-def: "A neoplasm originating in the pharynx." []
-is_a: HP:0000600 ! Abnormality of the pharynx
-
-[Term]
-id: HP:0030074
-name: Chemodectoma
-def: "A usually benign neoplasm originating in the chemoreceptor tissue of the cartodi body, glomus jugulare, glomus tympanicum, aortic bodies, or the female genital tract." []
-xref: MeSH:D010236
-is_a: HP:0002668 ! Paraganglioma
-
-[Term]
-id: HP:0030075
-name: Ductal carcinoma in situ
-def: "Presence of abnormal cells inside a milk duct, that is, non-invasive breast cancer. Ductal carcinoma in situ is considered to be a precursor lesion to invasive breast cancer." [pmid:24415964]
-is_a: HP:0100013 ! Neoplasm of the breast
-
-[Term]
-id: HP:0030076
-name: Lobular carcinoma in situ
-is_a: HP:0100013 ! Neoplasm of the breast
-
-[Term]
-id: HP:0030077
-name: Bronchial neoplasm
-def: "A tumor originating in a bronchus." []
-xref: MeSH:D001984
-is_a: HP:0100526 ! Neoplasm of the lung
-
-[Term]
-id: HP:0030078
-name: Lung adenocarcinoma
-is_a: HP:0100526 ! Neoplasm of the lung
-
-[Term]
-id: HP:0030079
-name: Cervix cancer
-def: "A tumor of the uterine cervix." []
-xref: MeSH:D002583
-is_a: HP:0012888 ! Abnormality of the uterine cervix
-
-[Term]
-id: HP:0030080
-name: Burkitt lymphoma
-def: "A form of undifferentiated malignant lymphoma commonly manifested as a large osteolytic lesion in the jaw or as an abdominal mass." []
-is_a: HP:0012539 ! Non-Hodgkin lymphoma
-
-[Term]
-id: HP:0030081
-name: Punctate periventricular T2 hyperintense foci
-def: "Multiple pointlike areas of high T2 signal observed upon magnetic resonance imaging of the periventricular cerebral white matter." []
-is_a: HP:0002518 ! Abnormality of the periventricular white matter
-
-[Term]
-id: HP:0030082
-name: Abnormal drinking behavior
-def: "Abnormal consumption of fluids with excessive or insufficient consumption of fluid or any other abnormal pattern of fluid consumption." []
-comment: Note that this HPO term refers to an abnormal habit of drinking fluids but does not directly refer to an psychological disorder.
-is_a: HP:0000708 ! Behavioral abnormality
-
-[Term]
-id: HP:0030083
-name: Salt craving
-def: "An excessive desire to eat salt (sodium chloride) or salty foods." []
-comment: Salt craving can be a sign of low salt levels, Addison's disease, Gitelman syndrome, and other diseases.
-is_a: HP:0100738 ! Abnormal eating behavior
-
-[Term]
-id: HP:0030084
-name: Clinodactyly
-def: "An angulation of a digit at an interphalangeal joint in the plane of the palm (finger) or sole (toe)." [pmid:16252026]
-is_a: HP:0011297 ! Abnormality of digit
-
-[Term]
-id: HP:0030085
-name: Abnormal CSF lactate level
-def: "Abnormal concentration of lactate in the cerebrospinal fluid." [HPO:probinson]
-is_a: HP:0002921 ! Abnormality of the cerebrospinal fluid
-
-[Term]
-id: HP:0030086
-name: Reduced CSF lactate
-def: "Decreased concentration of lactate in the cerebrospinal fluid." []
-is_a: HP:0030085 ! Abnormal CSF lactate level
-
-[Term]
-id: HP:0030087
-name: Abnormal testosterone level
-def: "An anomalous concentration of testosterone in the blood." []
-is_a: HP:0008373 ! Puberty and gonadal disorders
-
-[Term]
-id: HP:0030088
-name: Increased testosterone
-def: "An elevated circulating testosterone level in the blood." []
-is_a: HP:0030087 ! Abnormal testosterone level
-
-[Term]
-id: HP:0030089
-name: Abnormal muscle fiber protein expression
-def: "An anomalous amount of protein present in or on the surface of muscle fibers. This feature may be appreciate upon immunohistochemical investigation of muscle biopsy tissue." []
-is_a: HP:0004303 ! Abnormality of muscle fibers
-
-[Term]
-id: HP:0030090
-name: Abnormal muscle fiber merosin expression
-def: "An anomalous amount of merosin in muscle fibers. Merosin is a basement membrane-associated protein found in placenta, striated muscle, and peripheral nerve." [HPO:probinson, pmid:2185464]
-is_a: HP:0030089 ! Abnormal muscle fiber protein expression
-
-[Term]
-id: HP:0030091
-name: Absent muscle fiber merosin
-def: "Lack of merosin protein in the muscle biopsy." []
-synonym: "Absent merosin staining in muscle biopsy" EXACT []
-synonym: "Absent muscle fiber laminin alpha 2" EXACT []
-is_a: HP:0030090 ! Abnormal muscle fiber merosin expression
-
-[Term]
-id: HP:0030092
-name: Reduced muscle fiber merosin
-def: "A reduced amount of merosin in muscle fibers. This feature is usually assessed by immunohistochemical examination of muscle biopsy tissue." [HPO:Probinson]
-is_a: HP:0030090 ! Abnormal muscle fiber merosin expression
-
-[Term]
-id: HP:0030093
-name: Abnormal muscle fiber laminin beta 1
-def: "A deviation from normal of the amount of laminin beta 1 in muscle fiber tissue. Laminin 2 is a major component of the basal lamina of skeletal muscle cells. It is a heterotrimer composed of 3 chains: merosin (laminin alpha 2 chain), beta 1, and gamma 1." [HPO:probinson, pmid:9400354, UToronto:HTrang]
-is_a: HP:0030089 ! Abnormal muscle fiber protein expression
-
-[Term]
-id: HP:0030094
-name: Reduced muscle fiber laminin beta 1
-def: "A reduced amount of laminin beta 1 in muscle fiber tissue. Laminin 2 is a major component of the basal lamina of skeletal muscle cells. It is a heterotrimer composed of 3 chains: merosin (laminin alpha 2 chain), beta 1, and gamma 1." []
-is_a: HP:0030093 ! Abnormal muscle fiber laminin beta 1
-
-[Term]
-id: HP:0030095
-name: Reduced muscle collagen VI
-def: "A decreased amount of collagen VI in muscle tissue. Collagen VI is a primarily associated with the extracellular matrix of skeletal muscle." [UToronto:HTrang]
-synonym: "Reduced collagen 6 in muscle" EXACT []
-is_a: HP:0030089 ! Abnormal muscle fiber protein expression
-
-[Term]
-id: HP:0030096
-name: Abnormal muscle fiber dystrophin expression
-def: "A deviation from normal in the amoutn of dystrophin in muscle fiber tissue. Dystrophin is located at the muscle sarcolemma in a membrane-spanning protein complex that connects the cytoskeleton to the basal lamina. " [pmid:11917091, UToronto:HTrang]
-is_a: HP:0030089 ! Abnormal muscle fiber protein expression
-
-[Term]
-id: HP:0030097
-name: Absent muscle dystrophin expression
-def: "Lack of dystrophin in muscle tissue. Immunohistochemistry reveals absent dystrophin protein in the muscle biopsy. " [pmid:11917091, UToronto:htrang]
-is_a: HP:0030096 ! Abnormal muscle fiber dystrophin expression
-
-[Term]
-id: HP:0030098
-name: Reduced muscle dystrophin expression
-def: "A decreased amount of dystrophin in muscle fiber tissue." [UToronto:htrang]
-synonym: "Reduced dystrophin staining in muscle" EXACT []
-is_a: HP:0030096 ! Abnormal muscle fiber dystrophin expression
-
-[Term]
-id: HP:0030099
-name: Reduced muscle fiber alpha dystroglycan
-def: "Immunohistochemistry reveals reduced alpha dystroglycan protein in the muscle biopsy. Alpha-dystroglycan is a heavily glycosylated peripheral-membrane component of the dystrophin-associated glycoprotein complex (DAPC), which, in addition to laminin alpha2, binds perlecan and agrin in the extracellular matrix, whereas beta-dystroglycan, derived from the same gene, is a transmembrane protein that links to dystrophin intracellularly." [HPO:probinson, pmid:11592034, UToronto:htrang]
-is_a: HP:0030112 ! Abnormal muscle fiber alpha dystroglycan
-
-[Term]
-id: HP:0030100
-name: Abnormal muscle fiber alpha sarcoglycan
-def: "Deviation from normal in the amount of alpha sarcoglycan in muscle. The alpha, beta, gamma, and delta sarcoglycans are components of the dystrophin-complex. They are all N-glycosylated transmembrane proteins with a short intra-cellular domain, a single transmembrane region and a large extra-cellular domain containing a cluster of conserved cysteines." [HPO:probinson, pmid:24843229, UToronto:htrang]
-is_a: HP:0030089 ! Abnormal muscle fiber protein expression
-
-[Term]
-id: HP:0030101
-name: Absent muscle fiber alpha sarcoglycan
-def: "Lack of alpha sarcoglycan in muscle. Immunohistochemistry reveals absent alpha sarcoglycan protein in the muscle biopsy." [UToronto:htrang]
-is_a: HP:0030100 ! Abnormal muscle fiber alpha sarcoglycan
-
-[Term]
-id: HP:0030102
-name: Reduced muscle fiber alpha sarcoglycan
-def: "A decreased amount of alpha sarcoglycan in muscle. Immunohistochemistry reveals reduced alpha sarcoglycan protein in the muscle biopsy. " [UToronto:htrang]
-is_a: HP:0030100 ! Abnormal muscle fiber alpha sarcoglycan
-
-[Term]
-id: HP:0030103
-name: Abnormal muscle fiber beta sarcoglycan
-def: "Deviation from normal in the amount of beta sarcoglycan in muscle. The alpha, beta, gamma, and delta sarcoglycans are components of the dystrophin-complex. They are all N-glycosylated transmembrane proteins with a short intra-cellular domain, a single transmembrane region and a large extra-cellular domain containing a cluster of conserved cysteines." [HPO:probinson, pmid:24843229, UToronto:htrang]
-is_a: HP:0030089 ! Abnormal muscle fiber protein expression
-
-[Term]
-id: HP:0030104
-name: Abnormal muscle fiber gamma sarcoglycan
-def: "Deviation from normal in the amount of gamma sarcoglycan in muscle. The alpha, beta, gamma, and delta sarcoglycans are components of the dystrophin-complex. They are all N-glycosylated transmembrane proteins with a short intra-cellular domain, a single transmembrane region and a large extra-cellular domain containing a cluster of conserved cysteines." [HPO:probinson, pmid:24843229, UToronto:htrang]
-is_a: HP:0030089 ! Abnormal muscle fiber protein expression
-
-[Term]
-id: HP:0030105
-name: Abnormal muscle fiber delta sarcoglycan
-def: "Deviation from normal in the amount of delta sarcoglycan in muscle. The alpha, beta, gamma, and delta sarcoglycans are components of the dystrophin-complex. They are all N-glycosylated transmembrane proteins with a short intra-cellular domain, a single transmembrane region and a large extra-cellular domain containing a cluster of conserved cysteines." [HPO:probinson, pmid:24843229, UToronto:htrang]
-is_a: HP:0030089 ! Abnormal muscle fiber protein expression
-
-[Term]
-id: HP:0030106
-name: Absent muscle fiber beta sarcoglyan
-def: "Immunohistochemistry shows complete lack of beta sarcoglycan protein in the muscle biopsy. " [UToronto:htrang]
-is_a: HP:0030103 ! Abnormal muscle fiber beta sarcoglycan
-
-[Term]
-id: HP:0030107
-name: Reduced muscle fiber beta sarcoglycan
-def: "Immunohistochemistry reveals reduced beta sarcoglycan protein in the muscle biopsy." [UToronto:htrang]
-is_a: HP:0030103 ! Abnormal muscle fiber beta sarcoglycan
-
-[Term]
-id: HP:0030108
-name: Reduced muscle fiber gamma sarcoglycan
-def: "Immunohistochemistry reveals reduced gamma sarcoglyan protein in the muscle biopsy." [UToronto:htrang]
-is_a: HP:0030104 ! Abnormal muscle fiber gamma sarcoglycan
-
-[Term]
-id: HP:0030109
-name: Absent muscle fiber gamma sarcoglycan
-def: "Immunohistochemistry shows complete lack of gamma sarcoglycan protein in the muscle biopsy. " [UToronto:htrang]
-is_a: HP:0030104 ! Abnormal muscle fiber gamma sarcoglycan
-
-[Term]
-id: HP:0030110
-name: Absent muscle fiber delta sarcoglycan
-def: "Immunohistochemistry shows complete lack of delta sarcoglycan protein in the muscle biopsy. " [UToronto:htrang]
-is_a: HP:0030105 ! Abnormal muscle fiber delta sarcoglycan
-
-[Term]
-id: HP:0030111
-name: Reduced muscle fiber delta sarcoglycan
-def: "Immunohistochemistry reveals reduced delta sarcoglycan protein in the muscle biopsy." [UToronto:htrang]
-is_a: HP:0030105 ! Abnormal muscle fiber delta sarcoglycan
-
-[Term]
-id: HP:0030112
-name: Abnormal muscle fiber alpha dystroglycan
-def: "A deviation from normal of muscle alpha-dystroglcan expression. Alpha-dystroglycan is a heavily glycosylated peripheral-membrane component of the dystrophin-associated glycoprotein complex (DAPC), which, in addition to laminin alpha2, binds perlecan and agrin in the extracellular matrix, whereas beta-dystroglycan, derived from the same gene, is a transmembrane protein that links to dystrophin intracellularly." []
-is_a: HP:0030089 ! Abnormal muscle fiber protein expression
-
-[Term]
-id: HP:0030113
-name: Abnormal muscle fiber dysferlin
-def: "A deviation from normal in the expression of dysferlin in muscle tissue. Dysferlin is an ubiquitous 230-KDa transmembrane protein involved in calcium-mediated sarcolemma resealing. " [HPO:probinson, pmid:24843229]
-is_a: HP:0030089 ! Abnormal muscle fiber protein expression
-
-[Term]
-id: HP:0030114
-name: Absent muscle fiber dysferlin
-def: "Immunohistochemistry shows complete lack of dysferlin protein in the muscle biopsy. " [UToronto:htrang]
-is_a: HP:0030113 ! Abnormal muscle fiber dysferlin
-
-[Term]
-id: HP:0030115
-name: Reduced muscle fiber dysferlin
-def: "Immunohistochemistry reveals reduced dysferlin protein in the muscle biopsy." [UToronto:htrang]
-is_a: HP:0030113 ! Abnormal muscle fiber dysferlin
-
-[Term]
-id: HP:0030116
-name: Abnormal muscle fiber emerin
-def: "A deviation from normal of the amount of the inner nuclear membrane protein emerin in muscle tissue." [HPO:probinson]
-is_a: HP:0030089 ! Abnormal muscle fiber protein expression
-
-[Term]
-id: HP:0030117
-name: Absent muscle fiber emerin
-def: "Immunohistochemistry shows complete lack of emerin protein in the muscle biopsy." [UToronto:htrang]
-is_a: HP:0030116 ! Abnormal muscle fiber emerin
-
-[Term]
-id: HP:0030118
-name: Reduced muscle fiber emerin
-def: "Immunohistochemistry reveals reduced emerin protein in the muscle biopsy." [UToronto:htrang]
-is_a: HP:0030116 ! Abnormal muscle fiber emerin
-
-[Term]
-id: HP:0030119
-name: Abnormal muscle fiber calpain-3
-def: "A deviation from normal in the amount of calpain-3 in muscle tissue. Calpains are intracellular nonlysosomal cysteine proteases modulated by calcium ions. A typical calpain is a heterodimer composed of two distinct subunits, one large (over 80 kDa) and the other small (30 kDa). While only one gene encoding the small subunit has been demonstrated, there are many genes for the large one. CAPN3 is similar to ubiquitous Calpain 1 and 2 (m-calpain and micro-calpain), but contains specific insertion sequences (NS, IS1 and IS2). Calpains cleave target proteins to modify their properties, rather than breaking down the substrates." [HPO:probinson, pmid:24843229]
-is_a: HP:0030089 ! Abnormal muscle fiber protein expression
-
-[Term]
-id: HP:0030120
-name: Absent muscle fiber calpain-3
-def: "Western blot shows complete lack of calpain-3 protein in the muscle biopsy tissue. " [UToronto:htrang]
-is_a: HP:0030119 ! Abnormal muscle fiber calpain-3
-
-[Term]
-id: HP:0030121
-name: Reduced muscle fiber calpain-3
-def: "Western blot reveals reduced calpain-3 protein in the muscle biopsy tissue." [UToronto:htrang]
-is_a: HP:0030119 ! Abnormal muscle fiber calpain-3
-
-[Term]
-id: HP:0030122
-name: Reduced muscle fiber perlecan
-def: "Immunohistochemistry reveals reduced perlecan protein in the muscle biopsy. Perlecan is a basement membrane-specific heparan sulfate proteoglycan core protein (HSPG) also known as heparan sulfate proteoglycan 2 (HSPG2)." [HPO:probinson, UToronto:htrang]
-is_a: HP:0030089 ! Abnormal muscle fiber protein expression
-
-[Term]
-id: HP:0030123
-name: Abnormal muscle fiber lamin A/C
-def: "A deviation from the normal amount of lamin A/C in muscle tissue. The LMNA gene gives rise to at least three splicing isoforms including the two main isoforms, lamin A and lamin C. These are constitutive components of the fibrous nuclear lamina and have different roles, ranging from mechanical nuclear membrane maintenance to gene regulation. " [HPO:probinson, pmid:24843229]
-is_a: HP:0030089 ! Abnormal muscle fiber protein expression
-
-[Term]
-id: HP:0030124
-name: Reduced muscle fiber lamin A/C
-def: "A decreased amount of lamin A/C in muscle tissue. This feature can be shown by immunohistochemistry of Western blotting of muscle tissue." [HPO:probinson, UToronto:htrang]
-is_a: HP:0030123 ! Abnormal muscle fiber lamin A/C
 
 [Term]
 id: HP:0040004
@@ -88305,7 +87512,7 @@ creation_date: 2010-12-20T11:40:58Z
 
 [Term]
 id: HP:0100526
-name: Neoplasm of the lung
+name: Neoplasm of the lungs
 def: "Tumor of the lung." [HPO:probinson]
 synonym: "Lung tumor" EXACT []
 xref: MeSH:D008175 "Lung Neoplasms"
@@ -88567,7 +87774,7 @@ creation_date: 2010-12-21T03:44:37Z
 [Term]
 id: HP:0100552
 name: Neoplasm of the tracheobronchial system
-is_a: HP:0100526 ! Neoplasm of the lung
+is_a: HP:0100526 ! Neoplasm of the lungs
 created_by: doelkens
 creation_date: 2010-12-21T03:46:30Z
 
@@ -89331,7 +88538,7 @@ creation_date: 2010-12-29T05:20:58Z
 id: HP:0100636
 name: Pulmonary paraglioma
 is_a: HP:0002668 ! Paraganglioma
-is_a: HP:0100526 ! Neoplasm of the lung
+is_a: HP:0100526 ! Neoplasm of the lungs
 created_by: doelkens
 creation_date: 2010-12-29T05:23:34Z
 
@@ -90143,8 +89350,6 @@ creation_date: 2011-06-06T05:42:10Z
 [Term]
 id: HP:0100738
 name: Abnormal eating behavior
-def: "Abnormal eating habit with excessive or insufficient consumption of food or any other abnormal pattern of food consumption." []
-comment: Note that this HPO term refers to an abnormal eating habit but does not directly refer to an eating disorder, which is a psychological disorder that is characterized by one or more abnormal eating behaviors.
 is_a: HP:0000708 ! Behavioral abnormality
 created_by: doelkens
 creation_date: 2011-06-06T05:54:51Z
@@ -92588,7 +91793,7 @@ creation_date: 2013-06-05T12:11:38Z
 [Term]
 id: HP:0200106
 name: Absent/shortened dynein arms
-is_a: HP:0012255 ! Dynein arm defect of respiratory motile cilia
+is_a: HP:0012255 ! Dynein arm defect of motile cilia
 created_by: sebastiankohler
 creation_date: 2013-06-05T12:14:18Z
 
@@ -92896,47 +92101,4 @@ is_a: HP:0006485 ! Agenesis of incisor
 id: HP:0200161
 name: Agenesis of mandibular incisor
 is_a: HP:0006485 ! Agenesis of incisor
-
-[Term]
-id: HP:0400000
-name: Tall chin
-def: "Increased vertical distance from the vermillion border of the lower lip to the inferior-most point of the chin." [eom:96d8ca16a3c80216, pmid:19125436]
-is_a: HP:0000306 ! Abnormality of the chin
-
-[Term]
-id: HP:0400001
-name: Chin with vertical crease
-def: "Vertical crease fold situated below the vermilion border of the lower lip and above the fatty pad of the chin with the face at rest." [eom:8a5493c72e0dd13c, pmid:19125436]
-comment: The vertical shape must be distinguished from H-shaped crease of the chin.
-synonym: "Chin, vertical crease" EXACT []
-is_a: HP:0000306 ! Abnormality of the chin
-
-[Term]
-id: HP:0400002
-name: Extra concha fold
-def: "Folds or ridges within the concha that are distinct from the crus helix." [eom:40563f1f62db2319, pmid:19152421]
-synonym: "Concha, Extra Fold" EXACT []
-is_a: HP:0000356 ! Abnormality of the outer ear
-
-[Term]
-id: HP:0400003
-name: Focal absence of the external ear
-def: "Absence of a localized portion of the ear that cannot be described by a more precise term (e.g., absent ear lobe)." [eom:5b0e213b31288acd, pmid:19152421]
-is_a: HP:0008772 ! Aplasia/Hypoplasia of the external ear
-
-[Term]
-id: HP:0400004
-name: Long ear
-def: "Median longitudinal ear length greater than two SD above the mean determined by the maximal distance from the superior aspect to the inferior aspect of the external ear." [eom:2028381d5c61842a, pmid:19152421]
-comment: The commonly used term Macrotia is a bundled term comprising increased length and width (surface area).
-synonym: "Long ears" EXACT [HPO:skoehler]
-is_a: HP:0000377 ! Abnormality of the pinna
-
-[Term]
-id: HP:0400005
-name: Short ear
-def: "Median longitudinal ear length less than two SD above the mean determined by the maximal distance from the superior aspect to the inferior aspect of the external ear." [eom:2cff5ac9b681fc73, pmid:19152421]
-comment: The commonly used term Microtia is a bundled term comprising decreased length and width (surface area).
-synonym: "Short ears" EXACT [HPO:skoehler]
-is_a: HP:0000377 ! Abnormality of the pinna
 

@@ -8,19 +8,19 @@ __author__ = 'Orion Buske'
 
 import os
 import sys
-import re
 import logging
 
-from collections import defaultdict
 import xml.etree.ElementTree as ET
 
 logger = logging.getLogger(__name__)
 
 class Orphanet:
-    def __init__(self, lookup_filename, prevalence_filename):
-        self.lookup = self.parse_lookup(lookup_filename)
-        self.prevalence = self.parse_prevalence(prevalence_filename, 
-                                                lookup=self.lookup)
+    def __init__(self, prevalence_filename, lookup_filename=None):
+        lookup = None
+        if lookup_filename:
+            lookup = cls.parse_lookup(lookup_filename)
+
+        self.prevalence = self.parse_prevalence(prevalence_filename, lookup=lookup)
 
     def average_frequency(self):
         return sum(self.prevalence.values()) / len(self.prevalence)

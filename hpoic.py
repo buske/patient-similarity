@@ -6,10 +6,15 @@ Module that provides information-content functionality for the HPO.
 
 __author__ = 'Orion Buske (buske@cs.toronto.edu)'
 
+import sys
 import logging
 
 from math import log, exp
 from collections import defaultdict
+
+from disease import Diseases
+from hpo import HPO
+from orphanet import Orphanet
 
 EPS = 1e-9
 logger = logging.getLogger(__name__)
@@ -18,12 +23,12 @@ def _bound(p, eps=EPS):
     return min(max(p, eps), 1-eps)
 
 class HPOIC:
-    def __init__(self, hpo, mim, orphanet=None, patients=None,
+    def __init__(self, hpo, diseases, orphanet=None, patients=None,
                  use_disease_prevalence=False,
                  use_phenotype_frequency=False):
         logger.info('HPO root: {}'.format(hpo.root.id))
 
-        term_freq = self.get_term_frequencies(mim, hpo, orphanet=orphanet, patients=patients,
+        term_freq = self.get_term_frequencies(diseases, hpo, orphanet=orphanet, patients=patients,
                                               use_disease_prevalence=use_disease_prevalence, 
                                               use_phenotype_frequency=use_phenotype_frequency)
         logger.info('Total term frequency mass: {}'.format(sum(term_freq.values())))
@@ -48,7 +53,7 @@ class HPOIC:
 
 
     @classmethod
-    def get_term_frequencies(cls, mim, hpo, orphanet=None, patients=None,
+    def get_term_frequencies(cls, diseases, hpo, orphanet=None, patients=None,
                              use_disease_prevalence=False, 
                              use_phenotype_frequency=False):
         bound = _bound
@@ -56,15 +61,15 @@ class HPOIC:
 
         if use_phenotype_frequency:
             # Use average observed phenotype frequency as default
-            default_hp_freq = cls.get_average_phenotype_frequency(mim, hpo)
+            default_hp_freq = cls.get_average_phenotype_frequency(diseases, hpo)
             logger.info('Average observed phenotype frequency: {:.4f}'.format(default_hp_freq))
 
         if use_disease_prevalence:
             default_disease_freq = orphanet.average_frequency()
             logger.info('Average disease frequency: {}'.format(default_disease_freq))
 
-        # Aggregate weighted term frequencies across OMIM for IC corpus
-        for disease in mim:
+        # Aggregate weighted term frequencies across database for IC corpus
+        for id, disease in diseases.diseases.items():
             # Weight by disease prevalence?
             if use_disease_prevalence:
                 prevalence = orphanet.prevalence.get(disease.id)
@@ -89,24 +94,26 @@ class HPOIC:
 
                 raw_freq[term] += freq * prevalence
 
-#         logger.warn('DISTRIBUTING WEIGHT TO LEAVES')
-#         def distribute_weight_towards_leaves(node):
-#             freq = raw_freq[node] + 0.01
-#             if node.children:
-#                 # Evenly divide frequency amongst children
-#                 logger.info('Distributing {:.4f} to children of {}'.format(freq, node))
-#                 raw_freq[node] = 0
-#                 freq_part = freq / len(node.children)
-#                 for child in node.children:
-#                     raw_freq[child] += freq_part
-#                     distribute_weight_towards_leaves(child)
-
-#         distribute_weight_towards_leaves(hpo.root)
-
         if patients:
             for patient in patients:
                 for term in patient.hp_terms:
                     raw_freq[term] += 1
+
+        if True:
+            logger.warn('DISTRIBUTING WEIGHT TO LEAVES')
+            q = [hpo.root]
+
+            while q:
+                node = q.pop()
+                if node.children:
+                    q.extend(node.children)
+                    # Evenly divide frequency amongst children
+                    freq = raw_freq[node]
+                    logger.info('Distributing {:.4f} to children of {}'.format(freq, node))
+                    raw_freq[node] = 0
+                    freq_part = freq / len(node.children)
+                    for child in node.children:
+                        raw_freq[child] += freq_part
 
         # Normalize all frequencies to sum to 1
         term_freq = {}
@@ -190,11 +197,11 @@ class HPOIC:
         return lss
 
     @classmethod
-    def get_average_phenotype_frequency(cls, mim, hpo):
+    def get_average_phenotype_frequency(cls, diseases, hpo):
         freq_sum = 0
         n_freqs = 0
         dropped = set()
-        for disease in mim:
+        for disease in diseases:
             for hp_term, freq in disease.phenotype_freqs.items():
                 try:
                     hpo[hp_term]
@@ -230,3 +237,51 @@ class HPOIC:
     def counter_ls_information_content(self, ancestors):
         """Return the "joint" information content of the given counter of terms"""
         return sum([self.lss.get(term, 0) * count for term, count in ancestors.items()])
+
+def script(hpo_filename, disease_phenotype_filename, patient_phenotype_file=None, 
+           orphanet_lookup_filename=False, orphanet_prevalence_filename=False,
+           *args, **kwargs):
+    hpo = HPO(hpo_filename, new_root='HP:0000118')
+    diseases = Diseases(disease_phenotype_filename)
+    patients = None
+    if patient_phenotype_file:
+        patients = [patient 
+                    for patient in Patient.iter_from_file(patient_hpo_filename, hpo)
+                    if patient.hp_terms]
+
+    orphanet = None
+    if orphanet_prevalence_filename:
+        orphanet = Orphanet(orphanet_prevalence_filename, lookup_filename=orphanet_lookup_filename)
+
+    hpoic = HPOIC(hpo, diseases, patients=patients, orphanet=orphanet, *args, **kwargs)
+    for term in hpo:
+        ic = hpoic.term_ic.get(term)
+        ls = hpoic.lss.get(term)
+        print('{}\t{}\t{}'.format(term.id, ic, ls))
+                    
+
+def parse_args(args):
+    from argparse import ArgumentParser
+    description = __doc__.strip()
+    
+    parser = ArgumentParser(description=description)
+    parser.add_argument('hpo_filename', metavar='hp.obo')
+    parser.add_argument('disease_phenotype_filename', metavar='phenotype_annotations.tab')
+    parser.add_argument('--orphanet-lookup', metavar='en_product1.xml', 
+                        dest='orphanet_lookup_filename', default=None)
+    parser.add_argument('--orphanet-prevalence', metavar='en_product2.xml',
+                        dest='orphanet_prevalence_filename', default=None)
+    parser.add_argument('--use-disease-prevalence', default=False, action='store_true')
+    parser.add_argument('--use-phenotype-frequency', default=False, action='store_true')
+    parser.add_argument('--patient-phenotype-file')
+    parser.add_argument('--log', dest='loglevel', choices=['DEBUG', 'INFO', 'WARNING', 'ERROR', 'CRITICAL'], default='INFO')
+
+    return parser.parse_args(args)
+
+def main(args=sys.argv[1:]):
+    args = parse_args(args)
+    logging.basicConfig(level=args.__dict__.pop('loglevel'))
+    script(**vars(args))
+
+if __name__ == '__main__':
+    sys.exit(main())
