@@ -141,13 +141,18 @@ def compare_patients(hpoic, patient1, patient2, scores=None, use_aoo=False):
     if not scores or 'icca' in scores:
         out['icca'] = hpoic.information_content(common_ancestors)
 
-    if not scores or 'jz' in scores:
+    if not scores or 'jz' in scores or 'nsimgic' in scores:
         p1_ancestor_counts = ancestor_counts(p1_terms)
         p2_ancestor_counts = ancestor_counts(p2_terms)
         common_ancestor_counts = p1_ancestor_counts & p2_ancestor_counts  # min
         all_ancestor_counts = p1_ancestor_counts | p2_ancestor_counts  # max
-        out['simgic_jz'] = 2 * hpoic.counter_ls_information_content(common_ancestor_counts) / (hpoic.information_content(p1_terms) + hpoic.information_content(p2_terms))
-        out['simgic_jz2'] = hpoic.counter_ls_information_content(common_ancestor_counts) / hpoic.counter_ls_information_content(all_ancestor_counts)
+        if not scores or 'jz' in scores:
+            out['simgic_jz'] = 2 * hpoic.counter_ls_information_content(common_ancestor_counts) / (hpoic.information_content(p1_terms) + hpoic.information_content(p2_terms))
+            out['simgic_jz2'] = hpoic.counter_ls_information_content(common_ancestor_counts) / hpoic.counter_ls_information_content(all_ancestor_counts)
+
+        if not scores or 'nsimgic' in scores:
+            out['nsimgic'] = hpoic.counter_information_content(common_ancestor_counts) / hpoic.counter_information_content(all_ancestor_counts)
+
         
     if not scores or 'jaccard' in scores:
         jaccard_rows = [[jaccard(t1, t2) for t2 in p2_terms] for t1 in p1_terms]
@@ -164,13 +169,13 @@ def compare_patients(hpoic, patient1, patient2, scores=None, use_aoo=False):
         row_max = [max(row) for row in micas]
         col_max = [max([row[i] for row in micas]) for i in range(len(micas[0]))]
 
-        if 'resnik' in scores:
+        if not scores or 'resnik' in scores:
             # average, max, best-match-average
             out['resnik_avg'] = sum([sum(row) for row in micas]) / (len(micas) * len(micas[0]))
             out['resnik_best_avg'] = sum(row_max) / len(row_max)
             out['resnik_max'] = max(row_max)
             
-        if 'owlsim' in scores:
+        if not scores or 'owlsim' in scores:
             owl_max_score = max(row_max)
             owl_avg_score = (sum(row_max) + sum(col_max)) / (len(row_max) + len(col_max))
             opt_p1_scores = [hpoic.get_term_ic(t) for t in p1_terms]
@@ -292,7 +297,7 @@ def parse_args(args):
     parser.add_argument('--log', dest='loglevel', choices=['DEBUG', 'INFO', 'WARNING', 'ERROR', 'CRITICAL'], default='WARNING')
     parser.add_argument('--proto', metavar="file", help="HPO file of disease prototypes to compare against as well")
     parser.add_argument('-s', '--score', dest='scores', action='append', default=[],
-                        choices=['jaccard', 'resnik', 'lin', 'jc', 'owlsim', 'ob', 'jz', 'ui', 'simgic', 'icca'],
+                        choices=['jaccard', 'resnik', 'lin', 'jc', 'owlsim', 'ob', 'jz', 'ui', 'simgic', 'nsimgic', 'icca'],
                         help='Include this score in the output for each pair of patients')
 
     return parser.parse_args(args)

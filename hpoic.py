@@ -165,34 +165,41 @@ class HPOIC:
         # P(parents) = probmass(descendants)
         for term, ic in term_ic.items():
             assert term not in lss
-            if not term.parents:
-                ls = 0.0
-            elif len(term.parents) == 1:
-                ls = ic - term_ic[next(iter(term.parents))]
+            if term.parents:
+                max_parent_ic = max([term_ic[parent] for parent in term.parents])
+                ls = max(ic - max_parent_ic, 0.0)
             else:
-                siblings = None
-                for p in term.parents:
-                    if siblings is None:
-                        siblings = set(p.children)
-                    else:
-                        siblings.intersection_update(p.children)
+                ls = 0.0
 
-                assert siblings
-                # Siblings now contains all other siblings to term (+ self)
-                sibling_prob_mass = 0.0
-                for t in siblings:
-                    if t in term_ic:
-                        sibling_prob_mass += exp(-term_ic[t])
-
-                if sibling_prob_mass < eps:
-                    ls = 0.0
-                else:
-                    ls = ic + log(sibling_prob_mass)
-                    if abs(ls) < eps:
-                        ls = 0
-                    assert ls >= 0
-                        
             lss[term] = ls
+#             if not term.parents:
+#                 ls = 0.0
+#             elif len(term.parents) == 1:
+#                 ls = ic - term_ic[next(iter(term.parents))]
+#             else:
+#                 siblings = None
+#                 for p in term.parents:
+#                     if siblings is None:
+#                         siblings = set(p.children)
+#                     else:
+#                         siblings.intersection_update(p.children)
+
+#                 assert siblings
+#                 # Siblings now contains all other siblings to term (+ self)
+#                 sibling_prob_mass = 0.0
+#                 for t in siblings:
+#                     if t in term_ic:
+#                         sibling_prob_mass += exp(-term_ic[t])
+
+#                 if sibling_prob_mass < eps:
+#                     ls = 0.0
+#                 else:
+#                     ls = ic + log(sibling_prob_mass)
+#                     if abs(ls) < eps:
+#                         ls = 0
+#                     assert ls >= 0
+                        
+#             lss[term] = ls
 
         return lss
 
@@ -237,6 +244,10 @@ class HPOIC:
     def counter_ls_information_content(self, ancestors):
         """Return the "joint" information content of the given counter of terms"""
         return sum([self.lss.get(term, 0) * count for term, count in ancestors.items()])
+
+    def counter_information_content(self, ancestors):
+        """Return the sum of information content of the given counter of terms"""
+        return sum([self.term_ic.get(term, 0) * count for term, count in ancestors.items()])
 
 def script(hpo_filename, disease_phenotype_filename, patient_phenotype_file=None, 
            orphanet_lookup_filename=False, orphanet_prevalence_filename=False,
