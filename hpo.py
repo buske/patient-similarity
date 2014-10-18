@@ -1,15 +1,17 @@
 #!/usr/bin/env python
 
 """
-
+Module for processing the Human Phenotype Ontology.
 """
 
-__author__ = 'Orion Buske'
+__author__ = 'Orion Buske (buske@cs.toronto.edu)'
 
 import os
 import sys
 import re
 import logging
+
+logger = logging.getLogger(__name__)
 
 class HPError(Exception):
     pass
@@ -35,7 +37,7 @@ def get_ancestors(root, acc=None):
     return acc
 
 
-class HP(object):
+class HPNode(object):
     """HPO graph node
 
     Attributes:
@@ -74,7 +76,7 @@ class HP(object):
             if self.id != 'HP:0000001':
                 assert self._parent_hps
         except:
-            logging.error("Error parsing TERM:\n{}".format('\n'.join(lines)))
+            logger.error("Error parsing TERM:\n{}".format('\n'.join(lines)))
             raise
 
     def __str__(self):
@@ -122,21 +124,26 @@ class HPO(object):
     hps: {hp -> HP}
     root: HP
     """
-    def __init__(self, filename):
+    def __init__(self, filename, new_root=None):
+        """Load the HPO ontology specified in the OBO file 'filename'.
+
+        If new_root is specified (an HPO term ID), the HPO will be truncated to 
+        only include that node and descendants.
+        """
         self.hps = {}
         self.root = None
 
-        logging.info("Parsing HPO graph...")
+        logger.info("Parsing graph...")
         roots = []
         with open(filename, encoding='utf-8') as ifp:
             version_str = ifp.readline().strip()
             assert version_str.startswith('format-version')
             self.version = version_str.split(': ')[1]
-            logging.info("HPO version {}...".format(self.version))
+            logger.info("HPO version: {}".format(self.version))
             
             for lines in _iter_hp_terms(ifp):
                 try:
-                    hp = HP(lines)
+                    hp = HPNode(lines)
                 except HPError:
                     continue
                 
@@ -153,24 +160,28 @@ class HPO(object):
         for node in nodes:
             node.link(self.hps)
 
-        logging.info("Found {:d} HP nodes ({:d} terms) in graph".format(len(nodes), len(self.hps)))
+        logger.info("Found {:d} HP nodes ({:d} terms) in graph".format(len(nodes), len(self.hps)))
 
-        logging.debug("Here are 5:")
+        logger.debug("Here are 5:")
         for i, k in zip(list(range(5)), nodes):
-            logging.debug("  {:d}: {}".format(i, k))
+            logger.debug("  {:d}: {}".format(i, k))
 
         if len(roots) == 1:
             self.root = roots[0]
         else:
-            logging.warning("Warning: found {:d} root nodes, leaving root as None".format(len(roots)))
+            logger.warning("Warning: found {:d} root nodes, leaving root as None".format(len(roots)))
             self.root = None
+
+        if new_root:
+            assert new_root in self.hps
+            self.filter_to_descendants(new_root)
 
 
     def filter_to_descendants(self, root_hp):
         root = self.hps[root_hp]
         
         safe_nodes = get_descendants(root)
-        logging.info("Filtering to the {:d} nodes descendant of {} ({})...".format(len(safe_nodes), root_hp, root.name))
+        logger.info("Filtering to the {:d} nodes descendant of {} ({})...".format(len(safe_nodes), root_hp, root.name))
 
         hps = {}
         safe_hps = set()
@@ -178,12 +189,12 @@ class HPO(object):
             safe_hps.add(node.id)
             safe_hps.update(node.alts)
             if node.id in hps:
-                logging.warning('Found duplicate of HP term:' + node.id)
+                logger.warning('Found duplicate of HP term:' + node.id)
 
             hps[node.id] = node
             for alt_hp in node.alts:
                 if alt_hp in hps:
-                    logging.warning('Found duplicate of HP term:' + alt_hp)
+                    logger.warning('Found duplicate of HP term:' + alt_hp)
                 else:
                     hps[alt_hp] = node
 
@@ -231,7 +242,7 @@ def parse_args(args):
     description = __doc__.strip()
     
     parser = ArgumentParser(description=description)
-    parser.add_argument('hpo_filename', metavar='HPO')
+    parser.add_argument('hpo_filename', metavar='hp.obo')
     return parser.parse_args()
 
 def main(args=sys.argv[1:]):
