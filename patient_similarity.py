@@ -229,7 +229,8 @@ def compare_patients(hpoic, patient1, patient2, scores=None, use_aoo=False):
 def script(patient_hpo_filename, hpo_filename, disease_phenotype_filename, 
            orphanet_lookup_filename=None, orphanet_prevalence_filename=None, proto=None, 
            use_disease_prevalence=False, use_phenotype_frequency=False, 
-           use_patient_phenotypes=False, use_aoo=False, scores=None):
+           use_patient_phenotypes=False, distribute_ic_to_leaves=False,
+           use_aoo=False, scores=None):
     hpo = HPO(hpo_filename, new_root='HP:0000118')
     diseases = Diseases(disease_phenotype_filename)
 
@@ -251,7 +252,8 @@ def script(patient_hpo_filename, hpo_filename, disease_phenotype_filename,
 
     hpoic = HPOIC(hpo, diseases, orphanet=orphanet, patients=use_patient_phenotypes,
                   use_disease_prevalence=use_disease_prevalence,
-                  use_phenotype_frequency=use_phenotype_frequency)
+                  use_phenotype_frequency=use_phenotype_frequency,
+                  distribute_ic_to_leaves=distribute_ic_to_leaves)
 
     total_patient_logprob = 0
     for patient in patients:
@@ -293,6 +295,7 @@ def parse_args(args):
     parser.add_argument('--use-disease-prevalence', default=False, action='store_true')
     parser.add_argument('--use-phenotype-frequency', default=False, action='store_true')
     parser.add_argument('--use-patient-phenotypes', default=False, action='store_true')
+    parser.add_argument('--distribute-ic-to-leaves', default=False, action='store_true')
     parser.add_argument('--use-aoo', default=False, action='store_true')
     parser.add_argument('--log', dest='loglevel', choices=['DEBUG', 'INFO', 'WARNING', 'ERROR', 'CRITICAL'], default='WARNING')
     parser.add_argument('--proto', metavar="file", help="HPO file of disease prototypes to compare against as well")
