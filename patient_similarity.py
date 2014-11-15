@@ -158,8 +158,6 @@ def compare_patients(hpoic, patient1, patient2, scores=None, use_aoo=False):
         jaccard_rows = [[jaccard(t1, t2) for t2 in p2_terms] for t1 in p1_terms]
         out['jaccard_best_avg'] = sum([max(row) for row in jaccard_rows]) / len(jaccard_rows)
         out['jaccard_avg'] = sum([sum(row) for row in jaccard_rows]) / (len(jaccard_rows) * len(jaccard_rows[0]))
-        out['jaccard_max'] = max([max(row) for row in jaccard_rows])
-
 
     if not scores or ('resnik' in scores or 'owlsim' in scores):
         micas = [[resnik(t1, t2) 
@@ -173,7 +171,6 @@ def compare_patients(hpoic, patient1, patient2, scores=None, use_aoo=False):
             # average, max, best-match-average
             out['resnik_avg'] = sum([sum(row) for row in micas]) / (len(micas) * len(micas[0]))
             out['resnik_best_avg'] = sum(row_max) / len(row_max)
-            out['resnik_max'] = max(row_max)
             
         if not scores or 'owlsim' in scores:
             owl_max_score = max(row_max)
@@ -193,7 +190,6 @@ def compare_patients(hpoic, patient1, patient2, scores=None, use_aoo=False):
 
         out['lin_avg'] = sum([sum(row) for row in lins]) / (len(lins) * len(lins[0]))
         out['lin_best_avg'] = sum([max(row) for row in lins]) / len(lins)
-        out['lin_max'] = max([max(row) for row in lins])
 
     if not scores or 'jc' in scores:
         jcs = [[jc(t1, t2, res)
@@ -201,7 +197,6 @@ def compare_patients(hpoic, patient1, patient2, scores=None, use_aoo=False):
                for (t1, row) in zip(p1_terms, micas)]
         out['jc_avg'] = sum([sum(row) for row in jcs]) / (len(jcs) * len(jcs[0]))
         out['jc_best_avg'] = sum([max(row) for row in jcs]) / len(jcs)
-        out['jc_max'] = max([max(row) for row in jcs])
 
     if not scores or 'ob' in scores:
         p1_ic = hpoic.ls_information_content(p1_ancestors)
