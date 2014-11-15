@@ -118,12 +118,13 @@ class Diseases:
 
                     phenotypes = disease_phenotypes[disease]
                     if freq is not None and hp_term in phenotypes:
+                        old_freq = phenotypes[hp_term]
                         # Always take max annotated frequency
-                        if phenotypes[hp_term] is None or phenotypes[hp_term] < freq:
+                        if old_freq is None or old_freq < freq:
                             phenotypes[hp_term] = freq
 
-                        if phenotypes[hp_term] != freq:
-                            logging.warn('Found conflicting frequencies ({}, {}) for same disease-phenotype: {}:{} - {}'.format(phenotypes[hp_term], freq, disease[0], disease[1], hp_term))
+                        if old_freq != freq:
+                            logging.warn('Found conflicting frequencies ({}, {}) for same disease-phenotype: {}:{} - {} (taking larger)'.format(old_freq, freq, disease[0], disease[1], hp_term))
                     else:
                         phenotypes[hp_term] = freq
 
