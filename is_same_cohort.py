@@ -6,20 +6,17 @@
 
 import sys
 import os
-import math
 import logging
 import csv
 import string
 
 from collections import defaultdict
-from itertools import combinations, product
-from numpy import array
 
 def read_cohorts(filename):
     cohort_lookup = {}
     with open(filename) as ifp:
         for line in ifp:
-            line = lin.strip()
+            line = line.strip()
             cohorts = set(line.strip().split())
             for cohort in cohorts:
                 if cohort in cohort_lookup:
@@ -31,16 +28,16 @@ def read_cohorts(filename):
 def read_id_lookup(filename):
     ids = {}  # id -> external
     with open(filename) as ifp:
-        reader = csv.DictReader(ifp, delimiter=',')
+        reader = csv.DictReader(ifp, delimiter='\t')
         for row in reader:
-            patient_id = row['Report ID'].strip()
-            external_id = row['Identifier'].strip()
+            patient_id = row['Patient ID'].strip()
+            external_id = row['External ID'].strip()
             if external_id:
                 ids[patient_id] = external_id
     return ids
 
 def get_cohort(p):
-    if p.startswith('UDP'):
+    if p.startswith('UDP') or p.startswith('DDN'):
         return p
     else:
         cohort = p.split('_')[0].rstrip(string.ascii_lowercase)
@@ -57,6 +54,8 @@ def script(pheno_sim, cohort_file, id_file=None):
     if id_file:
         ids = read_id_lookup(id_file)
 
+    seen_ids = set()
+    matches_found = defaultdict(set)
     with open(pheno_sim) as ifp:
         # Burn and replace header
         header = ifp.readline()
@@ -73,10 +72,28 @@ def script(pheno_sim, cohort_file, id_file=None):
                 p1 = ids.get(p1, p1)
                 p2 = ids.get(p2, p2)
 
+
             c1 = get_cohort(p1)
             c2 = get_cohort(p2)
+            same_cohort = is_same_cohort(c1, c2, cohort_lookup)
 
-            print('{:d}'.format(is_same_cohort(c1, c2, cohort_lookup)))
+            seen_ids.add(p1)
+            seen_ids.add(p2)
+            if same_cohort:
+                matches_found[p1].add(p2)
+                matches_found[p2].add(p1)
+
+            print('{:d}'.format(same_cohort))
+
+    for id in sorted(seen_ids):
+        if id in matches_found:
+            logging.info('Found matches for {}: {}'.format(id, ','.join(sorted(matches_found[id]))))
+        else:
+            logging.info('No matches found for {}'.format(id))
+
+    logging.info('Found {} IDs'.format(len(seen_ids)))
+    logging.info('{} with matches'.format(len(matches_found)))
+    logging.info('{} without matches'.format(len(seen_ids) - len(matches_found)))
 
 def parse_args(args):
     from argparse import ArgumentParser
