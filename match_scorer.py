@@ -1,4 +1,4 @@
-#!/usr/bin/env python
+#!/usr/bin/env python3
 
 """
 Given all the information for a pair of patients, computer a match score, with gene and variant info
