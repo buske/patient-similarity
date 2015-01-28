@@ -31,7 +31,7 @@ def script(patient1, patient2, patient_hpo_filename, hpo_filename,
     p2 = patients[patient2]
 
     diseases = Diseases(disease_phenotype_filename)
-    orphanet = Orphanet(orphanet_lookup_filename, orphanet_prevalence_filename)
+    orphanet = Orphanet(orphanet_prevalence_filename, lookup_filename=orphanet_lookup_filename)
     comparator = PatientComparator(hpo, diseases, orphanet)
     
     clusters = comparator.similarity_breakdown(p1, p2)

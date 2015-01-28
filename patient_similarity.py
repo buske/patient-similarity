@@ -231,7 +231,7 @@ def script(patient_hpo_filename, hpo_filename, disease_phenotype_filename,
 
     orphanet = None
     if orphanet_lookup_filename and orphanet_prevalence_filename:
-        orphanet = Orphanet(orphanet_lookup_filename, orphanet_prevalence_filename)
+        orphanet = Orphanet(orphanet_prevalence_filename, lookup_filename=orphanet_lookup_filename)
 
     patients = [patient 
                 for patient in Patient.iter_from_file(patient_hpo_filename, hpo)
