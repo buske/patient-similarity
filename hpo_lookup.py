@@ -1,4 +1,4 @@
-#!/usr/bin/env python
+#!/usr/bin/env python3
 
 """
 Lookup information about a list of HPO terms, specified on stdin.

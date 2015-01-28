@@ -1,4 +1,4 @@
-#!/usr/bin/env python
+#!/usr/bin/env python3
 
 """
 Given patient similarity scores, incorporate genetic information and report candidate genes.

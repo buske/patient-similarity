@@ -1,4 +1,4 @@
-#!/usr/bin/env python
+#!/usr/bin/env python3
 
 """
 Compute phenotypic similarity between all pairs of patients in patients.hpo. 
