@@ -1,4 +1,4 @@
-#!/usr/bin/env python
+#!/usr/bin/env python3
 
 """
 Module that provides information-content functionality for the HPO.
@@ -25,12 +25,14 @@ def _bound(p, eps=EPS):
 class HPOIC:
     def __init__(self, hpo, diseases, orphanet=None, patients=None,
                  use_disease_prevalence=False,
-                 use_phenotype_frequency=False):
+                 use_phenotype_frequency=False,
+                 distribute_ic_to_leaves=False):
         logger.info('HPO root: {}'.format(hpo.root.id))
 
         term_freq = self.get_term_frequencies(diseases, hpo, orphanet=orphanet, patients=patients,
                                               use_disease_prevalence=use_disease_prevalence, 
-                                              use_phenotype_frequency=use_phenotype_frequency)
+                                              use_phenotype_frequency=use_phenotype_frequency,
+                                              distribute_ic_to_leaves=distribute_ic_to_leaves)
         logger.info('Total term frequency mass: {}'.format(sum(term_freq.values())))
 
         term_ic = self.get_ics(hpo.root, term_freq)
@@ -55,7 +57,8 @@ class HPOIC:
     @classmethod
     def get_term_frequencies(cls, diseases, hpo, orphanet=None, patients=None,
                              use_disease_prevalence=False, 
-                             use_phenotype_frequency=False):
+                             use_phenotype_frequency=False,
+                             distribute_ic_to_leaves=False):
         bound = _bound
         raw_freq = defaultdict(float)
 
@@ -99,7 +102,7 @@ class HPOIC:
                 for term in patient.hp_terms:
                     raw_freq[term] += 1
 
-        if True:
+        if distribute_ic_to_leaves:
             logger.warn('DISTRIBUTING WEIGHT TO LEAVES')
             q = [hpo.root]
 
@@ -284,6 +287,7 @@ def parse_args(args):
                         dest='orphanet_prevalence_filename', default=None)
     parser.add_argument('--use-disease-prevalence', default=False, action='store_true')
     parser.add_argument('--use-phenotype-frequency', default=False, action='store_true')
+    parser.add_argument('--distribute-ic-to-leaves', default=False, action='store_true')
     parser.add_argument('--patient-phenotype-file')
     parser.add_argument('--log', dest='loglevel', choices=['DEBUG', 'INFO', 'WARNING', 'ERROR', 'CRITICAL'], default='INFO')
 

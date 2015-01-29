@@ -1,4 +1,4 @@
-#!/usr/bin/env python
+#!/usr/bin/env python3
 
 """
 
@@ -18,7 +18,7 @@ class Orphanet:
     def __init__(self, prevalence_filename, lookup_filename=None):
         lookup = None
         if lookup_filename:
-            lookup = cls.parse_lookup(lookup_filename)
+            lookup = self.parse_lookup(lookup_filename)
 
         self.prevalence = self.parse_prevalence(prevalence_filename, lookup=lookup)
 
@@ -32,13 +32,16 @@ class Orphanet:
         lookup = {}  # orphanet -> omim
         for disorder in root.findall('.//Disorder'):
             orphanum = disorder.find('OrphaNumber').text
-            for ref in disorder.findall('./ExternalReferenceList/ExternalReference'):
-                if ref.find('Source').text == 'OMIM':
+            omim = None
+            for ref in disorder.findall('.//ExternalReferenceList/ExternalReference'):
+                source = ref.find('Source').text
+                if source == 'OMIM':
                     omim = ref.find('Reference').text
                     break
 
             assert orphanum not in lookup
-            lookup[orphanum] = omim
+            if omim is not None:
+                lookup[orphanum] = omim
 
         logger.info('Found {:d} Orphanet->OMIM entries'.format(len(lookup)))
         return lookup

@@ -1,4 +1,4 @@
-#!/usr/bin/env python
+#!/usr/bin/env python3
 
 """
 Compute phenotypic similarity between all pairs of patients in patients.hpo. 
@@ -158,8 +158,6 @@ def compare_patients(hpoic, patient1, patient2, scores=None, use_aoo=False):
         jaccard_rows = [[jaccard(t1, t2) for t2 in p2_terms] for t1 in p1_terms]
         out['jaccard_best_avg'] = sum([max(row) for row in jaccard_rows]) / len(jaccard_rows)
         out['jaccard_avg'] = sum([sum(row) for row in jaccard_rows]) / (len(jaccard_rows) * len(jaccard_rows[0]))
-        out['jaccard_max'] = max([max(row) for row in jaccard_rows])
-
 
     if not scores or ('resnik' in scores or 'owlsim' in scores):
         micas = [[resnik(t1, t2) 
@@ -173,7 +171,6 @@ def compare_patients(hpoic, patient1, patient2, scores=None, use_aoo=False):
             # average, max, best-match-average
             out['resnik_avg'] = sum([sum(row) for row in micas]) / (len(micas) * len(micas[0]))
             out['resnik_best_avg'] = sum(row_max) / len(row_max)
-            out['resnik_max'] = max(row_max)
             
         if not scores or 'owlsim' in scores:
             owl_max_score = max(row_max)
@@ -193,7 +190,6 @@ def compare_patients(hpoic, patient1, patient2, scores=None, use_aoo=False):
 
         out['lin_avg'] = sum([sum(row) for row in lins]) / (len(lins) * len(lins[0]))
         out['lin_best_avg'] = sum([max(row) for row in lins]) / len(lins)
-        out['lin_max'] = max([max(row) for row in lins])
 
     if not scores or 'jc' in scores:
         jcs = [[jc(t1, t2, res)
@@ -201,7 +197,6 @@ def compare_patients(hpoic, patient1, patient2, scores=None, use_aoo=False):
                for (t1, row) in zip(p1_terms, micas)]
         out['jc_avg'] = sum([sum(row) for row in jcs]) / (len(jcs) * len(jcs[0]))
         out['jc_best_avg'] = sum([max(row) for row in jcs]) / len(jcs)
-        out['jc_max'] = max([max(row) for row in jcs])
 
     if not scores or 'ob' in scores:
         p1_ic = hpoic.ls_information_content(p1_ancestors)
@@ -229,13 +224,14 @@ def compare_patients(hpoic, patient1, patient2, scores=None, use_aoo=False):
 def script(patient_hpo_filename, hpo_filename, disease_phenotype_filename, 
            orphanet_lookup_filename=None, orphanet_prevalence_filename=None, proto=None, 
            use_disease_prevalence=False, use_phenotype_frequency=False, 
-           use_patient_phenotypes=False, use_aoo=False, scores=None):
+           use_patient_phenotypes=False, distribute_ic_to_leaves=False,
+           use_aoo=False, scores=None):
     hpo = HPO(hpo_filename, new_root='HP:0000118')
     diseases = Diseases(disease_phenotype_filename)
 
     orphanet = None
     if orphanet_lookup_filename and orphanet_prevalence_filename:
-        orphanet = Orphanet(orphanet_lookup_filename, orphanet_prevalence_filename)
+        orphanet = Orphanet(orphanet_prevalence_filename, lookup_filename=orphanet_lookup_filename)
 
     patients = [patient 
                 for patient in Patient.iter_from_file(patient_hpo_filename, hpo)
@@ -251,7 +247,8 @@ def script(patient_hpo_filename, hpo_filename, disease_phenotype_filename,
 
     hpoic = HPOIC(hpo, diseases, orphanet=orphanet, patients=use_patient_phenotypes,
                   use_disease_prevalence=use_disease_prevalence,
-                  use_phenotype_frequency=use_phenotype_frequency)
+                  use_phenotype_frequency=use_phenotype_frequency,
+                  distribute_ic_to_leaves=distribute_ic_to_leaves)
 
     total_patient_logprob = 0
     for patient in patients:
@@ -293,6 +290,7 @@ def parse_args(args):
     parser.add_argument('--use-disease-prevalence', default=False, action='store_true')
     parser.add_argument('--use-phenotype-frequency', default=False, action='store_true')
     parser.add_argument('--use-patient-phenotypes', default=False, action='store_true')
+    parser.add_argument('--distribute-ic-to-leaves', default=False, action='store_true')
     parser.add_argument('--use-aoo', default=False, action='store_true')
     parser.add_argument('--log', dest='loglevel', choices=['DEBUG', 'INFO', 'WARNING', 'ERROR', 'CRITICAL'], default='WARNING')
     parser.add_argument('--proto', metavar="file", help="HPO file of disease prototypes to compare against as well")

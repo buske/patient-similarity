@@ -1,4 +1,4 @@
-#!/usr/bin/env python
+#!/usr/bin/env python3
 
 """
 Representation of a patient, with phenotypes described with HPO terms.
