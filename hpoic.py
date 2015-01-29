@@ -211,7 +211,7 @@ class HPOIC:
         freq_sum = 0
         n_freqs = 0
         dropped = set()
-        for disease in diseases:
+        for id, disease in diseases.diseases.items():
             for hp_term, freq in disease.phenotype_freqs.items():
                 try:
                     hpo[hp_term]
