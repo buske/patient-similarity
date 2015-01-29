@@ -72,12 +72,17 @@ class HPOIC:
             logger.info('Average disease frequency: {}'.format(default_disease_freq))
 
         # Aggregate weighted term frequencies across database for IC corpus
+        n_phenotype_freqs_used = 0
+        n_disease_prevalences_used = 0
+        n_entries = 0
         for id, disease in diseases.diseases.items():
             # Weight by disease prevalence?
             if use_disease_prevalence:
                 prevalence = orphanet.prevalence.get(disease.id)
                 if prevalence is None:
                     prevalence = default_disease_freq
+                else:
+                    n_disease_prevalences_used += 1
             else:
                 prevalence = 1
 
@@ -92,10 +97,19 @@ class HPOIC:
                 if use_phenotype_frequency:
                     if freq is None:
                         freq = default_hp_freq
+                    else:
+                        n_phenotype_freqs_used += 1
                 else:
                     freq = 1
 
+                n_entries += 1
                 raw_freq[term] += freq * prevalence
+
+        if use_phenotype_frequency:
+            logging.warn('Used phenotype frequencies for {}/{} disease-phenotype associations'.format(n_phenotype_freqs_used, n_entries))
+
+        if use_disease_prevalence:
+            logging.warn('Used disease prevalences for {}/{} diseases'.format(n_disease_prevalences_used, len(diseases)))
 
         if patients:
             for patient in patients:
@@ -223,7 +237,7 @@ class HPOIC:
                         n_freqs += 1
 
         if dropped:
-            logger.warning('Dropped {} unknown terms when computing average frequency'.format(len(dropped)))
+            logger.warning('Dropped {} unknown terms when computing average frequency: {}'.format(len(dropped), ', '.join(sorted(dropped))))
         return freq_sum / n_freqs
 
     def get_term_ic(self, term):
