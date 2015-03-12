@@ -1,7 +1,7 @@
 #!/usr/bin/env python3
 
 """
-Compute phenotypic similarity between all pairs of patients in patients.hpo. 
+Compute phenotypic similarity between all pairs of patients in patients.json. 
 A number of different similarity measures are supported, specifiable with
 the --score option.
 """
@@ -221,7 +221,7 @@ def compare_patients(hpoic, patient1, patient2, scores=None, use_aoo=False):
 
     return out
 
-def script(patient_hpo_filename, hpo_filename, disease_phenotype_filename, 
+def script(patient_filename, hpo_filename, disease_phenotype_filename, 
            orphanet_lookup_filename=None, orphanet_prevalence_filename=None, proto=None, 
            use_disease_prevalence=False, use_phenotype_frequency=False, 
            use_patient_phenotypes=False, distribute_ic_to_leaves=False,
@@ -234,7 +234,7 @@ def script(patient_hpo_filename, hpo_filename, disease_phenotype_filename,
         orphanet = Orphanet(orphanet_prevalence_filename, lookup_filename=orphanet_lookup_filename)
 
     patients = [patient 
-                for patient in Patient.iter_from_file(patient_hpo_filename, hpo)
+                for patient in Patient.iter_from_file(patient_filename, hpo)
                 if patient.hp_terms]
 
     if proto:
@@ -259,11 +259,13 @@ def script(patient_hpo_filename, hpo_filename, disease_phenotype_filename,
     header = None
     for i in range(len(patients)):
         patient = patients[i]
+        id1 = patient.external_id if patient.external_id else patient.id
         compare_against = [patients[j] for j in range(i+1, len(patients))]
         if proto:
             compare_against.extend(proto)
 
         for o in compare_against:
+            id2 = o.external_id if o.external_id else o.id
             sims = compare_patients(hpoic, patient, o, scores=scores, use_aoo=use_aoo)
             if header is None:
                 header = sorted(sims)
@@ -272,7 +274,7 @@ def script(patient_hpo_filename, hpo_filename, disease_phenotype_filename,
             sim_strs = ['{:.6f}'.format(sims[sim]) for sim in header]
             for sim, sim_str in zip(header, sim_strs):
                 logging.debug('{}: {}'.format(sim, sim_str))
-            print('\t'.join([patient.id, o.id] + sim_strs))
+            print('\t'.join([id1, id2] + sim_strs))
 
 
 def parse_args(args):
@@ -280,7 +282,7 @@ def parse_args(args):
     description = __doc__.strip()
     
     parser = ArgumentParser(description=description)
-    parser.add_argument('patient_hpo_filename', metavar='patients.hpo')
+    parser.add_argument('patient_filename', metavar='patients.json')
     parser.add_argument('hpo_filename', metavar='hp.obo')
     parser.add_argument('disease_phenotype_filename', metavar='phenotype_annotations.tab')
     parser.add_argument('--orphanet-lookup', metavar='en_product1.xml', 

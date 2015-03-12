@@ -6,7 +6,7 @@ Representation of a patient, with phenotypes described with HPO terms.
 
 __author__ = 'Orion Buske (buske@cs.toronto.edu)'
 
-import csv
+import json
 import logging
 
 logger = logging.getLogger(__name__)
@@ -51,37 +51,51 @@ class Patient:
                     nodes.append(node)
             return nodes
 
-        pid = row['Patient ID']
-        external_id = row['External ID']
+        pid = row['report_id']
+        external_id = row.get('external_id')
 
-        hp_terms = row['HPO+']
-        if hp_terms:
-            hp_terms = resolve_terms(hp_terms.split(','))
+        hpids = set()
+        features = row.get('features', [])
+        prenatal_perinatal_phenotype = row.get('prenatal_perinatal_phenotype', {})
+        prenatal_phenotype = prenatal_perinatal_phenotype.get('prenatal_phenotype', [])
+        features.extend(prenatal_phenotype)
 
-        neg_hp_terms = row['HPO-']
-        if neg_hp_terms:
-            neg_hp_terms = resolve_terms(neg_hp_terms.split(','))
+        for feature in features:
+            if feature.get('observed', 'yes') == 'yes':
+                term = feature.get('id')
+                if term:
+                    hpids.add(term.strip())
+                else:
+                    logging.error('ID missing from term {}'.format(feature))
 
+        for nonstandard in row.get('nonstandard_features', []):
+            if nonstandard['observed'] == 'yes':
+                for category in nonstandard.get('categories', []):
+                    hpids.add(category['id'].strip())
 
-        onset = row.get('AOO')
+        hp_terms = set([hpo[hpid] for hpid in hpids])
+        # XXX: parse negative phenotypes
+
+        onset = row.get('global_age_of_onset', {}).get('id')
         if onset:
             assert onset.startswith('HP:') and len(onset) == 10, 'Invalid onset: {!r}'.format(onset)
 
-        diagnoses = row.get('Diagnoses')
-        if diagnoses:
-            diagnoses = set(diagnoses.split(','))
+        diagnoses = set()
+        for diagnosis in row.get('disorders', []):
+            term = diagnosis.get('id')
+            if term:
+                diagnoses.add(term.strip())
 
-        return Patient(id=pid, hp_terms=hp_terms, neg_hp_terms=neg_hp_terms, 
+        return Patient(id=pid, hp_terms=hp_terms,
                        onset=onset, diagnoses=diagnoses, external_id=external_id)
-        
 
     @classmethod
     def iter_from_file(cls, filename, hpo):
         missing_terms = set()
 
         with open(filename) as ifp:
-            reader = csv.DictReader(ifp, delimiter='\t')
-            for row in reader:
+            database = json.load(ifp)
+            for row in database:
                 yield cls.from_row(row, hpo, missing_terms)
 
         if missing_terms:
