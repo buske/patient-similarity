@@ -6,8 +6,11 @@ Module for processing the Human Phenotype Ontology.
 
 __author__ = 'Orion Buske (buske@cs.toronto.edu)'
 
-import os
 import sys
+
+assert sys.version_info >= (3, 0), 'Python 3 is required'
+
+import os
 import re
 import logging
 
@@ -97,6 +100,9 @@ class HPNode(object):
 
     def ancestors(self):
         return get_ancestors(self)
+
+    def descendants(self):
+        return get_descendants(self)
 
 def _iter_hp_terms(reader):
     term_lines = None
