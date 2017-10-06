@@ -1,7 +1,7 @@
 #!/usr/bin/env python3
 
 """
-
+Helper script for printing out the similarity breakdown between two patients
 """
 
 __author__ = 'Orion Buske'
@@ -18,9 +18,9 @@ from orphanet import Orphanet
 from patient_similarity import PatientComparator, Patient
 
 
-def script(patient1, patient2, patient_hpo_filename, hpo_filename, 
-           disease_phenotype_filename, 
-           orphanet_lookup_filename, orphanet_prevalence_filename, 
+def script(patient1, patient2, patient_hpo_filename, hpo_filename,
+           disease_phenotype_filename,
+           orphanet_lookup_filename, orphanet_prevalence_filename,
            **kwargs):
     hpo = HPO(hpo_filename, new_root='HP:0000118')
     patients = dict([(patient.id, patient)
@@ -33,7 +33,7 @@ def script(patient1, patient2, patient_hpo_filename, hpo_filename,
     diseases = Diseases(disease_phenotype_filename)
     orphanet = Orphanet(orphanet_prevalence_filename, lookup_filename=orphanet_lookup_filename)
     comparator = PatientComparator(hpo, diseases, orphanet)
-    
+
     clusters = comparator.similarity_breakdown(p1, p2)
     cluster_strs = []
     for cluster in clusters:
@@ -60,7 +60,7 @@ def script(patient1, patient2, patient_hpo_filename, hpo_filename,
 def parse_args(args):
     from argparse import ArgumentParser
     description = __doc__.strip()
-    
+
     parser = ArgumentParser(description=description)
     parser.add_argument('patient1')
     parser.add_argument('patient2')

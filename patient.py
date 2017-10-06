@@ -66,19 +66,35 @@ class Patient:
                 if term:
                     hpids.add(term.strip())
                 else:
-                    logging.error('ID missing from term {}'.format(feature))
+                    logger.error('ID missing from term {}'.format(feature))
 
         for nonstandard in row.get('nonstandard_features', []):
             if nonstandard['observed'] == 'yes':
                 for category in nonstandard.get('categories', []):
                     hpids.add(category['id'].strip())
 
-        hp_terms = set([hpo[hpid] for hpid in hpids])
+        hp_terms = set()
+        for hpid in hpids:
+            try:
+                term = hpo[hpid]
+                hp_terms.add(term)
+            except KeyError:
+                logger.warning('Dropping term not found in HPO: {}'.format(hpid))
+
         # XXX: parse negative phenotypes
 
-        onset = row.get('global_age_of_onset', {}).get('id')
-        if onset:
-            assert onset.startswith('HP:') and len(onset) == 10, 'Invalid onset: {!r}'.format(onset)
+        onsets = []
+        for term in row.get('global_age_of_onset', []):
+            term_id = term['id']
+            assert term_id.startswith('HP:') and len(term_id) == 10, 'Invalid onset: {!r}'.format(term_id)
+            onsets.append(term_id)
+
+        if len(onsets) > 1:
+            logger.warning('Found multiple ages of onset... choosing randomly')
+
+        onset = None
+        if onsets:
+            onset = onsets[0]
 
         diagnoses = set()
         for diagnosis in row.get('disorders', []):

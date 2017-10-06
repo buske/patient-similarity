@@ -1,7 +1,14 @@
 #!/usr/bin/env python3
 
 """
-Lookup information about a list of HPO terms, specified on stdin.
+Helper script for looking up information about a list of HPO terms, specified on stdin.
+
+Usage:
+
+$ echo -e "HP:0000118\nHP:0012588" | ./hpo_lookup.py data/hp.obo
+[HP:0000118] Phenotypic abnormality
+[HP:0012588] Steroid-resistant nephrotic syndrome
+
 """
 
 __author__ = 'Orion Buske (buske@cs.toronto.edu)'
@@ -24,7 +31,7 @@ def script(hpo_filename):
 def parse_args(args):
     from argparse import ArgumentParser
     description = __doc__.strip()
-    
+
     parser = ArgumentParser(description=description)
     parser.add_argument('hpo_filename', metavar='hp.obo')
     parser.add_argument('--log', dest='loglevel', choices=['DEBUG', 'INFO', 'WARNING', 'ERROR', 'CRITICAL'], default='WARNING')

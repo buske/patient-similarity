@@ -1,7 +1,7 @@
 #!/usr/bin/env python3
 
 """
-Compute phenotypic similarity between all pairs of patients in patients.json. 
+Compute phenotypic similarity between all pairs of patients in patients.json.
 A number of different similarity measures are supported, specifiable with
 the --score option.
 """
@@ -26,7 +26,7 @@ AOOS = {
     'HP:0011463': 5.0,  # Childhood onset
     'HP:0003621': 6.0,  # Juvenile onset;
     'HP:0003581': 8.0,  # Adult onset
-    
+
     'HP:0011460': 1.0,  # Embryonal onset
     'HP:0011461': 2.0,  # Fetal onset
     'HP:0011462': 7.0,  # Young adult onset
@@ -153,14 +153,14 @@ def compare_patients(hpoic, patient1, patient2, scores=None, use_aoo=False):
         if not scores or 'nsimgic' in scores:
             out['nsimgic'] = hpoic.counter_information_content(common_ancestor_counts) / hpoic.counter_information_content(all_ancestor_counts)
 
-        
+
     if not scores or 'jaccard' in scores:
         jaccard_rows = [[jaccard(t1, t2) for t2 in p2_terms] for t1 in p1_terms]
         out['jaccard_best_avg'] = sum([max(row) for row in jaccard_rows]) / len(jaccard_rows)
         out['jaccard_avg'] = sum([sum(row) for row in jaccard_rows]) / (len(jaccard_rows) * len(jaccard_rows[0]))
 
     if not scores or ('resnik' in scores or 'owlsim' in scores):
-        micas = [[resnik(t1, t2) 
+        micas = [[resnik(t1, t2)
                   for t2 in p2_terms]
                  for t1 in p1_terms]
 
@@ -171,14 +171,14 @@ def compare_patients(hpoic, patient1, patient2, scores=None, use_aoo=False):
             # average, max, best-match-average
             out['resnik_avg'] = sum([sum(row) for row in micas]) / (len(micas) * len(micas[0]))
             out['resnik_best_avg'] = sum(row_max) / len(row_max)
-            
+
         if not scores or 'owlsim' in scores:
             owl_max_score = max(row_max)
             owl_avg_score = (sum(row_max) + sum(col_max)) / (len(row_max) + len(col_max))
             opt_p1_scores = [hpoic.get_term_ic(t) for t in p1_terms]
             opt_max_score = max(opt_p1_scores)
             opt_avg_score = sum(opt_p1_scores) / len(opt_p1_scores)
-            
+
             out['owlsim_max'] = 100 * owl_max_score / opt_max_score
             out['owlsim_avg'] = 100 * owl_avg_score / opt_avg_score
             out['owlsim_combined'] = 0.5 * (out['owlsim_max'] + out['owlsim_avg'])
@@ -212,20 +212,20 @@ def compare_patients(hpoic, patient1, patient2, scores=None, use_aoo=False):
 #     for t1 in p1_terms:
 #         res, t2 = max([(resnik(t1, t2), t2) for t2 in p2_terms])
 #         logging.debug('{} vs (best) {}'.format(t1, t2))
-#         logging.debug('  mica: {}'.format(mica(t1, t2))) 
-#         logging.debug('  mica: {}'.format(mica(t1, t2))) 
-#         logging.debug('  resnik: {:.4f}'.format(resnik(t1, t2))) 
-#         logging.debug('  lin: {:.4f}'.format(lin(t1, t2))) 
-#         logging.debug('  j&c: {:.4f}'.format(jc(t1, t2))) 
-#         logging.debug('  jaccard: {:.4f}'.format(jaccard(t1, t2))) 
+#         logging.debug('  mica: {}'.format(mica(t1, t2)))
+#         logging.debug('  mica: {}'.format(mica(t1, t2)))
+#         logging.debug('  resnik: {:.4f}'.format(resnik(t1, t2)))
+#         logging.debug('  lin: {:.4f}'.format(lin(t1, t2)))
+#         logging.debug('  j&c: {:.4f}'.format(jc(t1, t2)))
+#         logging.debug('  jaccard: {:.4f}'.format(jaccard(t1, t2)))
 
     return out
 
-def script(patient_filename, hpo_filename, disease_phenotype_filename, 
-           orphanet_lookup_filename=None, orphanet_prevalence_filename=None, proto=None, 
-           use_disease_prevalence=False, use_phenotype_frequency=False, 
+def script(patient_filename, hpo_filename, disease_phenotype_filename,
+           orphanet_lookup_filename=None, orphanet_prevalence_filename=None, proto=None,
+           use_disease_prevalence=False, use_phenotype_frequency=False,
            use_patient_phenotypes=False, distribute_ic_to_leaves=False,
-           use_aoo=False, scores=None):
+           use_external_ids=False, use_aoo=False, scores=None):
     hpo = HPO(hpo_filename, new_root='HP:0000118')
     diseases = Diseases(disease_phenotype_filename)
 
@@ -233,12 +233,12 @@ def script(patient_filename, hpo_filename, disease_phenotype_filename,
     if orphanet_lookup_filename and orphanet_prevalence_filename:
         orphanet = Orphanet(orphanet_prevalence_filename, lookup_filename=orphanet_lookup_filename)
 
-    patients = [patient 
+    patients = [patient
                 for patient in Patient.iter_from_file(patient_filename, hpo)
                 if patient.hp_terms]
 
     if proto:
-        proto = [patient 
+        proto = [patient
                  for patient in Patient.iter_from_file(proto, hpo)
                  if patient.hp_terms]
 
@@ -256,16 +256,19 @@ def script(patient_filename, hpo_filename, disease_phenotype_filename,
 
     logging.info('Total patient logprob: {:.1f}'.format(-total_patient_logprob))
 
+    def get_id(patient):
+        return patient.external_id if (patient.external_id and use_external_ids) else patient.id
+
     header = None
     for i in range(len(patients)):
         patient = patients[i]
-        id1 = patient.external_id if patient.external_id else patient.id
+        id1 = get_id(patient)
         compare_against = [patients[j] for j in range(i+1, len(patients))]
         if proto:
             compare_against.extend(proto)
 
         for o in compare_against:
-            id2 = o.external_id if o.external_id else o.id
+            id2 = get_id(o)
             sims = compare_patients(hpoic, patient, o, scores=scores, use_aoo=use_aoo)
             if header is None:
                 header = sorted(sims)
@@ -280,12 +283,12 @@ def script(patient_filename, hpo_filename, disease_phenotype_filename,
 def parse_args(args):
     from argparse import ArgumentParser
     description = __doc__.strip()
-    
+
     parser = ArgumentParser(description=description)
     parser.add_argument('patient_filename', metavar='patients.json')
     parser.add_argument('hpo_filename', metavar='hp.obo')
     parser.add_argument('disease_phenotype_filename', metavar='phenotype_annotations.tab')
-    parser.add_argument('--orphanet-lookup', metavar='en_product1.xml', 
+    parser.add_argument('--orphanet-lookup', metavar='en_product1.xml',
                         dest='orphanet_lookup_filename', default=None)
     parser.add_argument('--orphanet-prevalence', metavar='en_product2.xml',
                         dest='orphanet_prevalence_filename', default=None)
@@ -294,6 +297,8 @@ def parse_args(args):
     parser.add_argument('--use-patient-phenotypes', default=False, action='store_true')
     parser.add_argument('--distribute-ic-to-leaves', default=False, action='store_true')
     parser.add_argument('--use-aoo', default=False, action='store_true')
+    parser.add_argument('--use-external-ids', default=False, action='store_true',
+                        help='Use external ids, where available, instead of report ids')
     parser.add_argument('--log', dest='loglevel', choices=['DEBUG', 'INFO', 'WARNING', 'ERROR', 'CRITICAL'], default='WARNING')
     parser.add_argument('--proto', metavar="file", help="HPO file of disease prototypes to compare against as well")
     parser.add_argument('-s', '--score', dest='scores', action='append', default=[],

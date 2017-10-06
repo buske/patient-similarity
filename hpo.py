@@ -2,6 +2,29 @@
 
 """
 Module for processing the Human Phenotype Ontology.
+
+Provides a Class interface for interacting with the HPO:
+> hpo = HPO('hpo.obo')
+> hpo.root
+HP:0000001
+
+Restrict to a sub-branch of the HPO:
+> hpo.filter_to_descendants('HP:0000118')
+> hpo.root
+HP:0000118
+
+Lookup HPNode by id or alt_id:
+> term = hpo['HP:0000801']
+> term.name
+'Nephrotic syndrome'
+> term.id  # canonical id
+'HP:0000100'
+
+Can get parents or children HPNodes:
+> term.parents
+{HP:0012211}
+> term.children
+{HP:0012589, HP:0012588, HP:0008695, HP:0008677}
 """
 
 __author__ = 'Orion Buske (buske@cs.toronto.edu)'
@@ -112,7 +135,7 @@ def _iter_hp_terms(reader):
         if line == '[Term]':
             if term_lines:
                 yield term_lines
-                
+
             term_lines = []
         else:
             if term_lines is not None:
@@ -133,7 +156,7 @@ class HPO(object):
     def __init__(self, filename, new_root=None):
         """Load the HPO ontology specified in the OBO file 'filename'.
 
-        If new_root is specified (an HPO term ID), the HPO will be truncated to 
+        If new_root is specified (an HPO term ID), the HPO will be truncated to
         only include that node and descendants.
         """
         self.hps = {}
@@ -146,13 +169,13 @@ class HPO(object):
             assert version_str.startswith('format-version')
             self.version = version_str.split(': ')[1]
             logger.info("HPO version: {}".format(self.version))
-            
+
             for lines in _iter_hp_terms(ifp):
                 try:
                     hp = HPNode(lines)
                 except HPError:
                     continue
-                
+
                 if hp.is_root():
                     roots.append(hp)
                 # Relate all alt HP ids to object
@@ -185,7 +208,7 @@ class HPO(object):
 
     def filter_to_descendants(self, root_hp):
         root = self.hps[root_hp]
-        
+
         safe_nodes = get_descendants(root)
         logger.info("Filtering to the {:d} nodes descendant of {} ({})...".format(len(safe_nodes), root_hp, root.name))
 
@@ -217,7 +240,7 @@ class HPO(object):
         # Replace attributes
         self.root = root
         self.hps = hps
-        
+
     def __getitem__(self, key):
         return self.hps[key]
 
@@ -229,7 +252,7 @@ class HPO(object):
 
     def descendant_terms(self, root_hp):
         root = self.hps[root_hp]
-        
+
         descendants = get_descendants(root)
         terms = set()
         for node in descendants:
@@ -238,7 +261,7 @@ class HPO(object):
 
         return terms
 
-        
+
 def script(hpo_filename):
     hpo = HPO(hpo_filename)
     hpo.filter_to_descendants('HP:0000118')
@@ -246,7 +269,7 @@ def script(hpo_filename):
 def parse_args(args):
     from argparse import ArgumentParser
     description = __doc__.strip()
-    
+
     parser = ArgumentParser(description=description)
     parser.add_argument('hpo_filename', metavar='hp.obo')
     return parser.parse_args()

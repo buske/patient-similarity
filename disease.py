@@ -1,7 +1,8 @@
 #!/usr/bin/env python3
 
 """
-
+Module to provide a class-based interface for interacting with diseases
+and associated phenotypes (from a phenotype_annotations.tab file)
 """
 
 __author__ = 'Orion Buske'
@@ -15,18 +16,19 @@ from collections import defaultdict
 
 DBS = set(['ORPHANET', 'OMIM', 'DECIPHER'])
 db_re = re.compile('([A-Z]+:\d+)')
-FREQUENCIES = {'very rare':  0.01, 
-               'rare':       0.05, 
-               'occasional': 0.075, 
-               'frequent':   0.33, 
-               'typical':    0.5, 
-               'variable':   0.5, 
-               'common':     0.75, 
-               'hallmark':   0.9, 
+FREQUENCIES = {'very rare':  0.01,
+               'rare':       0.05,
+               'occasional': 0.075,
+               'frequent':   0.33,
+               'typical':    0.5,
+               'variable':   0.5,
+               'common':     0.75,
+               'hallmark':   0.9,
                'obligate':   1.0}
 fraction_frequency_re = re.compile(r'of|/')
 
 logger = logging.getLogger(__name__)
+
 
 class Disease:
     def __init__(self, db, id, phenotype_freqs):
@@ -37,12 +39,13 @@ class Disease:
     def __str__(self):
         return '{}:{}'.format(self.db, self.id)
 
+
 class Diseases:
     def __init__(self, filename, db=None):
         """Read disease informaton from file into dict: {(db, id) -> Disease}
 
         db: database to restrict to (e.g. 'OMIM'), or None to include all
-        
+
         Will use disease links in reference column (#6)
         """
         if db:
@@ -132,7 +135,8 @@ class Diseases:
             disease = Disease(db, id, phenotypes)
             yield ((db, id), disease)
 
-def script(phenotype_filename, disease_gene_filename, out_hpo, out_genes, **kwargs):
+
+def script(phenotype_filename):
     diseases = Diseases(phenotype_filename, db='ORPHANET')
 
     for id, disease in diseases.diseases.items():
@@ -141,50 +145,22 @@ def script(phenotype_filename, disease_gene_filename, out_hpo, out_genes, **kwar
         if len(numeric) >= 5 and max(numeric) < 0.1:
             logging.warning('Disease only has rare phenotypes with frequencies {}:{}'.format(id[0], id[1]))
 
-    sys.exit(0)
-
-    disease_genes = defaultdict(set)
-    with open(disease_gene_filename) as ifp:
-        for line in ifp:
-            line = line.strip()
-            if not line or line.startswith('#'): continue
-            tokens = line.split('\t')
-            if len(tokens) == 1: continue
-            disease_id, gene_id, gene_name = tokens
-            disease_genes[disease_id].add(gene_name)
-            
-    # Generate prototypical patients
-    with open(out_hpo, 'w') as out_hpo, open(out_genes, 'w') as out_genes:
-        for disease in diseases:
-            hp_terms = []
-            for hp_term, freq in disease.phenotype_freqs.items():
-                if freq is None or freq >= 0.25:
-                    hp_terms.append(hp_term)
-
-            disease_id = '{}:{}'.format(disease.db, disease.id)
-            genes = disease_genes[disease_id]
-            if len(hp_terms) >= 5 and genes:
-                disease_id = 'PROTO:{}'.format(disease_id)
-                print('{}\t{}'.format(disease_id, ';'.join(hp_terms)), file=out_hpo)
-                print('{}\t{}'.format(disease_id, ';'.join(genes)), file=out_genes)
-        
 
 def parse_args(args):
     from argparse import ArgumentParser
     description = __doc__.strip()
-    
+
     parser = ArgumentParser(description=description)
     parser.add_argument('phenotype_filename', metavar='phenotype_annotations.tab')
-    parser.add_argument('disease_gene_filename', metavar='diseases_to_genes.txt')
-    parser.add_argument('out_hpo', metavar='out.hpo')
-    parser.add_argument('out_genes', metavar='out.genes')
 
     return parser.parse_args(args)
+
 
 def main(args=sys.argv[1:]):
     logging.basicConfig(level='INFO')
     args = parse_args(args)
     script(**vars(args))
+
 
 if __name__ == '__main__':
     sys.exit(main())
