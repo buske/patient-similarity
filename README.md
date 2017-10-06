@@ -39,6 +39,7 @@ Multiple scores can be added by specifying `-s` multiple times, or all scores wi
 - simgic
 - icca
 - TODO: add [ebosimgic](http://rucs.ca/computational-biology/exponential-back-off-simgic)
+
 _See the [PhenomeCentral paper](http://dx.doi.org/10.1002/humu.22851) for a comparison of many of these_
 
 Many of these similarity scores use the information content of the terms in the HPO to compute a similarity score. The information content of a term is defined to be `IC(t) = -log_2(p(t))`, where `p(t)` is the probability of the term. The probability of the term can be estimated in many ways, such as the fraction of OMIM diseases that have the term associated ([10.1016/j.ajhg.2008.09.017](https://dx.doi.org/10.1016%2Fj.ajhg.2008.09.017)).
