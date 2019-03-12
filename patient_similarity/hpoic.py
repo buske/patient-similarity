@@ -12,9 +12,6 @@ import logging
 from math import log, exp
 from collections import defaultdict
 
-from disease import Diseases
-from hpo import HPO
-from orphanet import Orphanet
 
 EPS = 1e-9
 logger = logging.getLogger(__name__)
@@ -30,7 +27,7 @@ class HPOIC:
         logger.info('HPO root: {}'.format(hpo.root.id))
 
         term_freq = self.get_term_frequencies(diseases, hpo, orphanet=orphanet, patients=patients,
-                                              use_disease_prevalence=use_disease_prevalence, 
+                                              use_disease_prevalence=use_disease_prevalence,
                                               use_phenotype_frequency=use_phenotype_frequency,
                                               distribute_ic_to_leaves=distribute_ic_to_leaves)
         logger.info('Total term frequency mass: {}'.format(sum(term_freq.values())))
@@ -56,7 +53,7 @@ class HPOIC:
 
     @classmethod
     def get_term_frequencies(cls, diseases, hpo, orphanet=None, patients=None,
-                             use_disease_prevalence=False, 
+                             use_disease_prevalence=False,
                              use_phenotype_frequency=False,
                              distribute_ic_to_leaves=False):
         bound = _bound
@@ -171,7 +168,7 @@ class HPOIC:
                 term_ic[node] = -log(prob_mass)
 
         return term_ic
-    
+
     @classmethod
     def get_link_strengths(cls, root, term_ic):
         eps = EPS
@@ -215,7 +212,7 @@ class HPOIC:
 #                     if abs(ls) < eps:
 #                         ls = 0
 #                     assert ls >= 0
-                        
+
 #             lss[term] = ls
 
         return lss
@@ -265,52 +262,3 @@ class HPOIC:
     def counter_information_content(self, ancestors):
         """Return the sum of information content of the given counter of terms"""
         return sum([self.term_ic.get(term, 0) * count for term, count in ancestors.items()])
-
-def script(hpo_filename, disease_phenotype_filename, patient_phenotype_file=None, 
-           orphanet_lookup_filename=False, orphanet_prevalence_filename=False,
-           *args, **kwargs):
-    hpo = HPO(hpo_filename, new_root='HP:0000118')
-    diseases = Diseases(disease_phenotype_filename)
-    patients = None
-    if patient_phenotype_file:
-        patients = [patient 
-                    for patient in Patient.iter_from_file(patient_hpo_filename, hpo)
-                    if patient.hp_terms]
-
-    orphanet = None
-    if orphanet_prevalence_filename:
-        orphanet = Orphanet(orphanet_prevalence_filename, lookup_filename=orphanet_lookup_filename)
-
-    hpoic = HPOIC(hpo, diseases, patients=patients, orphanet=orphanet, *args, **kwargs)
-    for term in hpo:
-        ic = hpoic.term_ic.get(term)
-        ls = hpoic.lss.get(term)
-        print('{}\t{}\t{}'.format(term.id, ic, ls))
-                    
-
-def parse_args(args):
-    from argparse import ArgumentParser
-    description = __doc__.strip()
-    
-    parser = ArgumentParser(description=description)
-    parser.add_argument('hpo_filename', metavar='hp.obo')
-    parser.add_argument('disease_phenotype_filename', metavar='phenotype_annotations.tab')
-    parser.add_argument('--orphanet-lookup', metavar='en_product1.xml', 
-                        dest='orphanet_lookup_filename', default=None)
-    parser.add_argument('--orphanet-prevalence', metavar='en_product2.xml',
-                        dest='orphanet_prevalence_filename', default=None)
-    parser.add_argument('--use-disease-prevalence', default=False, action='store_true')
-    parser.add_argument('--use-phenotype-frequency', default=False, action='store_true')
-    parser.add_argument('--distribute-ic-to-leaves', default=False, action='store_true')
-    parser.add_argument('--patient-phenotype-file')
-    parser.add_argument('--log', dest='loglevel', choices=['DEBUG', 'INFO', 'WARNING', 'ERROR', 'CRITICAL'], default='INFO')
-
-    return parser.parse_args(args)
-
-def main(args=sys.argv[1:]):
-    args = parse_args(args)
-    logging.basicConfig(level=args.__dict__.pop('loglevel'))
-    script(**vars(args))
-
-if __name__ == '__main__':
-    sys.exit(main())
