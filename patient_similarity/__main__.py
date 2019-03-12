@@ -136,7 +136,6 @@ def compare_patients(hpoic, patient1, patient2, scores=None, use_aoo=False):
         all_ancestor_counts = p1_ancestor_counts | p2_ancestor_counts  # max
         if not scores or 'jz' in scores:
             out['simgic_jz'] = 2 * hpoic.counter_ls_information_content(common_ancestor_counts) / (hpoic.information_content(p1_terms) + hpoic.information_content(p2_terms))
-            out['simgic_jz2'] = hpoic.counter_ls_information_content(common_ancestor_counts) / hpoic.counter_ls_information_content(all_ancestor_counts)
 
         if not scores or 'nsimgic' in scores:
             out['nsimgic'] = hpoic.counter_information_content(common_ancestor_counts) / hpoic.counter_information_content(all_ancestor_counts)
@@ -185,17 +184,6 @@ def compare_patients(hpoic, patient1, patient2, scores=None, use_aoo=False):
                for (t1, row) in zip(p1_terms, micas)]
         out['jc_avg'] = sum([sum(row) for row in jcs]) / (len(jcs) * len(jcs[0]))
         out['jc_best_avg'] = sum([max(row) for row in jcs]) / len(jcs)
-
-    if not scores or 'ob' in scores:
-        p1_ic = hpoic.ls_information_content(p1_ancestors)
-        p2_ic = hpoic.ls_information_content(p2_ancestors)
-        shared_ic = hpoic.ls_information_content(common_ancestors)
-        out['ob'] = 2 * shared_ic / (p1_ic + p2_ic)  # harmonic mean
-        out['ob2'] = shared_ic / hpoic.ls_information_content(all_ancestors)
-
-        logging.debug('Patient 1 ic: {:.6f}'.format(p1_ic))
-        logging.debug('Patient 2 ic: {:.6f}'.format(p2_ic))
-        logging.debug('Shared ic: {:.6f}'.format(shared_ic))
 
     return out
 
@@ -280,7 +268,7 @@ def parse_args(args):
     parser.add_argument('--log', dest='loglevel', choices=['DEBUG', 'INFO', 'WARNING', 'ERROR', 'CRITICAL'], default='WARNING')
     parser.add_argument('--proto', metavar="file", help="HPO file of disease prototypes to compare against as well")
     parser.add_argument('-s', '--score', dest='scores', action='append', default=[],
-                        choices=['jaccard', 'resnik', 'lin', 'jc', 'owlsim', 'ob', 'jz', 'ui', 'simgic', 'nsimgic', 'icca'],
+                        choices=['jaccard', 'resnik', 'lin', 'jc', 'owlsim', 'jz', 'ui', 'simgic', 'nsimgic', 'icca'],
                         help='Include this score in the output for each pair of patients')
 
     return parser.parse_args(args)
