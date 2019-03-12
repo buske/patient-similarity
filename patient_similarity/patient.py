@@ -8,6 +8,7 @@ __author__ = 'Orion Buske (buske@cs.toronto.edu)'
 
 import json
 import logging
+import csv
 
 logger = logging.getLogger(__name__)
 
@@ -37,20 +38,7 @@ class Patient:
         return self._ancestors
 
     @classmethod
-    def from_row(cls, row, hpo, missing_terms=None):
-        def resolve_terms(terms, missing_terms=missing_terms):
-            nodes = []
-            for term in terms:
-                term = term.strip()
-                try:
-                    node = hpo[term]
-                except KeyError:
-                    if missing_terms is not None:
-                        missing_terms.add(term)
-                else:
-                    nodes.append(node)
-            return nodes
-
+    def from_row(cls, row, hpo):
         pid = row['report_id']
         external_id = row.get('external_id')
 
@@ -107,12 +95,27 @@ class Patient:
 
     @classmethod
     def iter_from_file(cls, filename, hpo):
-        missing_terms = set()
-
         with open(filename) as ifp:
             database = json.load(ifp)
             for row in database:
-                yield cls.from_row(row, hpo, missing_terms)
+                yield cls.from_row(row, hpo)
 
-        if missing_terms:
-            logger.warning('Could not find {} terms: {}'.format(len(missing_terms), ','.join(missing_terms)))
+    @classmethod
+    def iter_from_csv_file(cls, filename, hpo):
+        with open(filename, newline='') as ifp:
+            reader = csv.reader(ifp)
+            for row in reader:
+                if len(row) < 2:
+                    raise FormatError('Expected at least two columns: id, phenotype1, ...')
+                pid, term_ids = [row[0], row[1:]]
+                terms = set()
+                for term_id in term_ids:
+                    term_id = term_id.strip()
+                    if not term_id:
+                        continue
+
+                    term = hpo[term_id]
+                    if term:
+                        terms.add(term)
+
+                yield Patient(id=pid, hp_terms=terms)

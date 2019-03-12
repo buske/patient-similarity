@@ -1,6 +1,6 @@
 
 # Patient phenotype and genotype similarity
-This package is research code designed to measure the similarity between patients, using phenotype (specified as [Human Phenotype Ontology (HPO)](human-phenotype-ontology.github.io) terms) and/or genotype (specified as the [Exomiser](http://www.sanger.ac.uk/science/tools/exomiser)-processed results of whole-exome VCF files). 
+This package is research code designed to measure the similarity between patients, using phenotype (specified as [Human Phenotype Ontology (HPO)](human-phenotype-ontology.github.io) terms) and/or genotype (specified as the [Exomiser](http://www.sanger.ac.uk/science/tools/exomiser)-processed results of whole-exome VCF files).
 
 ## Dependencies
 
@@ -8,13 +8,36 @@ This package is research code designed to measure the similarity between patient
 
 ## Phenotypic similarity
 
-Phenotype data is expected in [PhenoTips](phenotips.org) JSON export format, e.g.: `phenotips_2017-02-01_00-01.json`.
+### Input file formats
+
+#### JSON (default, `--patient-file-format phenotips`)
+
+By default, phenotype data is expected in [PhenoTips](https://phenotips.org) JSON export format, e.g.: `phenotips_2017-02-01_00-01.json`.
+
+Here is an [example JSON file](test/test.json).
+
+#### CSV (`--patient-file-format csv`)
+
+A simple csv file format is supported, with a patient per line and columns:
+1. The patient's identifier (required)
+2. The patient's first present HPO term (required)
+3. The patient's second present HPO term (optional)
+4. The patient's third present HPO term (optional), ...
+
+For example :
+```
+Patient1,HP:0000001,HP:0000002,HP:0000003,HP:0000004
+Patient2,HP:0000001,HP:0000002
+```
+
+Here is an [example CSV file](test/test.csv).
+
 
 ### Pair-wise phenotypic similarity
 
 Pair-wise phenotypic similarity can be computed using a number of different similarity metrics using the `patient_similarity.py` script. For example, to compute just the simGIC score:
 ```bash
-./patient_similarity.py --log=INFO -s simgic test/test.json \
+python -m patient_similarity --log=INFO -s simgic test/test.json \
   data/hp.obo data/phenotype_annotation.tab
 ```
 

@@ -30,6 +30,11 @@ AOOS = {
     'HP:0003584': 9.0,  # Late onset
     }
 
+PHENOTYPE_ROOT = 'HP:0000118'
+PATIENT_FILE_FORMAT_PHENOTIPS = 'phenotips'
+PATIENT_FILE_FORMAT_CSV = 'csv'
+PATIENT_FILE_FORMATS = [PATIENT_FILE_FORMAT_PHENOTIPS, PATIENT_FILE_FORMAT_CSV]
+DEFAULT_PATIENT_FILE_FORMAT = PATIENT_FILE_FORMAT_PHENOTIPS
 
 def similarity_breakdown(hpoic, patient1, patient2):
     p1_terms = set(patient1.hp_terms)
@@ -191,17 +196,26 @@ def script(patient_filename, hpo_filename, disease_phenotype_filename,
            orphanet_lookup_filename=None, orphanet_prevalence_filename=None, proto=None,
            use_disease_prevalence=False, use_phenotype_frequency=False,
            use_patient_phenotypes=False, distribute_ic_to_leaves=False,
-           use_external_ids=False, use_aoo=False, scores=None):
-    hpo = HPO(hpo_filename, new_root='HP:0000118')
+           use_external_ids=False, use_aoo=False, scores=None,
+           patient_file_format=DEFAULT_PATIENT_FILE_FORMAT):
+
+    hpo = HPO(hpo_filename, new_root=PHENOTYPE_ROOT)
     diseases = Diseases(disease_phenotype_filename)
 
     orphanet = None
     if orphanet_lookup_filename and orphanet_prevalence_filename:
         orphanet = Orphanet(orphanet_prevalence_filename, lookup_filename=orphanet_lookup_filename)
 
-    patients = [patient
-                for patient in Patient.iter_from_file(patient_filename, hpo)
-                if patient.hp_terms]
+    if patient_file_format == PATIENT_FILE_FORMAT_PHENOTIPS:
+        patients = [patient
+                    for patient in Patient.iter_from_file(patient_filename, hpo)
+                    if patient.hp_terms]
+    elif patient_file_format == PATIENT_FILE_FORMAT_CSV:
+        patients = [patient
+                    for patient in Patient.iter_from_csv_file(patient_filename, hpo)
+                    if patient.hp_terms]
+    else:
+        raise NotImplementedError('Unsupported patient file format: {}'.format(patient_file_format))
 
     if proto:
         proto = [patient
@@ -254,6 +268,9 @@ def parse_args(args):
     parser.add_argument('patient_filename', metavar='patients.json')
     parser.add_argument('hpo_filename', metavar='hp.obo')
     parser.add_argument('disease_phenotype_filename', metavar='phenotype_annotations.tab')
+    parser.add_argument('--patient-file-format', dest='patient_file_format', default=DEFAULT_PATIENT_FILE_FORMAT,
+                        choices=PATIENT_FILE_FORMATS,
+                        help='Parse patient_filename file from the specified format')
     parser.add_argument('--orphanet-lookup', metavar='en_product1.xml',
                         dest='orphanet_lookup_filename', default=None)
     parser.add_argument('--orphanet-prevalence', metavar='en_product2.xml',
