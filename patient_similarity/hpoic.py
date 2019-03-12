@@ -44,13 +44,6 @@ class HPOIC:
         self.term_ic = term_ic
         self.lss = lss
 
-#         for term in hpo:
-#             ic = self.get_term_ic(term)
-#             ls_ic = sum([lss.get(a, 0) for a in term.ancestors()])
-#             logger.info('ic: {:.6f}, lsic: {:.6f}, term: {}'.format(ic, ls_ic, term))
-#             assert abs(ic - ls_ic) < EPS * 2
-
-
     @classmethod
     def get_term_frequencies(cls, diseases, hpo, orphanet=None, patients=None,
                              use_disease_prevalence=False,
