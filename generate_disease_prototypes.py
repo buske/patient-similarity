@@ -13,7 +13,7 @@ import logging
 
 from collections import defaultdict
 
-from disease import Diseases
+from patient_similarity import Diseases
 
 logger = logging.getLogger(__name__)
 

@@ -16,7 +16,7 @@ __author__ = 'Orion Buske (buske@cs.toronto.edu)'
 import sys
 import logging
 
-from hpo import HPO
+from patient_similarity import HPO
 
 def script(hpo_filename):
     hpo = HPO(hpo_filename)

@@ -13,11 +13,7 @@ import logging
 
 from collections import Counter
 
-from .hpo import HPO
-from .hpoic import HPOIC
-from .disease import Diseases
-from .orphanet import Orphanet
-from .patient import Patient
+from . import HPO, HPOIC, Diseases, Orphanet, Patient
 
 AOOS = {
     'HP:0003577': 1.5,  # Congenital onset

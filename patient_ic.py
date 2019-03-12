@@ -9,10 +9,7 @@ __author__ = 'Orion Buske (buske@cs.toronto.edu)'
 import sys
 import logging
 
-from hpo import HPO
-from disease import Diseases
-from hpoic import HPOIC
-from patient import Patient
+from patient_similarity import HPO, Diseases, HPOIC, Patient
 
 def script(patient_hpo_filename, hpo_filename, disease_phenotype_filename,
            **kwargs):
