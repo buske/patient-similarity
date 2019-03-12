@@ -25,6 +25,14 @@ FREQUENCIES = {'very rare':  0.01,
                'common':     0.75,
                'hallmark':   0.9,
                'obligate':   1.0}
+FREQUENCY_TERMS = {
+    'HP:0040280': 1.0,  # Obligate
+    'HP:0040281': (0.99 + 0.80) / 2.0,  # Very frequent
+    'HP:0040282': (0.79 + 0.30) / 2.0,  # Frequent
+    'HP:0040283': (0.05 + 0.29) / 2.0,  # Occasional
+    'HP:0040284': (0.01 + 0.04) / 2.0,  # Very rare
+    'HP:0040285': 0.0,  # Excluded
+}
 fraction_frequency_re = re.compile(r'of|/')
 
 logger = logging.getLogger(__name__)
@@ -68,6 +76,9 @@ class Diseases:
     @classmethod
     def parse_frequency(cls, s, default=None):
         """Return float parsed frequency or default if problem or absent"""
+        if s.upper() in FREQUENCY_TERMS:
+            return FREQUENCY_TERMS[s]
+
         s = s.lower()
         if not s:
             freq = default
@@ -110,8 +121,9 @@ class Diseases:
                         db = 'OMIM'
 
                     id = int(id.strip())
-                    if db in set(['PMID', 'PMS']): continue
-                    assert db in DBS, 'Unexpected DB: {!r}'.format(db)
+                    if db not in DBS:
+                        continue
+
                     diseases.append((db, id))
 
                 hp_term = tokens[4].strip()
