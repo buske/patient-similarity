@@ -92,14 +92,6 @@ def compare_patients(hpoic, patient1, patient2, scores=None, use_aoo=False):
     if use_aoo:
         out['aoo'] = get_aoo_penalty(patient1.onset, patient2.onset)
 
-#     logging.debug('Patient 1 terms and IC')
-#     for t in p1_terms:
-#         logging.debug('  {:.6f}: {}'.format(hpoic.get_term_ic(t), t))
-
-#     logging.debug('Patient 2 terms and IC')
-#     for t in p2_terms:
-#         logging.debug('  {:.6f}: {}'.format(hpoic.get_term_ic(t), t))
-
     p1_ancestors = patient1.ancestors()
     p2_ancestors = patient2.ancestors()
     common_ancestors = p1_ancestors & p2_ancestors  # min
@@ -208,16 +200,6 @@ def compare_patients(hpoic, patient1, patient2, scores=None, use_aoo=False):
         logging.debug('Patient 1 ic: {:.6f}'.format(p1_ic))
         logging.debug('Patient 2 ic: {:.6f}'.format(p2_ic))
         logging.debug('Shared ic: {:.6f}'.format(shared_ic))
-
-#     for t1 in p1_terms:
-#         res, t2 = max([(resnik(t1, t2), t2) for t2 in p2_terms])
-#         logging.debug('{} vs (best) {}'.format(t1, t2))
-#         logging.debug('  mica: {}'.format(mica(t1, t2)))
-#         logging.debug('  mica: {}'.format(mica(t1, t2)))
-#         logging.debug('  resnik: {:.4f}'.format(resnik(t1, t2)))
-#         logging.debug('  lin: {:.4f}'.format(lin(t1, t2)))
-#         logging.debug('  j&c: {:.4f}'.format(jc(t1, t2)))
-#         logging.debug('  jaccard: {:.4f}'.format(jaccard(t1, t2)))
 
     return out
 

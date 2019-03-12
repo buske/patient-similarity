@@ -61,7 +61,7 @@ class Orphanet:
             '12360': 0.5 / 1000000,
             '12372': None,
             '12366': None
-            }
+        }
 
         n_total = 0
         for disorder in root.findall('.//Disorder'):
@@ -96,7 +96,7 @@ def script(lookup_filename, prevalence_filename):
 def parse_args(args):
     from argparse import ArgumentParser
     description = __doc__.strip()
-    
+
     parser = ArgumentParser(description=description)
     parser.add_argument('lookup_filename')
     parser.add_argument('prevalence_filename')

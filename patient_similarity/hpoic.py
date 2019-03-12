@@ -186,34 +186,6 @@ class HPOIC:
                 ls = 0.0
 
             lss[term] = ls
-#             if not term.parents:
-#                 ls = 0.0
-#             elif len(term.parents) == 1:
-#                 ls = ic - term_ic[next(iter(term.parents))]
-#             else:
-#                 siblings = None
-#                 for p in term.parents:
-#                     if siblings is None:
-#                         siblings = set(p.children)
-#                     else:
-#                         siblings.intersection_update(p.children)
-
-#                 assert siblings
-#                 # Siblings now contains all other siblings to term (+ self)
-#                 sibling_prob_mass = 0.0
-#                 for t in siblings:
-#                     if t in term_ic:
-#                         sibling_prob_mass += exp(-term_ic[t])
-
-#                 if sibling_prob_mass < eps:
-#                     ls = 0.0
-#                 else:
-#                     ls = ic + log(sibling_prob_mass)
-#                     if abs(ls) < eps:
-#                         ls = 0
-#                     assert ls >= 0
-
-#             lss[term] = ls
 
         return lss
 
