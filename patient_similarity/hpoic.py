@@ -96,10 +96,10 @@ class HPOIC:
                 raw_freq[term] += freq * prevalence
 
         if use_phenotype_frequency:
-            logging.warn('Used phenotype frequencies for {}/{} disease-phenotype associations'.format(n_phenotype_freqs_used, n_entries))
+            logging.warning('Used phenotype frequencies for {}/{} disease-phenotype associations'.format(n_phenotype_freqs_used, n_entries))
 
         if use_disease_prevalence:
-            logging.warn('Used disease prevalences for {}/{} diseases'.format(n_disease_prevalences_used, len(diseases)))
+            logging.warning('Used disease prevalences for {}/{} diseases'.format(n_disease_prevalences_used, len(diseases)))
 
         if patients:
             for patient in patients:
@@ -107,7 +107,7 @@ class HPOIC:
                     raw_freq[term] += 1
 
         if distribute_ic_to_leaves:
-            logger.warn('DISTRIBUTING WEIGHT TO LEAVES')
+            logger.warning('DISTRIBUTING WEIGHT TO LEAVES')
             q = [hpo.root]
 
             while q:
