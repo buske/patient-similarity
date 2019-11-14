@@ -139,7 +139,7 @@ class Diseases:
                             phenotypes[hp_term] = freq
 
                         if old_freq != freq:
-                            logging.warn('Found conflicting frequencies ({}, {}) for same disease-phenotype: {}:{} - {} (taking larger)'.format(old_freq, freq, disease[0], disease[1], hp_term))
+                            logging.warning('Found conflicting frequencies ({}, {}) for same disease-phenotype: {}:{} - {} (taking larger)'.format(old_freq, freq, disease[0], disease[1], hp_term))
                     else:
                         phenotypes[hp_term] = freq
 
