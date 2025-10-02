@@ -1,3 +1,5 @@
+> [!NOTE]
+> This project is no longer being actively developed or maintained.
 
 # Patient phenotype and genotype similarity
 This package is research code designed to measure the similarity between patients, using phenotype (specified as [Human Phenotype Ontology (HPO)](human-phenotype-ontology.github.io) terms) and/or genotype (specified as the [Exomiser](http://www.sanger.ac.uk/science/tools/exomiser)-processed results of whole-exome VCF files).
